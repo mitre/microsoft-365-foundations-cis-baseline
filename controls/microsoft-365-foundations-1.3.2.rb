@@ -1,6 +1,6 @@
-control 'microsoft-365-foundations-1.3.2' do
-    title "Ensure 'Idle session timeout' is set to '3 hours (or less)' for unmanaged devices"
-    desc "Idle session timeout allows the configuration of a setting which will timeout inactive users after a pre-determined amount of time. When a user reaches the set idle timeout session, they'll get a notification that they're about to be signed out. They have to select to stay signed in or they'll be automatically signed out of all Microsoft 365 web apps. Combined with a Conditional Access rule this will only impact unmanaged devices. A managed device is considered a device managed by Intune MDM.
+control "microsoft-365-foundations-1.3.2" do
+  title "Ensure 'Idle session timeout' is set to '3 hours (or less)' for unmanaged devices"
+  desc "Idle session timeout allows the configuration of a setting which will timeout inactive users after a pre-determined amount of time. When a user reaches the set idle timeout session, they'll get a notification that they're about to be signed out. They have to select to stay signed in or they'll be automatically signed out of all Microsoft 365 web apps. Combined with a Conditional Access rule this will only impact unmanaged devices. A managed device is considered a device managed by Intune MDM.
         The following Microsoft 365 web apps are supported.
             • Outlook Web App
             • OneDrive for Business
@@ -10,8 +10,8 @@ control 'microsoft-365-foundations-1.3.2' do
             • Microsoft 365 Admin Center
         NOTE: Idle session timeout doesn't affect Microsoft 365 desktop and mobile apps.
         The recommended setting is 3 hours (or less) for unmanaged devices."
-    desc 'check'
-        "Step 1 - Ensure Idle session timeout is configured:
+  desc "check",
+       "Step 1 - Ensure Idle session timeout is configured:
             1. Navigate to the Microsoft 365 admin center https://admin.microsoft.com/.
             2. Click to expand Settings Select Org settings.
             3. Click Security & Privacy tab.
@@ -27,8 +27,8 @@ control 'microsoft-365-foundations-1.3.2' do
                 • Session is set to Use app enforced restrictions.
                 • Enable Policy is set to On
         NOTE: To ensure that idle timeouts affect only unmanaged devices, both steps must be completed."
-    desc 'fix'
-    "To configure Idle session timeout:
+  desc "fix",
+       "To configure Idle session timeout:
         1. Navigate to the Microsoft 365 admin center https://admin.microsoft.com/.
         2. Click to expand Settings Select Org settings.
         3. Click Security & Privacy tab.
@@ -47,13 +47,13 @@ control 'microsoft-365-foundations-1.3.2' do
         8. Set Enable policy to On and click Create.
     NOTE: To ensure that idle timeouts affect only unmanaged devices, both steps must be completed."
 
-    impact 0.5
-    tag severity: 'medium'
-    tag cis_controls: [{ '8' => ['4.3'] }]
+  impact 0.5
+  tag severity: "medium"
+  tag cis_controls: [{ "8" => ["4.3"] }]
 
-    ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/manage/idle-session-timeout-web-apps?view=o365-worldwide'
+  ref "https://learn.microsoft.com/en-us/microsoft-365/admin/manage/idle-session-timeout-web-apps?view=o365-worldwide"
 
-    describe 'manual' do
-        skip 'manual'
-    end
+  describe "This control's test logic needs to be implemented." do
+    skip "This control's test logic needs to be implemented."
+  end
 end

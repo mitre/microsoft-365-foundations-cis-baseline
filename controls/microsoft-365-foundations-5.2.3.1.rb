@@ -1,14 +1,14 @@
-control 'microsoft-365-foundations-5.2.3.1' do
-    title 'Ensure Microsoft Authenticator is configured to protect against MFA fatigue'
-    desc 'Microsoft has released additional settings to enhance the configuration of the Microsoft Authenticator application. These settings provide additional information and context to users who receive MFA passwordless and push requests, such as geographic location the request came from, the requesting application and requiring a number match.
+control "microsoft-365-foundations-5.2.3.1" do
+  title "Ensure Microsoft Authenticator is configured to protect against MFA fatigue"
+  desc "Microsoft has released additional settings to enhance the configuration of the Microsoft Authenticator application. These settings provide additional information and context to users who receive MFA passwordless and push requests, such as geographic location the request came from, the requesting application and requiring a number match.
         Ensure the following are Enabled.
             • Require number matching for push notifications
             • Show application name in push and passwordless notifications
             • Show geographic location in push and passwordless notifications
-        NOTE: On February 27, 2023 Microsoft started enforcing number matching tenant-wide for all users using Microsoft Authenticator.'
-    
-    desc 'check'
-    'To audit using the UI:
+        NOTE: On February 27, 2023 Microsoft started enforcing number matching tenant-wide for all users using Microsoft Authenticator."
+
+  desc "check",
+       "To audit using the UI:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click to expand Protection > Authentication methods select Policies.
         3. Under Method select Microsoft Authenticator.
@@ -20,10 +20,10 @@ control 'microsoft-365-foundations-5.2.3.1' do
             o Require number matching for push notifications Status is set to Enabled, Target All users
             o Show application name in push and passwordless notifications is set to Enabled, Target All users
             o Show geographic location in push and passwordless notifications is set to Enabled, Target All users
-        9. In each setting select Exclude and verify only groups are present (i.e. Break Glass accounts).'
-    
-    desc 'fix'
-    'To remediate using the UI:
+        9. In each setting select Exclude and verify only groups are present (i.e. Break Glass accounts)."
+
+  desc "fix",
+       "To remediate using the UI:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click to expand Protection > Authentication methods select Policies.
         3. Select Microsoft Authenticator
@@ -33,17 +33,17 @@ control 'microsoft-365-foundations-5.2.3.1' do
             o Require number matching for push notifications Status is set to Enabled, Target All users
             o Show application name in push and passwordless notifications is set to Enabled, Target All users
             o Show geographic location in push and passwordless notifications is set to Enabled, Target All users
-        Note: Valid groups such as break glass accounts can be excluded per organization policy.'
-    
-    impact 0.5
-    tag severity: 'medium'
-    tag cis_controls: [{ '8' => ['6.4'] }]
+        Note: Valid groups such as break glass accounts can be excluded per organization policy."
 
-    ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-authentication-default-enablement'
-    ref 'https://techcommunity.microsoft.com/t5/microsoft-entra-azure-ad-blog/defend-your-users-from-mfa-fatigue-attacks/ba-p/2365677'
-    ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/how-to-mfa-number-match'
+  impact 0.5
+  tag severity: "medium"
+  tag cis_controls: [{ "8" => ["6.4"] }]
 
-    describe 'manual' do
-        skip 'manual'
-    end
+  ref "https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-authentication-default-enablement"
+  ref "https://techcommunity.microsoft.com/t5/microsoft-entra-azure-ad-blog/defend-your-users-from-mfa-fatigue-attacks/ba-p/2365677"
+  ref "https://learn.microsoft.com/en-us/azure/active-directory/authentication/how-to-mfa-number-match"
+
+  describe "This control's test logic needs to be implemented." do
+    skip "This control's test logic needs to be implemented."
+  end
 end

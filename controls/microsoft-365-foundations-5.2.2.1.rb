@@ -1,10 +1,10 @@
-control 'microsoft-365-foundations-5.2.2.1' do
-    title 'Ensure multifactor authentication is enabled for all users in administrative roles'
-    desc 'Multifactor authentication is a process that requires an additional form of identification during the sign-in process, such as a code from a mobile device or a fingerprint scan, to enhance security.
-        Ensure users in administrator roles have MFA capabilities enabled.'
-    
-    desc 'check'
-    'To audit using the UI:
+control "microsoft-365-foundations-5.2.2.1" do
+  title "Ensure multifactor authentication is enabled for all users in administrative roles"
+  desc "Multifactor authentication is a process that requires an additional form of identification during the sign-in process, such as a code from a mobile device or a fingerprint scan, to enhance security.
+        Ensure users in administrator roles have MFA capabilities enabled."
+
+  desc "check",
+       "To audit using the UI:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click to expand Protection > Conditional Access select Policies.
         3. Review the list of policies and ensure that there is a policy meeting at least the following criteria:
@@ -18,12 +18,12 @@ control 'microsoft-365-foundations-5.2.2.1' do
         3. Select Recommended actions.
         4. Click on Ensure multifactor authentication is enabled for all users in administrative roles.
         5. Review the number of Admin users who do not have MFA configured.
-    This information is also available via the Microsoft Graph Security API: 
+    This information is also available via the Microsoft Graph Security API:
         GET https://graph.microsoft.com/beta/security/secureScores
-    Note: A list of required Directory roles can be found in the Remediation section.'
+    Note: A list of required Directory roles can be found in the Remediation section."
 
-    desc 'fix'
-    "To remediate using the UI:
+  desc "fix",
+       "To remediate using the UI:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click expand Protection > Conditional Access select Policies.
         3. Click New policy.
@@ -51,14 +51,13 @@ control 'microsoft-365-foundations-5.2.2.1' do
         • User administrator
     Note: Report-only is an acceptable first stage when introducing any CA policy. The control, however, is not complete until the policy is on."
 
-    impact 0.5
-    tag severity: 'medium'
-    tag cis_controls: [{ '8' => ['6.5'] }, { '7' => ['16.3'] }]
+  impact 0.5
+  tag severity: "medium"
+  tag cis_controls: [{ "8" => ["6.5"] }, { "7" => ["16.3"] }]
 
-    ref 'https://learn.microsoft.com/en-us/graph/api/resources/security-api-overview?view=graph-rest-beta'
+  ref "https://learn.microsoft.com/en-us/graph/api/resources/security-api-overview?view=graph-rest-beta"
 
-    describe 'manual' do
-        skip 'manual'
-    end
+  describe "This control's test logic needs to be implemented." do
+    skip "This control's test logic needs to be implemented."
+  end
 end
-    

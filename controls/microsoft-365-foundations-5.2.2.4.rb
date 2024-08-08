@@ -1,6 +1,6 @@
-control 'microsoft-365-foundations-5.2.2.4' do
-    title 'Ensure Sign-in frequency is enabled and browser sessions are not persistent for Administrative users'
-    desc 'In complex deployments, organizations might have a need to restrict authentication sessions. Conditional Access policies allow for the targeting of specific user accounts. Some scenarios might include:
+control "microsoft-365-foundations-5.2.2.4" do
+  title "Ensure Sign-in frequency is enabled and browser sessions are not persistent for Administrative users"
+  desc 'In complex deployments, organizations might have a need to restrict authentication sessions. Conditional Access policies allow for the targeting of specific user accounts. Some scenarios might include:
             • Resource access from an unmanaged or shared device
             • Access to sensitive information from an external network
             • High-privileged users
@@ -8,17 +8,17 @@ control 'microsoft-365-foundations-5.2.2.4' do
         Ensure Sign-in frequency does not exceed 4 hours for E3 tenants, or 24 hours for E5 tenants using Privileged Identity Management.
         Ensure Persistent browser session is set to Never persist
         NOTE: This CA policy can be added to the previous CA policy in this benchmark "Ensure multifactor authentication is enabled for all users in administrative roles"'
-    
-    desc 'check'
-    'Ensure Sign-in frequency is enabled and browser sessions are not persistent for Administrative users:
+
+  desc "check",
+       "Ensure Sign-in frequency is enabled and browser sessions are not persistent for Administrative users:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
         2. Click to expand Protection > Conditional Access Select Policies.
         3. Review the list of policies and ensure that there is a policy that have Sign-in frequency set to the time determined by your organization and that Persistent browser session is set to Never persistent.
         4. Ensure Sign-in frequency does not exceed 4 hours for E3 tenants. E5 tenants using PIM may be set to a maximum of 24 hours.
-            • A list of directory role applying to Administrators can be found in the remediation section.'
-    
-    desc 'fix'
-    "To configure Sign-in frequency and browser sessions persistence for Administrative users:
+            • A list of directory role applying to Administrators can be found in the remediation section."
+
+  desc "fix",
+       "To configure Sign-in frequency and browser sessions persistence for Administrative users:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
         2. Click to expand Protection > Conditional Access Select Policies.
         3. Click New policy
@@ -46,14 +46,14 @@ control 'microsoft-365-foundations-5.2.2.4' do
         • Security administrator
         • SharePoint administrator
         • User administrator"
-    
-    impact 0.5
-    tag severity: 'medium'
-    tag cis_controls: [{ '8' => ['4.3'] }, { '7' => ['16.3'] }]
 
-    ref 'https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-session-lifetime'
+  impact 0.5
+  tag severity: "medium"
+  tag cis_controls: [{ "8" => ["4.3"] }, { "7" => ["16.3"] }]
 
-    describe 'manual' do
-        skip 'manual'
-    end
+  ref "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-session-lifetime"
+
+  describe "This control's test logic needs to be implemented." do
+    skip "This control's test logic needs to be implemented."
+  end
 end

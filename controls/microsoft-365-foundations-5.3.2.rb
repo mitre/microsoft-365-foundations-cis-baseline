@@ -1,10 +1,10 @@
-control 'microsoft-365-foundations-5.3.2' do
-    title "Ensure 'Access reviews' for Guest Users are configured"
-    desc 'Access reviews enable administrators to establish an efficient automated process for reviewing group memberships, access to enterprise applications, and role assignments. These reviews can be scheduled to recur regularly, with flexible options for delegating the task of reviewing membership to different members of the organization.
-        Ensure Access reviews for Guest Users are configured to be performed no less frequently than monthly.'
+control "microsoft-365-foundations-5.3.2" do
+  title "Ensure 'Access reviews' for Guest Users are configured"
+  desc "Access reviews enable administrators to establish an efficient automated process for reviewing group memberships, access to enterprise applications, and role assignments. These reviews can be scheduled to recur regularly, with flexible options for delegating the task of reviewing membership to different members of the organization.
+        Ensure Access reviews for Guest Users are configured to be performed no less frequently than monthly."
 
-    desc 'check'
-    "Verify an access review for Guest Users is in place:
+  desc "check",
+       "Verify an access review for Guest Users is in place:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/
         2. Click to expand Identity Governance and select Access reviews
         3. Inspect the access reviews, and ensure an access review is created with the following criteria:
@@ -15,9 +15,9 @@ control 'microsoft-365-foundations-5.3.2' do
             o Scheduling: Frequency is Monthly or more frequent.
             o When completed: Auto apply results to resource is set to Enable
             o When completed: If reviewers don't respond is set to Remove access"
-    
-    desc 'fix'
-    "Create an access review for Guest Users:
+
+  desc "fix",
+       "Create an access review for Guest Users:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/
         2. Click to expand Identity Governance and select Access reviews
         3. Click New access review.
@@ -32,15 +32,15 @@ control 'microsoft-365-foundations-5.3.2' do
         12. Set If reviewers don't respond to Remove access.
         13. Check the following: Justification required, E-mail notifications, Reminders.
         14. Click Next: Review + Create and finally click Create."
-    
-    impact 0.5
-    tag severity: 'medium'
-    tag cis_controls: [{ '8' => ['5.1'] }, { '8' => ['5.3'] }]
 
-    ref 'https://learn.microsoft.com/en-us/azure/active-directory/governance/create-access-review'
-    ref 'https://learn.microsoft.com/en-us/azure/active-directory/governance/access-reviews-overview'
+  impact 0.5
+  tag severity: "medium"
+  tag cis_controls: [{ "8" => ["5.1"] }, { "8" => ["5.3"] }]
 
-    describe 'manual' do
-        skip 'manual'
-    end
+  ref "https://learn.microsoft.com/en-us/azure/active-directory/governance/create-access-review"
+  ref "https://learn.microsoft.com/en-us/azure/active-directory/governance/access-reviews-overview"
+
+  describe "This control's test logic needs to be implemented." do
+    skip "This control's test logic needs to be implemented."
+  end
 end

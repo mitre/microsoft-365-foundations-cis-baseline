@@ -1,6 +1,6 @@
-control 'microsoft-365-foundations-5.2.2.8' do
-    title 'Ensure admin center access is limited to administrative roles'
-    desc 'When a Conditional Access policy targets the Microsoft Admin Portals cloud app, the policy is enforced for tokens issued to application IDs of the following Microsoft administrative portals:
+control "microsoft-365-foundations-5.2.2.8" do
+  title "Ensure admin center access is limited to administrative roles"
+  desc "When a Conditional Access policy targets the Microsoft Admin Portals cloud app, the policy is enforced for tokens issued to application IDs of the following Microsoft administrative portals:
             • Azure portal
             • Exchange admin center
             • Microsoft 365 admin center
@@ -11,10 +11,10 @@ control 'microsoft-365-foundations-5.2.2.8' do
             • Power Platform admin center
             • SharePoint admin center
             • Microsoft Teams admin center
-        Microsoft Admin Portals should be restricted to specific pre-determined administrative roles.'
-    
-    desc 'check'
-    'To audit using the UI:
+        Microsoft Admin Portals should be restricted to specific pre-determined administrative roles."
+
+  desc "check",
+       "To audit using the UI:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click expand Protection > Conditional Access select Policies.
         3. Inspect and identify existing policies for the parameters below:
@@ -25,12 +25,12 @@ control 'microsoft-365-foundations-5.2.2.8' do
             o Grant is equal to Block Access
             o Enable policy is set to On
         4. If any of these conditions are not met, then the audit fails.
-        
-        In Directory roles > Exclude the role Global Administrator at a minimum should be selected to avoid I.T. being locked out. The organization should pre-determine roles in the exclusion list as there is not a one size fits all. Auditors and system administrators should exercise due diligence balancing operation while exercising least privilege. As the size of the organization increases so will the number of roles being utilized. A an example starting list of Administrator roles can be found under Additional Information 
+
+        In Directory roles > Exclude the role Global Administrator at a minimum should be selected to avoid I.T. being locked out. The organization should pre-determine roles in the exclusion list as there is not a one size fits all. Auditors and system administrators should exercise due diligence balancing operation while exercising least privilege. As the size of the organization increases so will the number of roles being utilized. A an example starting list of Administrator roles can be found under Additional Information
         Note: In order for PIM to function a group of users eligible for PIM roles must be excluded from the policy.
-        
+
         Additional Information:
-        
+
         Below is an example list of Administrator roles that could be excluded
             • Application administrator
             • Authentication administrator
@@ -46,10 +46,10 @@ control 'microsoft-365-foundations-5.2.2.8' do
             • Privileged role administrator
             • Security administrator
             • SharePoint administrator
-            • User administrator'
-    
-    desc 'fix'
-    'To remediate using the UI:
+            • User administrator"
+
+  desc "fix",
+       "To remediate using the UI:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click expand Protection > Conditional Access select Policies.
         3. Click New Policy and then name the policy.
@@ -59,14 +59,14 @@ control 'microsoft-365-foundations-5.2.2.8' do
         7. Confirm by clicking Select.
         8. Select Grant > Block access and click Select.
         9. Ensure Enable Policy is On or Report-only then click Create.
-    Warning: Exclude Global Administrator at a minimum to avoid being locked out. Report-only is a good option to use when testing any Conditional Access policy for the first time. Note: In order for PIM to function a group of users eligible for PIM roles must be excluded from the policy.'
+    Warning: Exclude Global Administrator at a minimum to avoid being locked out. Report-only is a good option to use when testing any Conditional Access policy for the first time. Note: In order for PIM to function a group of users eligible for PIM roles must be excluded from the policy."
 
-    impact 0.5
-    tag severity: 'medium'
+  impact 0.5
+  tag severity: "medium"
 
-    ref 'https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals'
-    
-    describe 'manual' do
-        skip 'manual'
-    end
+  ref "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals"
+
+  describe "This control's test logic needs to be implemented." do
+    skip "This control's test logic needs to be implemented."
+  end
 end

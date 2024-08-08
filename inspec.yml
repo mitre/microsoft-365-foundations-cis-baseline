@@ -1,0 +1,21 @@
+name: "cis-m365-foundations-baseline"
+title: "CIS Microsoft 365 Foundations Benchmark"
+maintainer: "MITRE SAF Team"
+copyright: "MITRE, 2024"
+copyright_email: "saf@groups.mitre.org"
+license: "Apache-2.0"
+summary: "InSpec Validation Profile for the CIS Microsoft 365 Foundations Benchmark"
+version: 3.1.0
+inspec_version: ">= 6"
+# supports:
+# - platform: azure
+#   release: '*'
+
+# depends:
+
+inputs:
+- name: disable_slow_controls
+  description: "Don't Run Long Running Controls (dev/testing only)"
+  type: Boolean
+  value: false
+  required: false

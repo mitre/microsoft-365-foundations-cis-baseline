@@ -1,6 +1,6 @@
-control 'microsoft-365-foundations-5.2.2.3' do
-    title 'Enable Conditional Access policies to block legacy authentication'
-    desc "Entra ID supports the most widely used authentication and authorization protocols including legacy authentication. This authentication pattern includes basic authentication, a widely used industry-standard method for collecting username and password information.
+control "microsoft-365-foundations-5.2.2.3" do
+  title "Enable Conditional Access policies to block legacy authentication"
+  desc "Entra ID supports the most widely used authentication and authorization protocols including legacy authentication. This authentication pattern includes basic authentication, a widely used industry-standard method for collecting username and password information.
         The following messaging protocols support legacy authentication:
             • Authenticated SMTP - Used to send authenticated email messages.
             • Autodiscover - Used by Outlook and EAS clients to find and connect to mailboxes in Exchange Online.
@@ -15,9 +15,9 @@ control 'microsoft-365-foundations-5.2.2.3' do
             • Reporting Web Services - Used to retrieve report data in Exchange Online.
             • Universal Outlook - Used by the Mail and Calendar app for Windows 10.
             • Other clients - Other protocols identified as utilizing legacy authentication."
-    
-    desc 'check'
-    'Ensure a Conditional Access policy to block legacy authentication is enabled:
+
+  desc "check",
+       "Ensure a Conditional Access policy to block legacy authentication is enabled:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click expand Protection > Conditional Access select Policies.
         3. Verify that either the policy Baseline policy: Block legacy authentication is set to On or find another with the following settings enabled:
@@ -25,23 +25,23 @@ control 'microsoft-365-foundations-5.2.2.3' do
             o Under Access controls ensure the Grant is set to Block access
             o Under Assignments ensure All users is enabled
             o Under Assignments and Users and groups ensure the Exclude is set to least one low risk account or directory role. This is required as a best practice.
-        This information is also available via the Microsoft Graph Security API: 
+        This information is also available via the Microsoft Graph Security API:
             GET https://graph.microsoft.com/beta/security/secureScores
-            
+
         More Granular Instructions:
 
         To verify basic authentication is disabled, use the Exchange Online PowerShell Module:
             1. Run the Microsoft Exchange Online PowerShell Module.
             2. Connect using Connect-ExchangeOnline.
-            3. Run the following PowerShell command: 
+            3. Run the following PowerShell command:
                 Get-OrganizationConfig | Select-Object -ExpandProperty
                 DefaultAuthenticationPolicy | ForEach { Get-AuthenticationPolicy $_ | Select-Object AllowBasicAuth* }
             4. Verify each of the basic authentication types is set to false. If no results are shown or an error is displayed, then no default authentication policy has been defined for your organization.
-            5. Verify Exchange Online users are configured to use the appropriate authentication policy (in this case Block Basic Auth) by running the following PowerShell command: 
-                Get-User -ResultSize Unlimited | Select-Object UserPrincipalName, AuthenticationPolicy'
-    
-    desc 'fix'
-    'To setup a conditional access policy to block legacy authentication, use the following steps:
+            5. Verify Exchange Online users are configured to use the appropriate authentication policy (in this case Block Basic Auth) by running the following PowerShell command:
+                Get-User -ResultSize Unlimited | Select-Object UserPrincipalName, AuthenticationPolicy"
+
+  desc "fix",
+       'To setup a conditional access policy to block legacy authentication, use the following steps:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click expand Protection > Conditional Access select Policies.
         3. Create a new policy by selecting New policy.
@@ -50,31 +50,31 @@ control 'microsoft-365-foundations-5.2.2.3' do
             o Under Access controls set the Grant section to Block access
             o Under Assignments enable All users
             o Under Assignments and Users and groups set the Exclude to be at least one low risk account or directory role. This is required as a best practice.
-        
+
         More Granular Instructions:
 
         To disable basic authentication, use the Exchange Online PowerShell Module:
             1. Run the Microsoft Exchange Online PowerShell Module.
             2. Connect using Connect-ExchangeOnline.
             3. Run the following PowerShell command:
-        *Note: If a policy exists and a command fails you may run Remove-AuthenticationPolicy first to ensure policy creation/application occurs as expected. 
-            $AuthenticationPolicy = Get-OrganizationConfig | Select-Object DefaultAuthenticationPolicy 
-            If (-not $AuthenticationPolicy.Identity) { 
-                $AuthenticationPolicy = New-AuthenticationPolicy "Block Basic Auth" 
-                Set-OrganizationConfig -DefaultAuthenticationPolicy $AuthenticationPolicy.Identity 
-            } 
-            Set-AuthenticationPolicy -Identity $AuthenticationPolicy.Identity -AllowBasicAuthActiveSync:$false -AllowBasicAuthAutodiscover:$false -AllowBasicAuthImap:$false -AllowBasicAuthMapi:$false -AllowBasicAuthOfflineAddressBook:$false -AllowBasicAuthOutlookService:$false -AllowBasicAuthPop:$false -AllowBasicAuthPowershell:$false -AllowBasicAuthReportingWebServices:$false -AllowBasicAuthRpc:$false -AllowBasicAuthSmtp:$false -AllowBasicAuthWebServices:$false 
+        *Note: If a policy exists and a command fails you may run Remove-AuthenticationPolicy first to ensure policy creation/application occurs as expected.
+            $AuthenticationPolicy = Get-OrganizationConfig | Select-Object DefaultAuthenticationPolicy
+            If (-not $AuthenticationPolicy.Identity) {
+                $AuthenticationPolicy = New-AuthenticationPolicy "Block Basic Auth"
+                Set-OrganizationConfig -DefaultAuthenticationPolicy $AuthenticationPolicy.Identity
+            }
+            Set-AuthenticationPolicy -Identity $AuthenticationPolicy.Identity -AllowBasicAuthActiveSync:$false -AllowBasicAuthAutodiscover:$false -AllowBasicAuthImap:$false -AllowBasicAuthMapi:$false -AllowBasicAuthOfflineAddressBook:$false -AllowBasicAuthOutlookService:$false -AllowBasicAuthPop:$false -AllowBasicAuthPowershell:$false -AllowBasicAuthReportingWebServices:$false -AllowBasicAuthRpc:$false -AllowBasicAuthSmtp:$false -AllowBasicAuthWebServices:$false
             Get-User -ResultSize Unlimited | ForEach-Object { Set-User -Identity $_.Identity -AuthenticationPolicy $AuthenticationPolicy.Identity -STSRefreshTokensValidFrom $([System.DateTime]::UtcNow) }'
 
-    impact 0.5
-    tag severity: 'medium'
-    tag cis_controls: [{ '8' => ['4.8'] }, { '7' => ['9.2'] }]
+  impact 0.5
+  tag severity: "medium"
+  tag cis_controls: [{ "8" => ["4.8"] }, { "7" => ["9.2"] }]
 
-    ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/disable-basic-authentication-in-exchange-online'
-    ref 'https://learn.microsoft.com/en-us/exchange/mail-flow-best-practices/how-to-set-up-a-multifunction-device-or-application-to-send-email-using-microsoft-365-or-office-365'
-    ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/deprecation-of-basic-authentication-exchange-online'
+  ref "https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/disable-basic-authentication-in-exchange-online"
+  ref "https://learn.microsoft.com/en-us/exchange/mail-flow-best-practices/how-to-set-up-a-multifunction-device-or-application-to-send-email-using-microsoft-365-or-office-365"
+  ref "https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/deprecation-of-basic-authentication-exchange-online"
 
-    describe 'manual' do
-        skip 'manual'
-    end
+  describe "This control's test logic needs to be implemented." do
+    skip "This control's test logic needs to be implemented."
+  end
 end
