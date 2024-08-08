@@ -47,9 +47,14 @@ control 'microsoft-365-foundations-1.3.2' do
         8. Set Enable policy to On and click Create.
     NOTE: To ensure that idle timeouts affect only unmanaged devices, both steps must be completed."
 
+  desc 'rationale',
+       'Ending idle sessions through an automatic process can help protect sensitive company data and will add another layer of security for end users who work on unmanaged devices that can potentially be accessed by the public. Unauthorized individuals onsite or remotely can take advantage of systems left unattended over time. Automatic timing out of sessions makes this more difficult.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.3'] }]
+  tag default_value: 'Not configured. (Idle sessions will not timeout.)'
+  tag nist: ['AC-2(5)', 'AC-11', 'AC-11(1)', 'AC-12']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/manage/idle-session-timeout-web-apps?view=o365-worldwide'
 

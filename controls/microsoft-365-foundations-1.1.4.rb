@@ -18,6 +18,9 @@ control 'microsoft-365-foundations-1.1.4' do
             Get-MgUser -All -Property UserType,UserPrincipalName | Where {$_.UserType -ne "Member"} | Format-Table UserPrincipalName, UserType
         3. Review the list of users. If nothing is returned then there are no guest users.'
 
+  desc 'rationale',
+       'Remembering Multi-Factor Authentication (MFA) for devices and browsers allows users to have the option to bypass MFA for a set number of days after performing a successful sign-in using MFA. This can enhance usability by minimizing the number of times a user may need to perform two-step verification on the same device. However, if an account or device is compromised, remembering MFA for trusted devices may affect security. Hence, it is recommended that users not be allowed to bypass MFA.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [
@@ -26,6 +29,8 @@ control 'microsoft-365-foundations-1.1.4' do
     { '7' => ['6.2'] },
     { '7' => ['16.6'] }
   ]
+  tag default_value: 'By default, Allow users to remember multi-factor authentication on devices they trust is disabled.'
+  tag nist: ['AC-2', 'AC-2(3)', 'AC-1', 'AC-2', 'AC-2(1)']
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

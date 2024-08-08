@@ -17,9 +17,14 @@ control 'microsoft-365-foundations-1.3.5' do
         4. Click the checkbox labeled Add internal phishing protection under Phishing protection.
         5. Click Save."
 
+  desc 'rationale',
+       'Enabling internal phishing protection for Microsoft Forms will prevent attackers using forms for phishing attacks by asking personal or other sensitive information and URLs.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['10.1'] }, { '8' => ['14.2'] }]
+  tag default_value: 'Internal Phishing Protection is enabled.'
+  tag nist: ['SI-3', 'AT-2(3)']
 
   ref 'https://learn.microsoft.com/en-US/microsoft-forms/administrator-settings-microsoft-forms'
   ref 'https://learn.microsoft.com/en-US/microsoft-forms/review-unblock-forms-users-detected-blocked-potential-phishing'

@@ -23,9 +23,14 @@ control 'microsoft-365-foundations-1.3.1' do
             1. Connect to the Microsoft Graph service using Connect-MgGraph -Scopes "Domain.ReadWrite.All".
             2. Run the following Microsoft Graph PowerShell command: Update-MgDomain -DomainId <Domain> -PasswordValidityPeriodInDays 2147483647 -PasswordNotificationWindowInDays 30'
 
+  desc 'rationale',
+       'Organizations such as NIST and Microsoft have updated their password policy recommendations to not arbitrarily require users to change their passwords after a specific amount of time, unless there is evidence that the password is compromised, or the user forgot it. They suggest this even for single factor (Password Only) use cases, with a reasoning that forcing arbitrary password changes on users actually make the passwords less secure. Other recommendations within this Benchmark suggest the use of MFA authentication for at least critical accounts (at minimum), which makes password expiration even less useful as well as password protection for Entra ID.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['5.2'] }, { '7' => ['4.4'] }]
+  tag default_value: 'If the property is not set, a default value of 90 days will be used'
+  tag nist: ['IA-5(1)', 'CA-9', 'SC-7', 'SC-7(5)']
 
   ref 'https://pages.nist.gov/800-63-3/sp800-63b.html'
   ref 'https://www.cisecurity.org/insights/white-papers/cis-password-policy-guide'

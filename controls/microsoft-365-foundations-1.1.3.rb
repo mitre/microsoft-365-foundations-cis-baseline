@@ -36,9 +36,13 @@ control 'microsoft-365-foundations-1.1.3' do
             3. De-Select the appropriate role.
             4. Click Save changes."
 
+  desc 'rationale',
+       'Multi-factor authentication requires an individual to present a minimum of two separate forms of authentication before access is granted. Multi-factor authentication provides additional assurance that the individual attempting to gain access is who they claim to be. With multi-factor authentication, an attacker would need to compromise at least two different authentication mechanisms, increasing the difficulty of compromise and thus reducing the risk.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['5.1'] }, { '7' => ['4.1'] }]
+  tag nist: ['AC-2', 'CM-1', 'CM-2', 'CM-6', 'CM-7', 'CM-7(1)', 'CM-9', 'SA-3', 'SA-8', 'SA-10']
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.identity.directorymanagement/get-mgdirectoryrole?view=graph-powershell-1.0'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#role-template-ids'

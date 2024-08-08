@@ -38,8 +38,14 @@ control 'microsoft-365-foundations-1.2.2' do
         3. To disable sign-in for a single account: $MBX = Get-EXOMailbox -Identity TestUser@example.com Update-MgUser -UserId $MBX.ExternalDirectoryObjectId -AccountEnabled:$false
         3. The following will block sign-in to all Shared Mailboxes. $MBX = Get-EXOMailbox -RecipientTypeDetails SharedMailbox $MBX | ForEach-Object { Update-MgUser -UserId $_.ExternalDirectoryObjectId -AccountEnabled:$false })
 
+  desc 'rationale',
+       'Conditional Access, when used as a deny list for the tenant or subscription, is able to prevent ingress or egress of traffic to countries that are outside of the scope of interest (e.g.: customers, suppliers) or jurisdiction of an organization. This is an effective way to prevent unnecessary and long-lasting exposure to international threats such as APTs.'
+
   impact 0.5
   tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['untracked'] }, { '7' => ['untracked'] }]
+  tag default_value: 'AccountEnabled: True'
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/email/about-shared-mailboxes?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/email/create-a-shared-mailbox?view=o365-worldwide#block-sign-in-for-the-shared-mailbox-account'

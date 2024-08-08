@@ -50,9 +50,14 @@ control 'microsoft-365-foundations-1.1.2' do
             * Exclude users from conditional access rules.
         Warning: If CA (conditional access) exclusion is managed by a group, this group should be added to PIM for groups (licensing required) or be created as a role-assignable group. If it is a regular security group, then users with the Group Administrators role are able to bypass CA entirely."
 
+  desc 'rationale',
+       'Multi-factor authentication requires an individual to present a minimum of two separate forms of authentication before access is granted. Multi-factor authentication provides additional assurance that the individual attempting to gain access is who they claim to be. With multi-factor authentication, an attacker would need to compromise at least two different authentication mechanisms, increasing the difficulty of compromise and thus reducing the risk.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['5.1'] }]
+  tag default_value: 'Not defined.'
+  tag nist: ['AC-2']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/security-planning#stage-1-critical-items-to-do-right-now'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access'

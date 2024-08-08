@@ -20,9 +20,19 @@ control 'microsoft-365-foundations-1.1.1' do
         4.Fill out the appropriate fields for Name, user, etc.
         5.When prompted to assign licenses select as needed Microsoft Entra ID P1 or Microsoft Entra ID P2, then click Next.
         6.Under the Option settings screen you may choose from several types of Administrative access roles. Choose Admin center access followed by the appropriate role then click"
+
+  desc 'rationale',
+       "Security defaults provide secure default settings that we manage on behalf of organizations to keep customers safe until they are ready to manage their own identity security settings.
+        For example, doing the following:
+          • Requiring all users and admins to register for MFA.
+          • Challenging users with MFA - when necessary, based on factors such as location, device, role, and task.
+          • Disabling authentication from legacy authentication clients, which can’t do MFA."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['5.4'] }, { '7' => ['4.1'] }]
+  tag default_value: 'N/A'
+  tag nist: ['AC-6(2)', 'CM-1', 'CM-2', 'CM-6', 'CM-7', 'CM-7(1)', 'CM-9', 'SA-3', 'SA-8', 'SA-10']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/add-users/add-users?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/enterprise/protect-your-global-administrator-accounts?view=o365-worldwide'

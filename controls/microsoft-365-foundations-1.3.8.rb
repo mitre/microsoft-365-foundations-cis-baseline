@@ -19,9 +19,14 @@ control 'microsoft-365-foundations-1.3.8' do
             o Uncheck: Let people in your organization share their sways with people outside your organization.
         4. Click Save."
 
+  desc 'rationale',
+       'Disable external sharing of Sway documents that can contain sensitive information to prevent accidental or arbitrary data leaks.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.8'] }, { '7' => ['13.1'] }]
+  tag default_value: 'Let people in your organization share their sways with people outside your organization - Enabled'
+  tag nist: ['CM-6', 'CM-7']
 
   ref 'https://support.microsoft.com/en-us/office/administrator-settings-for-sway-d298e79b-b6ab-44c6-9239-aa312f5784d4'
 

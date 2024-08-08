@@ -26,9 +26,15 @@ control 'microsoft-365-foundations-1.3.3' do
         2. Run the following Exchange Online PowerShell command:
             Set-SharingPolicy -Identity "Default Sharing Policy" -Enabled $False'
 
+  desc 'rationale',
+       'Attackers often spend time learning about organizations before launching an attack. Publicly available calendars can help attackers understand organizational relationships and determine when specific users may be more vulnerable to an attack, such as when they are traveling.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.8'] }, { '7' => ['14.6'] }]
+  tag default_value: 'Enabled (True)'
+  tag nist: ['CM-6', 'CM-7', 'AT-2']
+
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/manage/share-calendars-with-external-users?view=o365-worldwide'
 
   describe "This control's test logic needs to be implemented." do

@@ -18,9 +18,17 @@ control 'microsoft-365-foundations-1.3.4' do
         4. Uncheck Let users access the Office Store and Let users start trials on behalf of your organization.
         5. Click Save."
 
+  desc 'rationale',
+       "Attackers commonly use vulnerable and custom-built add-ins to access data in user applications.
+      While allowing users to install add-ins by themselves does allow them to easily acquire useful add-ins that integrate with Microsoft applications, it can represent a risk if not used and monitored carefully.
+      Disable future user's ability to install add-ins in Microsoft Word, Excel, or PowerPoint helps reduce your threat-surface and mitigate this risk."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.8'] }, { '7' => ['5.1'] }]
+  tag default_value: 'Let users access the Office Store is Checked
+                      Let users start trials on behalf of your organization is Checked'
+  tag nist: ['CM-6', 'CM-7', 'AC-2']
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

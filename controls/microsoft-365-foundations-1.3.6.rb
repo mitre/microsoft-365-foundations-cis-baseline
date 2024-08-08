@@ -31,8 +31,17 @@ control 'microsoft-365-foundations-1.3.6' do
         1. Connect to Exchange Online using Connect-ExchangeOnline.
         2. Run the following PowerShell command:
             Set-OrganizationConfig -CustomerLockBoxEnabled $true"
+
+  desc 'rationale',
+       'Enabling this feature protects organizational data against data spillage and exfiltration.'
+
   impact 0.5
   tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['untracked'] }]
+  tag default_value: 'Require approval for all data access requests - Unchecked
+                    CustomerLockboxEnabled - False'
+  tag nist: ['CM-6']
+
   ref 'https://learn.microsoft.com/en-us/azure/security/fundamentals/customer-lockbox-overview'
 
   describe "This control's test logic needs to be implemented." do
