@@ -30,3 +30,4 @@ control 'microsoft-365-foundations-1.3.3' do
     tag severity: 'medium'
     tag cis_controls: [{ '8' => ['4.8'] }, {'7' => ['14.6']}]
     ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/manage/share-calendars-with-external-users?view=o365-worldwide'
+end

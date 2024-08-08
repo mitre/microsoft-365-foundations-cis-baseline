@@ -28,5 +28,6 @@ control 'microsoft-365-foundations-6.1.1' do
 
     ref 'https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-mailboxes?view=o365-worldwide'
     ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-organizationconfig?view=exchange-ps#-auditdisabled'
+end
 
     

@@ -44,4 +44,5 @@ control 'microsoft-365-foundations-5.1.3.1' do
     ref 'https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-create-rule'
     ref 'https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-dynamic-membership'
     ref 'https://learn.microsoft.com/en-us/azure/active-directory/external-identities/use-dynamic-groups'
+end
     

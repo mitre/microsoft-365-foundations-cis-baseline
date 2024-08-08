@@ -27,3 +27,4 @@ control 'microsoft-365-foundations-5.1.5.2' do
     tag cis_controls: [{ '8' => ['3.3'] }, { '7' => ['14.6'] }]
 
     ref 'https://learn.microsoft.com/en-us/azure/active-directory/manage-apps/configure-user-consent?tabs=azure-portal&pivots=portal'
+end

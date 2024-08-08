@@ -46,3 +46,4 @@ control 'microsoft-365-foundations-2.1.9' do
     tag cis_controls: [{ '8' => ['9.5'] }, {'7' => ['7.8']}]  
 
     ref 'https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dkim-configure?view=o365-worldwide'
+end

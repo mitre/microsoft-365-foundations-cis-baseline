@@ -33,4 +33,5 @@ control 'microsoft-365-foundations-8.5.6' do
     ref 'https://learn.microsoft.com/en-us/microsoftteams/meeting-who-present-request-control#manage-who-can-present'
     ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/reducing-attack-surface-in-microsoft-teams?view=o365-worldwide#configure-meeting-settings-restrict-presenters'
     ref 'https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps'
+end
     

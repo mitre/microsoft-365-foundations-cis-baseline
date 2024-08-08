@@ -50,4 +50,5 @@ control 'microsoft-365-foundations-7.2.4' do
     tag cis_controls: [{ '8' => ['3.3'] }]
 
     ref 'https://learn.microsoft.com/en-us/sharepoint/dev/embedded/concepts/app-concepts/sharing-and-perm#container-partition'
+end
         

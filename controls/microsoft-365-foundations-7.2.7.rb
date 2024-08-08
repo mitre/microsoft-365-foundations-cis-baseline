@@ -31,4 +31,5 @@ control 'microsoft-365-foundations-7.2.7' do
     tag cis_controls: [{ '8' => ['3.3'] }]
 
     ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps'
+end
     

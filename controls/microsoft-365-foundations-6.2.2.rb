@@ -29,3 +29,4 @@ control 'microsoft-365-foundations-6.2.2' do
 
     ref 'https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/configuration-best-practices'
     ref 'https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/mail-flow-rules'
+end

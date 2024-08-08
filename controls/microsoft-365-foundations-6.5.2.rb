@@ -21,3 +21,4 @@ control 'microsoft-365-foundations-6.5.2' do
 
     ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/mailtips/mailtips'
     ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-organizationconfig?view=exchange-ps'
+end

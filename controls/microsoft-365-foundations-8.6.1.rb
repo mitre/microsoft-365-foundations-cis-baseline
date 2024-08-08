@@ -60,4 +60,5 @@ control 'microsoft-365-foundations-8.6.1' do
     tag severity: 'medium'
 
     ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/submissions-teams?view=o365-worldwide'
+end
     

@@ -24,4 +24,5 @@ control 'microsoft-365-foundations-7.3.1' do
     ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-attachments-for-spo-odfb-teams-configure?view=o365-worldwide'
     ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-malware-protection-for-spo-odfb-teams-about?view=o365-worldwide'
     ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#global-reader'
+end
     

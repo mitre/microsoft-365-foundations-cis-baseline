@@ -20,6 +20,7 @@ control 'microsoft-365-foundations-1.1.1' do
         4.Fill out the appropriate fields for Name, user, etc.
         5.When prompted to assign licenses select as needed Microsoft Entra ID P1 or Microsoft Entra ID P2, then click Next.
         6.Under the Option settings screen you may choose from several types of Administrative access roles. Choose Admin center access followed by the appropriate role then click'
+    
     impact 0.5
     tag severity: 'medium '
     tag cis_controls: [{ '8' => ['5.4'] },{ '7' => ['4.1'] }]
@@ -31,4 +32,5 @@ control 'microsoft-365-foundations-1.1.1' do
 
     describe 'manual' do
         skip 'manual'
-
+    end
+end

@@ -30,3 +30,4 @@ control 'microsoft-365-foundations-8.5.8' do
     tag cis_controls: [{ '8' => ['16.10'] }]
 
     ref 'https://learn.microsoft.com/en-US/microsoftteams/settings-policies-reference?WT.mc_id=TeamsAdminCenterCSH#meeting-engagement'
+end

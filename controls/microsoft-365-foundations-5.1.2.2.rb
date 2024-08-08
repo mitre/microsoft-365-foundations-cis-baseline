@@ -30,4 +30,5 @@ control 'microsoft-365-foundations-5.1.2.2' do
     tag cis_controls: [{ '8' => ['2.5'] }, { '7' => ['18.4'] }]
 
     ref 'https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-how-applications-are-added'
+end
     

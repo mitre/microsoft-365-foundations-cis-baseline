@@ -28,3 +28,4 @@ control 'microsoft-365-foundations-7.3.4' do
     ref 'https://learn.microsoft.com/en-us/sharepoint/allow-or-prevent-custom-script'
     ref 'https://learn.microsoft.com/en-us/sharepoint/security-considerations-of-allowing-custom-script'
     ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-sposite?view=sharepoint-ps'
+end

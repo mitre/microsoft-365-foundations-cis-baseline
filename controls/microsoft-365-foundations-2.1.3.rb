@@ -35,3 +35,4 @@ control 'microsoft-365-foundations-2.1.3' do
     impact 0.5
     tag severity: 'medium'
     tag cis_controls: [{ '8' => ['17.5'] }, {'7' => ['7.1']}, {'7' => ['8.1']}]
+end

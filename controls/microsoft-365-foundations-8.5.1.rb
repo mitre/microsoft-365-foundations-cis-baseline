@@ -30,3 +30,4 @@ control 'microsoft-365-foundations-8.5.1' do
     tag severity: 'medium'
 
     ref 'https://learn.microsoft.com/en-us/MicrosoftTeams/configure-meetings-sensitive-protection'
+end

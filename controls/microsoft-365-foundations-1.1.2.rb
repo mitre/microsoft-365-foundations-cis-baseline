@@ -24,6 +24,7 @@ control 'microsoft-365-foundations-1.1.2' do
         2. Expand Protection > Conditional Access.
         3. Inspect the conditional access rules.
         4. Ensure one of the emergency access accounts is excluded from all rules."
+        
     desc 'fix'
         "Step 1 - Create two emergency access accounts:
             1. Navigate to Microsoft 365 admin center https://admin.microsoft.com
@@ -50,12 +51,14 @@ control 'microsoft-365-foundations-1.1.2' do
             •Exclude users from conditional access rules.
         Warning: If CA (conditional access) exclusion is managed by a group, this group should be added to PIM for groups (licensing required) or be created as a role-assignable group. If it is a regular security group, then users with the Group Administrators role are able to bypass CA entirely."
 
-        impact 0.5
-        tag severity: 'medium '
-        tag cis_controls: [{ '8' => ['5.1'] }]
+    impact 0.5
+    tag severity: 'medium '
+    tag cis_controls: [{ '8' => ['5.1'] }]
 
-        ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/security-planning#stage-1-critical-items-to-do-right-now'
-        ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access'
+    ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/security-planning#stage-1-critical-items-to-do-right-now'
+    ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/security-emergency-access'
 
-        describe 'manual' do
-            skip 'manual'
+    describe 'manual' do
+        skip 'manual'
+    end
+end

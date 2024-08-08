@@ -28,5 +28,5 @@ control 'microsoft-365-foundations-1.2.1' do
 
     ref 'https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-self-service-management'
     ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/create-groups/compare-groups?view=o365-worldwide'
-
+end
         

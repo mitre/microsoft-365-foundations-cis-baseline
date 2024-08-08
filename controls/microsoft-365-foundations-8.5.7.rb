@@ -30,4 +30,4 @@ control 'microsoft-365-foundations-8.5.7' do
 
     ref 'https://learn.microsoft.com/en-us/microsoftteams/meeting-who-present-request-control'
     ref 'https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps'
-    
+end

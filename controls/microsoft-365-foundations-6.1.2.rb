@@ -72,4 +72,5 @@ control 'microsoft-365-foundations-6.1.2' do
     tag cis_controls: [{ '8' => ['8.2'] }, { '7' => ['6.2'] }]
 
     ref 'https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-mailboxes?view=o365-worldwide'
+end
     

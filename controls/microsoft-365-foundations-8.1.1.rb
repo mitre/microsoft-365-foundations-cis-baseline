@@ -30,4 +30,4 @@ control 'microsoft-365-foundations-8.1.1' do
     tag cis_controls: [{ '8' => ['3.3'] }, { '7' => ['14.7'] }]
 
     ref 'https://learn.microsoft.com/en-us/microsoft-365/enterprise/manage-skype-for-business-online-with-microsoft-365-powershell?view=o365-worldwide'
-    
+end

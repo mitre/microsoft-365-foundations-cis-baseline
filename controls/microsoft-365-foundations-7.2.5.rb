@@ -30,3 +30,4 @@ control 'microsoft-365-foundations-7.2.5' do
 
     ref 'https://learn.microsoft.com/en-us/sharepoint/turn-external-sharing-on-or-off'
     ref 'https://learn.microsoft.com/en-us/sharepoint/external-sharing-overview'
+end

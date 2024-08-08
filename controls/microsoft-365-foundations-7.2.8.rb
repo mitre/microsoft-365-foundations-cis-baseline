@@ -30,3 +30,5 @@ control 'microsoft-365-foundations-7.2.8' do
 
     describe 'manual' do
         skip 'manual'
+    end
+end

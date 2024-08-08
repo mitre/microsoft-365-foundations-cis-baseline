@@ -31,4 +31,5 @@ control 'microsoft-365-foundations-3.1.1' do
 
     ref 'https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-log-enable-disable?view=o365-worldwide'
     ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-adminauditlogconfig?view=exchange-ps'
+end
     

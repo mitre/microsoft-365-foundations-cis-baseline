@@ -35,3 +35,4 @@ control 'microsoft-365-foundations-8.5.2' do
 
     ref 'https://learn.microsoft.com/en-us/microsoftteams/anonymous-users-in-meetings'
     ref 'https://learn.microsoft.com/en-US/microsoftteams/who-can-bypass-meeting-lobby?WT.mc_id=TeamsAdminCenterCSH#overview-of-lobby-settings-and-policies'
+end

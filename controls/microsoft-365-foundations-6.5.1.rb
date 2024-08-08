@@ -23,4 +23,5 @@ control 'microsoft-365-foundations-6.5.1' do
     tag cis_controls: [{ '8' => ['3.10'] }, { '7' => ['16.3'] }, { '7' => ['16.5'] }]
 
     ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/enable-or-disable-modern-authentication-in-exchange-online'
+end
     

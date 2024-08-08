@@ -30,3 +30,4 @@ control 'microsoft-365-foundations-1.3.1' do
     ref 'https://pages.nist.gov/800-63-3/sp800-63b.html'
     ref 'https://www.cisecurity.org/insights/white-papers/cis-password-policy-guide'
     ref 'https://learn.microsoft.com/en-US/microsoft-365/admin/misc/password-policy-recommendations?view=o365-worldwide'
+end

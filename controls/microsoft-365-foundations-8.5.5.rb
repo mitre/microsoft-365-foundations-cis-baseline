@@ -29,4 +29,5 @@ control 'microsoft-365-foundations-8.5.5' do
     tag severity: 'medium'
 
     ref 'https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps#-meetingchatenabledtype'
+end
     

@@ -34,4 +34,5 @@ control 'microsoft-365-foundations-1.3.6' do
     impact 0.5
     tag severity: 'medium'
     ref 'https://learn.microsoft.com/en-us/azure/security/fundamentals/customer-lockbox-overview'
+end
     

@@ -33,3 +33,4 @@ control 'microsoft-365-foundations-7.2.9' do
 
     ref 'https://learn.microsoft.com/en-US/sharepoint/turn-external-sharing-on-or-off?WT.mc_id=365AdminCSH_spo#change-the-organization-level-external-sharing-setting'
     ref 'https://learn.microsoft.com/en-us/microsoft-365/community/sharepoint-security-a-team-effort'
+end

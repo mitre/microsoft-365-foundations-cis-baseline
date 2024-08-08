@@ -27,4 +27,6 @@ control 'microsoft-365-foundations-2.1.12' do
     
     describe 'manual' do
         skip 'manual'
+    end
+end
         

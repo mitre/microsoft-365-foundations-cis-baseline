@@ -29,4 +29,5 @@ control 'microsoft-365-foundations-5.1.2.3' do
     tag severity: 'medium'
 
     ref 'https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions#restrict-member-users-default-permissions'
+end
     

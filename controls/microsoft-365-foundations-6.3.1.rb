@@ -52,5 +52,6 @@ control 'microsoft-365-foundations-6.3.1' do
 
     ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/add-ins-for-outlook/specify-who-can-install-and-manage-add-ins?source=recommendations'
     ref 'https://learn.microsoft.com/en-us/exchange/permissions-exo/role-assignment-policies'
+end
 
     

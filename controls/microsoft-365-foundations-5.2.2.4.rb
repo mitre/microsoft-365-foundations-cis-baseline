@@ -55,3 +55,5 @@ control 'microsoft-365-foundations-5.2.2.4' do
 
     describe 'manual' do
         skip 'manual'
+    end
+end

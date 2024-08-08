@@ -34,3 +34,4 @@ control 'microsoft-365-foundations-7.2.10' do
     ref 'https://learn.microsoft.com/en-US/sharepoint/what-s-new-in-sharing-in-targeted-release?WT.mc_id=365AdminCSH_spo'
     ref 'https://learn.microsoft.com/en-US/sharepoint/turn-external-sharing-on-or-off?WT.mc_id=365AdminCSH_spo#change-the-organization-level-external-sharing-setting'
     ref 'https://learn.microsoft.com/en-us/azure/active-directory/external-identities/one-time-passcode'
+end

@@ -22,5 +22,6 @@ control 'microsoft-365-foundations-7.2.2' do
     ref 'https://learn.microsoft.com/en-us/sharepoint/sharepoint-azureb2b-integration#enabling-the-integration'
     ref 'https://learn.microsoft.com/en-us/azure/active-directory/external-identities/what-is-b2b'
     ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps'
+end
 
     
