@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-5.2.2.2" do
-  title "Ensure multifactor authentication is enabled for all users"
-  desc "Enable multifactor authentication for all users in the Microsoft 365 tenant. Users will be prompted to authenticate with a second factor upon logging in to Microsoft 365 services. The second factor is most commonly a text message to a registered mobile phone number where they type in an authorization code, or with a mobile application like Microsoft Authenticator."
+control 'microsoft-365-foundations-5.2.2.2' do
+  title 'Ensure multifactor authentication is enabled for all users'
+  desc 'Enable multifactor authentication for all users in the Microsoft 365 tenant. Users will be prompted to authenticate with a second factor upon logging in to Microsoft 365 services. The second factor is most commonly a text message to a registered mobile phone number where they type in an authorization code, or with a mobile application like Microsoft Authenticator.'
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click expand Protection > Conditional Access select Policies.
@@ -18,7 +18,7 @@ control "microsoft-365-foundations-5.2.2.2" do
         4. Click on Ensure multifactor authentication is enabled for all users.
         5. Review the list of users who do not have MFA configured."
 
-  desc "fix",
+  desc 'fix',
        "To remediate using the UI:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click expand Protection > Conditional Access select Policies.
@@ -31,10 +31,10 @@ control "microsoft-365-foundations-5.2.2.2" do
     Note: Report-only is an acceptable first stage when introducing any CA policy. The control, however, is not complete until the policy is on."
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["6.3"] }, { "7" => ["16.3"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['6.3'] }, { '7' => ['16.3'] }]
 
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa"
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-8.5.4" do
+control 'microsoft-365-foundations-8.5.4' do
   title "Ensure users dialing in can't bypass the lobby"
-  desc "This policy setting controls if users who dial in by phone can join the meeting directly or must wait in the lobby. Admittance to the meeting from the lobby is authorized by the meeting organizer, co-organizer, or presenter of the meeting."
+  desc 'This policy setting controls if users who dial in by phone can join the meeting directly or must wait in the lobby. Admittance to the meeting from the lobby is authorized by the meeting organizer, co-organizer, or presenter of the meeting.'
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com.
         2. Click to expand Meetings select Meeting policies.
@@ -14,7 +14,7 @@ control "microsoft-365-foundations-8.5.4" do
             Get-CsTeamsMeetingPolicy -Identity Global | fl AllowPSTNUsersToBypassLobby
         3. Ensure the value is False."
 
-  desc "fix",
+  desc 'fix',
        "To remediate using the UI:
         1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com.
         2. Click to expand Meetings select Meeting policies.
@@ -26,10 +26,10 @@ control "microsoft-365-foundations-8.5.4" do
             Set-CsTeamsMeetingPolicy -Identity Global -AllowPSTNUsersToBypassLobby $false"
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
 
-  ref "https://learn.microsoft.com/en-US/microsoftteams/who-can-bypass-meeting-lobby?WT.mc_id=TeamsAdminCenterCSH#choose-who-can-bypass-the-lobby-in-meetings-hosted-by-your-organization"
-  ref "https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps"
+  ref 'https://learn.microsoft.com/en-US/microsoftteams/who-can-bypass-meeting-lobby?WT.mc_id=TeamsAdminCenterCSH#choose-who-can-bypass-the-lobby-in-meetings-hosted-by-your-organization'
+  ref 'https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

@@ -1,9 +1,9 @@
-control "microsoft-365-foundations-7.3.2" do
-  title "Ensure OneDrive sync is restricted for unmanaged devices"
+control 'microsoft-365-foundations-7.3.2' do
+  title 'Ensure OneDrive sync is restricted for unmanaged devices'
   desc "Microsoft OneDrive allows users to sign in their cloud tenant account and begin syncing select folders or the entire contents of OneDrive to a local computer. By default, this includes any computer with OneDrive already installed, whether it is Azure Domain Joined or Active Directory Domain joined.
         The recommended state for this setting is Allow syncing only on computers joined to specific domains Enabled: Specify the AD domain GUID(s)"
 
-  desc "check",
+  desc 'check',
        'To audit using the UI:
         1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint
         2. Click Settings followed by OneDrive - Sync
@@ -16,7 +16,7 @@ control "microsoft-365-foundations-7.3.2" do
             Get-SPOTenantSyncClientRestriction | fl TenantRestrictionEnabled,AllowedDomainList
         3. Ensure TenantRestrictionEnabled is set to True and AllowedDomainList contains the trusted domains GUIDs from the on premises environment.'
 
-  desc "fix",
+  desc 'fix',
        'To remediate using the UI:
         1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint
         2. Click Settings then select OneDrive - Sync.
@@ -30,10 +30,10 @@ control "microsoft-365-foundations-7.3.2" do
         Note: Utilize the -BlockMacSync:$true parameter if you are not using conditional access to ensure Macs cannot sync.'
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
 
-  ref "https://learn.microsoft.com/en-US/sharepoint/allow-syncing-only-on-specific-domains?WT.mc_id=365AdminCSH_spo"
-  ref "https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps"
+  ref 'https://learn.microsoft.com/en-US/sharepoint/allow-syncing-only-on-specific-domains?WT.mc_id=365AdminCSH_spo'
+  ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

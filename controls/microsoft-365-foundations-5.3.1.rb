@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-5.3.1" do
+control 'microsoft-365-foundations-5.3.1' do
   title "Ensure 'Privileged Identity Management' is used to manage roles"
-  desc "Microsoft Entra Privileged Identity Management can be used to audit roles, allow just in time activation of roles and allow for periodic role attestation. Organizations should remove permanent members from privileged Office 365 roles and instead make them eligible, through a JIT activation workflow."
+  desc 'Microsoft Entra Privileged Identity Management can be used to audit roles, allow just in time activation of roles and allow for periodic role attestation. Organizations should remove permanent members from privileged Office 365 roles and instead make them eligible, through a JIT activation workflow.'
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
         2. Click to expand Identity Governance select Privileged Identity Management.
@@ -34,7 +34,7 @@ control "microsoft-365-foundations-5.3.1" do
             Teams Service Administrator
             User Administrator"
 
-  desc "fix",
+  desc 'fix',
        "To remediate using the UI:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
         2. Click to expand Identity Governance select Privileged Identity Management.
@@ -67,8 +67,8 @@ control "microsoft-365-foundations-5.3.1" do
             User Administrator"
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["6.1"] }, { "8" => ["6.2"] }, { "7" => ["4.1"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['6.1'] }, { '8' => ['6.2'] }, { '7' => ['4.1'] }]
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

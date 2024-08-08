@@ -1,9 +1,9 @@
-control "microsoft-365-foundations-7.2.10" do
-  title "Ensure reauthentication with verification code is restricted"
+control 'microsoft-365-foundations-7.2.10' do
+  title 'Ensure reauthentication with verification code is restricted'
   desc "This setting configures if guests who use a verification code to access the site or links are required to reauthenticate after a set number of days.
         The recommended state is 15 or less."
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint
         2. Click to expand Policies > Sharing.
@@ -17,7 +17,7 @@ control "microsoft-365-foundations-7.2.10" do
             o EmailAttestationRequired True
             o EmailAttestationReAuthDays 15 or less days."
 
-  desc "fix",
+  desc 'fix',
        "To remediate using the UI:
         1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint
         2. Click to expand Policies > Sharing.
@@ -29,11 +29,11 @@ control "microsoft-365-foundations-7.2.10" do
             Set-SPOTenant -EmailAttestationRequired $true -EmailAttestationReAuthDays 15"
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
 
-  ref "https://learn.microsoft.com/en-US/sharepoint/what-s-new-in-sharing-in-targeted-release?WT.mc_id=365AdminCSH_spo"
-  ref "https://learn.microsoft.com/en-US/sharepoint/turn-external-sharing-on-or-off?WT.mc_id=365AdminCSH_spo#change-the-organization-level-external-sharing-setting"
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/external-identities/one-time-passcode"
+  ref 'https://learn.microsoft.com/en-US/sharepoint/what-s-new-in-sharing-in-targeted-release?WT.mc_id=365AdminCSH_spo'
+  ref 'https://learn.microsoft.com/en-US/sharepoint/turn-external-sharing-on-or-off?WT.mc_id=365AdminCSH_spo#change-the-organization-level-external-sharing-setting'
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/external-identities/one-time-passcode'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

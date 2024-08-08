@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-1.3.3" do
+control 'microsoft-365-foundations-1.3.3' do
   title "Ensure 'External sharing' of calendars is not available"
-  desc "External calendar sharing allows an administrator to enable the ability for users to share calendars with anyone outside of the organization. Outside users will be sent a URL that can be used to view the calendar."
+  desc 'External calendar sharing allows an administrator to enable the ability for users to share calendars with anyone outside of the organization. Outside users will be sent a URL that can be used to view the calendar.'
 
-  desc "check",
+  desc 'check',
        'To audit using the UI:
         1. Navigate to Microsoft 365 admin center https://admin.microsoft.com.
         2. Click to expand Settings select Org settings.
@@ -14,7 +14,7 @@ control "microsoft-365-foundations-1.3.3" do
             Get-SharingPolicy -Identity "Default Sharing Policy"
         3. Verify Enabled is set to False'
 
-  desc "fix",
+  desc 'fix',
        'To remediate using the UI:
         1. Navigate to Microsoft 365 admin center https://admin.microsoft.com.
         2. Click to expand Settings select Org settings.
@@ -27,9 +27,9 @@ control "microsoft-365-foundations-1.3.3" do
             Set-SharingPolicy -Identity "Default Sharing Policy" -Enabled $False'
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["4.8"] }, { "7" => ["14.6"] }]
-  ref "https://learn.microsoft.com/en-us/microsoft-365/admin/manage/share-calendars-with-external-users?view=o365-worldwide"
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['4.8'] }, { '7' => ['14.6'] }]
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/manage/share-calendars-with-external-users?view=o365-worldwide'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

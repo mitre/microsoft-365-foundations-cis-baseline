@@ -1,9 +1,9 @@
-control "microsoft-365-foundations-7.2.9" do
-  title "Ensure guest access to a site or OneDrive will expire automatically"
+control 'microsoft-365-foundations-7.2.9' do
+  title 'Ensure guest access to a site or OneDrive will expire automatically'
   desc "This policy setting configures the expiration time for each guest that is invited to the SharePoint site or with whom users share individual files and folders with.
         The recommended state is 30 or less."
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint
         2. Click to expand Policies > Sharing.
@@ -17,7 +17,7 @@ control "microsoft-365-foundations-7.2.9" do
             o ExternalUserExpirationRequired is True.
             o ExternalUserExpireInDays is 30 or less."
 
-  desc "fix",
+  desc 'fix',
        "To remediate using the UI:
         1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint
         2. Click to expand Policies > Sharing.
@@ -29,10 +29,10 @@ control "microsoft-365-foundations-7.2.9" do
             Set-SPOTenant -ExternalUserExpireInDays 30 -ExternalUserExpirationRequired $True"
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
 
-  ref "https://learn.microsoft.com/en-US/sharepoint/turn-external-sharing-on-or-off?WT.mc_id=365AdminCSH_spo#change-the-organization-level-external-sharing-setting"
-  ref "https://learn.microsoft.com/en-us/microsoft-365/community/sharepoint-security-a-team-effort"
+  ref 'https://learn.microsoft.com/en-US/sharepoint/turn-external-sharing-on-or-off?WT.mc_id=365AdminCSH_spo#change-the-organization-level-external-sharing-setting'
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/community/sharepoint-security-a-team-effort'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-8.5.8" do
-  title "Ensure external meeting chat is off"
-  desc "This meeting policy setting controls whether users can read or write messages in external meeting chats with untrusted organizations. If an external organization is on the list of trusted organizations this setting will be ignored."
+control 'microsoft-365-foundations-8.5.8' do
+  title 'Ensure external meeting chat is off'
+  desc 'This meeting policy setting controls whether users can read or write messages in external meeting chats with untrusted organizations. If an external organization is on the list of trusted organizations this setting will be ignored.'
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com.
         2. Click to expand Meetings select Meeting policies.
@@ -14,7 +14,7 @@ control "microsoft-365-foundations-8.5.8" do
             Get-CsTeamsMeetingPolicy -Identity Global | fl AllowExternalNonTrustedMeetingChat
         3. Ensure the returned value is False."
 
-  desc "fix",
+  desc 'fix',
        "To remediate using the UI:
         1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com.
         2. Click to expand Meetings select Meeting policies.
@@ -26,10 +26,10 @@ control "microsoft-365-foundations-8.5.8" do
             Set-CsTeamsMeetingPolicy -Identity Global -AllowExternalNonTrustedMeetingChat $false"
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["16.10"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['16.10'] }]
 
-  ref "https://learn.microsoft.com/en-US/microsoftteams/settings-policies-reference?WT.mc_id=TeamsAdminCenterCSH#meeting-engagement"
+  ref 'https://learn.microsoft.com/en-US/microsoftteams/settings-policies-reference?WT.mc_id=TeamsAdminCenterCSH#meeting-engagement'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

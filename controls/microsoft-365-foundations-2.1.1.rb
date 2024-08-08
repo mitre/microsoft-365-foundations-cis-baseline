@@ -1,9 +1,9 @@
-control "microsoft-365-foundations-2.1.1" do
-  title "Ensure Safe Links for Office Applications is Enabled"
+control 'microsoft-365-foundations-2.1.1' do
+  title 'Ensure Safe Links for Office Applications is Enabled'
   desc "Enabling Safe Links policy for Office applications allows URL's that exist inside of Office documents and email applications opened by Office, Office Online and Office mobile to be processed against Defender for Office time-of-click verification and rewritten if required.
         Note: E5 Licensing includes a number of Built-in Protection policies. When auditing policies note which policy you are viewing, and keep in mind CIS recommendations often extend the Default or Build-in Policies provided by MS. In order to Pass the highest priority policy must match all settings recommended."
 
-  desc "check",
+  desc 'check',
        'Ensure Safe Links for Office Applications is Enabled:
         1. Navigate to Microsoft 365 Defender https://security.microsoft.com
         2. Under Email & collaboration select Policies & rules
@@ -43,7 +43,7 @@ control "microsoft-365-foundations-2.1.1" do
             o DeliverMessageAfterScan: True
             o DisableUrlRewrite: False'
 
-  desc "fix",
+  desc 'fix',
        'To create a Safe Links policy:
         1. Navigate to Microsoft 365 Defender https://security.microsoft.com
         2. Under Email & collaboration select Policies & rules
@@ -77,12 +77,12 @@ control "microsoft-365-foundations-2.1.1" do
             New-SafeLinksRule -Name "CIS SafeLinks" -SafeLinksPolicy "CIS SafeLinks Policy" -RecipientDomainIs (Get-AcceptedDomain).Name -Priority 0'
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["10.1"] }, { "7" => ["7.4"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['10.1'] }, { '7' => ['7.4'] }]
 
-  ref "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-links-policies-configure?view=o365-worldwide"
-  ref "https://learn.microsoft.com/en-us/powershell/module/exchange/set-safelinkspolicy?view=exchange-ps"
-  ref "https://learn.microsoft.com/en-us/defender-office-365/preset-security-policies?view=o365-worldwide"
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-links-policies-configure?view=o365-worldwide'
+  ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-safelinkspolicy?view=exchange-ps'
+  ref 'https://learn.microsoft.com/en-us/defender-office-365/preset-security-policies?view=o365-worldwide'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

@@ -1,9 +1,9 @@
-control "microsoft-365-foundations-2.4.1" do
-  title "Ensure Priority account protection is enabled and configured"
+control 'microsoft-365-foundations-2.4.1' do
+  title 'Ensure Priority account protection is enabled and configured'
   desc "Identify priority accounts to utilize Microsoft 365's advanced custom security features. This is an essential tool to bolster protection for users who are frequently targeted due to their critical positions, such as executives, leaders, managers, or others who have access to sensitive, confidential, financial, or high-priority information.
         Once these accounts are identified, several services and features can be enabled, including threat policies, enhanced sign-in protection through conditional access policies, and alert policies, enabling faster response times for incident response teams."
 
-  desc "check",
+  desc 'check',
        "Audit with a 3-step process
     Step 1: Verify Priority account protection is enabled:
         1.Navigate to Microsoft 365 Defender https://security.microsoft.com/
@@ -19,7 +19,7 @@ control "microsoft-365-foundations-2.4.1" do
         9.Select Policies & rules > Alert policy
         10.Ensure alert policies are configured for priority accounts, enabled and have a valid recipient. The tags column can be used to identify policies using a specific tag"
 
-  desc "fix",
+  desc 'fix',
        "Remediate with a 3-step process
     Step 1: Enable Priority account protection in Microsoft 365 Defender:
         1.Navigate to Microsoft 365 Defender https://security.microsoft.com/
@@ -46,11 +46,11 @@ control "microsoft-365-foundations-2.4.1" do
     NOTE: Any additional activity types may be added as needed. Above are the minimum recommended."
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["9.7"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['9.7'] }]
 
-  ref "https://learn.microsoft.com/en-us/microsoft-365/admin/setup/priority-accounts"
-  ref "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/security-recommendations-for-priority-accounts"
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/setup/priority-accounts'
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/security-recommendations-for-priority-accounts'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

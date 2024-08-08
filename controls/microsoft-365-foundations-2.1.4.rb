@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-2.1.4" do
-  title "(L2) Ensure Safe Attachments policy is enabled"
-  desc "The Safe Attachments policy helps protect users from malware in email attachments by scanning attachments for viruses, malware, and other malicious content. When an email attachment is received by a user, Safe Attachments will scan the attachment in a secure environment and provide a verdict on whether the attachment is safe or not."
+control 'microsoft-365-foundations-2.1.4' do
+  title '(L2) Ensure Safe Attachments policy is enabled'
+  desc 'The Safe Attachments policy helps protect users from malware in email attachments by scanning attachments for viruses, malware, and other malicious content. When an email attachment is received by a user, Safe Attachments will scan the attachment in a secure environment and provide a verdict on whether the attachment is safe or not.'
 
-  desc "check",
+  desc 'check',
        'Ensure Safe Attachments policy is enabled:
         1. Navigate to Microsoft 365 Defender https://security.microsoft.com.
         2. Click to expand E-mail & Collaboration select Policies & rules.
@@ -18,7 +18,7 @@ control "microsoft-365-foundations-2.1.4" do
         2. Run the following PowerShell command:
             Get-SafeAttachmentPolicy | where-object {$_.Enable -eq "True"}'
 
-  desc "fix",
+  desc 'fix',
        "To enable the Safe Attachments policy:
         1. Navigate to Microsoft 365 Defender https://security.microsoft.com.
         2. Click to expand E-mail & Collaboration select Policies & rules.
@@ -33,12 +33,12 @@ control "microsoft-365-foundations-2.1.4" do
         11. Click Next and finally Submit."
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
   tag cis_controls: [
-        { "8" => ["9.7"] },
-        { "7" => ["7.10"] },
-        { "7" => ["8.1"] }
-      ]
+    { '8' => ['9.7'] },
+    { '7' => ['7.10'] },
+    { '7' => ['8.1'] }
+  ]
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."
   end

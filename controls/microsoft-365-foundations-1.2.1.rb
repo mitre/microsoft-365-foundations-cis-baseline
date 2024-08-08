@@ -1,9 +1,9 @@
-control "microsoft-365-foundations-1.2.1" do
-  title "Ensure that only organizationally managed/approved public groups exist"
+control 'microsoft-365-foundations-1.2.1' do
+  title 'Ensure that only organizationally managed/approved public groups exist'
   desc 'Microsoft 365 Groups is the foundational membership service that drives all teamwork across Microsoft 365. With Microsoft 365 Groups, you can give a group of people access to a collection of shared resources. While there are several different group types this recommendation concerns Microsoft 365 Groups.
         In the Administration panel, when a group is created, the default privacy value is "Public".'
 
-  desc "check",
+  desc 'check',
        'Ensure only organizationally managed/approved public groups exist:
         1. Navigate to Microsoft 365 admin center https://admin.microsoft.com.
         2. Click to expand Teams & groups select Active teams & groups.
@@ -14,7 +14,7 @@ control "microsoft-365-foundations-1.2.1" do
             Get-MgGroup | where {$_.Visibility -eq "Public"} | select DisplayName,Visibility
         3. Ensure Visibility is Private for each group.'
 
-  desc "fix",
+  desc 'fix',
        "To enable only organizationally managed/approved public groups exist:
         1. Navigate to Microsoft 365 admin center https://admin.microsoft.com.
         2. Click to expand Teams & groups select Active teams & groups..
@@ -23,11 +23,11 @@ control "microsoft-365-foundations-1.2.1" do
         5. Under Privacy, select Private."
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["3.3"] }, { "7" => ["13.1"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['3.3'] }, { '7' => ['13.1'] }]
 
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-self-service-management"
-  ref "https://learn.microsoft.com/en-us/microsoft-365/admin/create-groups/compare-groups?view=o365-worldwide"
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-self-service-management'
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/create-groups/compare-groups?view=o365-worldwide'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

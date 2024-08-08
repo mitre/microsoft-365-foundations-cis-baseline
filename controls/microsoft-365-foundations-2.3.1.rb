@@ -1,11 +1,11 @@
-control "microsoft-365-foundations-2.3.1" do
-  title "Ensure the Account Provisioning Activity report is reviewed at least weekly"
-  desc "The Account Provisioning Activity report details any account provisioning that was attempted by an external application"
+control 'microsoft-365-foundations-2.3.1' do
+  title 'Ensure the Account Provisioning Activity report is reviewed at least weekly'
+  desc 'The Account Provisioning Activity report details any account provisioning that was attempted by an external application'
 
-  desc "check",
-       "To verify the report is being reviewed at least weekly, confirm that the necessary procedures are in place and being followed."
+  desc 'check',
+       'To verify the report is being reviewed at least weekly, confirm that the necessary procedures are in place and being followed.'
 
-  desc "fix",
+  desc 'fix',
        'To review the Account Provisioning Activity report:
         1.Navigate to Microsoft 365 Defender https://security.microsoft.com.
         2.Click on Audit.
@@ -23,8 +23,8 @@ control "microsoft-365-foundations-2.3.1" do
         3.Review the output.'
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["8.11"] }, { "7" => ["6.2"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['8.11'] }, { '7' => ['6.2'] }]
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."
   end

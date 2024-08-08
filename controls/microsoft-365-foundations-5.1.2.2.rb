@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-5.1.2.2" do
-  title "Ensure third party integrated applications are not allowed"
-  desc "App registration allows users to register custom-developed applications for use within the directory."
+control 'microsoft-365-foundations-5.1.2.2' do
+  title 'Ensure third party integrated applications are not allowed'
+  desc 'App registration allows users to register custom-developed applications for use within the directory.'
 
-  desc "check",
+  desc 'check',
        'To audit using the UI:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
         2. Click to expand Identity > Users select Users settings.
@@ -13,7 +13,7 @@ control "microsoft-365-foundations-5.1.2.2" do
             (Get-MgPolicyAuthorizationPolicy).DefaultUserRolePermissions | fl AllowedToCreateApps
         3. Ensure the returned value is False.'
 
-  desc "fix",
+  desc 'fix',
        'To remediate using the UI:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
         2. Click to expand Identity > Users select Users settings.
@@ -26,10 +26,10 @@ control "microsoft-365-foundations-5.1.2.2" do
             Update-MgPolicyAuthorizationPolicy -DefaultUserRolePermissions $param'
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["2.5"] }, { "7" => ["18.4"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['2.5'] }, { '7' => ['18.4'] }]
 
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-how-applications-are-added"
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-how-applications-are-added'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

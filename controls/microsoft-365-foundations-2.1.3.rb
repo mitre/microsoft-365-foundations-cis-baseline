@@ -1,9 +1,9 @@
-control "microsoft-365-foundations-2.1.3" do
-  title "Ensure notifications for internal users sending malware is Enabled"
+control 'microsoft-365-foundations-2.1.3' do
+  title 'Ensure notifications for internal users sending malware is Enabled'
   desc "Exchange Online Protection (EOP) is the cloud-based filtering service that protects organizations against spam, malware, and other email threats. EOP is included in all Microsoft 365 organizations with Exchange Online mailboxes.
         EOP uses flexible anti-malware policies for malware protection settings. These policies can be set to notify Admins of malicious activity."
 
-  desc "check",
+  desc 'check',
        "Ensure notifications for internal users sending malware is Enabled:
         1. Navigate to Microsoft 365 Defender https://security.microsoft.com.
         2. Click to expand E-mail & Collaboration select Policies & rules.
@@ -17,7 +17,7 @@ control "microsoft-365-foundations-2.1.3" do
             Get-MalwareFilterPolicy | fl Identity, EnableInternalSenderAdminNotifications, InternalSenderAdminAddress
     NOTE: Audit and Remediation guidance may focus on the Default policy however, if a Custom Policy exists in the organization's tenant then ensure the setting is set as outlined in the highest priority policy listed."
 
-  desc "fix",
+  desc 'fix',
        "To enable notifications for internal users sending malware:
         1. Navigate to Microsoft 365 Defender https://security.microsoft.com.
         2. Click to expand E-mail & Collaboration select Policies & rules.
@@ -33,12 +33,12 @@ control "microsoft-365-foundations-2.1.3" do
     NOTE: Audit and Remediation guidance may focus on the Default policy however, if a Custom Policy exists in the organization's tenant then ensure the setting is set as outlined in the highest priority policy listed."
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
   tag cis_controls: [
-        { "8" => ["17.5"] },
-        { "7" => ["7.1"] },
-        { "7" => ["8.1"] }
-      ]
+    { '8' => ['17.5'] },
+    { '7' => ['7.1'] },
+    { '7' => ['8.1'] }
+  ]
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."
   end

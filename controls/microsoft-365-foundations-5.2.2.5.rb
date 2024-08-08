@@ -1,4 +1,4 @@
-control "microsoft-365-foundations-5.2.2.5" do
+control 'microsoft-365-foundations-5.2.2.5' do
   title "Ensure 'Phishing-resistant MFA strength' is required for Administrators"
   desc "Authentication strength is a Conditional Access control that allows administrators to specify which combination of authentication methods can be used to access a resource. For example, they can make only phishing-resistant authentication methods available to access a sensitive resource. But to access a non-sensitive resource, they can allow less secure multifactor authentication (MFA) combinations, such as password + SMS.
         Microsoft has 3 built-in authentication strengths. MFA strength, Passwordless MFA strength, and Phishing-resistant MFA strength. Ensure administrator roles are using a CA policy with Phishing-resistant MFA strength.
@@ -9,7 +9,7 @@ control "microsoft-365-foundations-5.2.2.5" do
         Note: Additional steps to configure methods such as FIDO2 keys are not covered here but can be found in related MS articles in the references section. The Conditional Access policy only ensures 1 of the 3 methods is used.
         Warning: Administrators should be pre-registered for a strong authentication mechanism before this Conditional Access Policy is enforced. Additionally, as stated elsewhere in the CIS Benchmark a break-glass administrator account should be excluded from this policy to ensure unfettered access in the case of an emergency."
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click expand Protection > Conditional Access select Policies.
@@ -20,7 +20,7 @@ control "microsoft-365-foundations-5.2.2.5" do
             o Grant > Grant Access with Require authentication strength (Preview): Phishing-resistant MFA set.
         5. The policy is set to On."
 
-  desc "fix",
+  desc 'fix',
        "To remediate using the UI:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click expand Protection > Conditional Access select Policies.
@@ -50,13 +50,13 @@ control "microsoft-365-foundations-5.2.2.5" do
     Warning: Ensure administrators are pre-registered with strong authentication before enforcing the policy. After which the policy must be set to On."
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["6.5"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['6.5'] }]
 
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-authentication-passwordless#fido2-security-keys"
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/authentication/howto-authentication-passwordless-security-key"
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-authentication-strengths"
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/howto-identity-protection-configure-mfa-policy"
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-authentication-passwordless#fido2-security-keys'
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/howto-authentication-passwordless-security-key'
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-authentication-strengths'
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/howto-identity-protection-configure-mfa-policy'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-5.1.2.3" do
+control 'microsoft-365-foundations-5.1.2.3' do
   title "Ensure 'Restrict non-admin users from creating tenants' is set to 'Yes'"
   desc "Non-privileged users can create tenants in the Entra administration portal under Manage tenant. The creation of a tenant is recorded in the Audit log as category \"DirectoryManagement\" and activity \"Create Company\". Anyone who creates a tenant becomes the Global Administrator of that tenant. The newly created tenant doesn't inherit any settings or configurations."
 
-  desc "check",
+  desc 'check',
        'To audit using the UI:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/
         2. Click to expand Identity> Users > User settings.
@@ -13,7 +13,7 @@ control "microsoft-365-foundations-5.1.2.3" do
             (Get-MgPolicyAuthorizationPolicy).DefaultUserRolePermissions | Select-Object AllowedToCreateTenants
         3. Ensure the returned value is False'
 
-  desc "fix",
+  desc 'fix',
        'To remediate using the UI:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/
         2. Click to expand Identity> Users > User settings.
@@ -26,9 +26,9 @@ control "microsoft-365-foundations-5.1.2.3" do
             Update-MgPolicyAuthorizationPolicy -DefaultUserRolePermissions $params'
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
 
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions#restrict-member-users-default-permissions"
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions#restrict-member-users-default-permissions'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

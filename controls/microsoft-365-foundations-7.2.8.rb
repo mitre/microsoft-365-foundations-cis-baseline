@@ -1,10 +1,10 @@
-control "microsoft-365-foundations-7.2.8" do
-  title "Ensure external sharing is restricted by security group"
+control 'microsoft-365-foundations-7.2.8' do
+  title 'Ensure external sharing is restricted by security group'
   desc "External sharing of content can be restricted to specific security groups. This setting is global, applies to sharing in both SharePoint and OneDrive and cannot be set at the site level in SharePoint.
         The recommended state is Enabled or Checked.
         Note: Users in these security groups must be allowed to invite guests in the guest invite settings in Microsoft Entra. Identity > External Identities > External collaboration settings"
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint
         2. Click to expand Policies > Sharing.
@@ -13,7 +13,7 @@ control "microsoft-365-foundations-7.2.8" do
             o Verify Allow only users in specific security groups to share externally is checked
             o Verify Manage security groups is defined and accordance with company procedure."
 
-  desc "fix",
+  desc 'fix',
        "To remediate using the UI:
         1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint
         2. Click to expand Policies > Sharing.
@@ -23,10 +23,10 @@ control "microsoft-365-foundations-7.2.8" do
             o Define Manage security groups in accordance with company procedure."
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["6.8"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['6.8'] }]
 
-  ref "https://learn.microsoft.com/en-us/sharepoint/manage-security-groups"
+  ref 'https://learn.microsoft.com/en-us/sharepoint/manage-security-groups'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

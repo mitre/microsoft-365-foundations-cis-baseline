@@ -1,10 +1,10 @@
-control "microsoft-365-foundations-2.1.14" do
-  title "Ensure comprehensive attachment filtering is applied"
+control 'microsoft-365-foundations-2.1.14' do
+  title 'Ensure comprehensive attachment filtering is applied'
   desc "The Common Attachment Types Filter lets a user block known and custom malicious file types from being attached to emails. The policy provided by Microsoft covers 53 extensions, and an additional custom list of extensions can be defined.
         The list of 187 extensions provided in this recommendation is comprehensive but not exhaustive."
 
   # rubocop:disable Layout/LineLength
-  desc "check",
+  desc 'check',
        'Note: Utilizing the UI for auditing Anti-malware policies can be very time consuming so it is recommended to use a script like the one supplied below. To Audit using PowerShell:
             1.Connect to Exchange Online using Connect-ExchangeOnline.
             2.Run the following script:
@@ -82,7 +82,7 @@ control "microsoft-365-foundations-2.1.14" do
             4.A pass for this recommendation is made when an active policy is in place that covers all extensions except for those explicitly defined as an exception by the organization. A passing policy must also be enabled and have the EnableFileFilter parameter enabled.
             5.Review any manual steps listed in the output, exceptions and inclusions are organizational specific.
         Note: Weighting by individual extension risk is beyond the scope of this document. Organizations should evaluate these both independently and based on business need.'
-  desc "fix",
+  desc 'fix',
        'To Remediate using PowerShell:
         1.Connect to Exchange Online using Connect-ExchangeOnline.
         2.Run the following script:
@@ -116,12 +116,12 @@ control "microsoft-365-foundations-2.1.14" do
             2.Browse to Policies & rules > Threat policies > Anti-malware.'
   # rubocop:enable Layout/LineLength
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["9.6"] }, { "7" => ["7.9"] }, { "7" => ["8.1"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['9.6'] }, { '7' => ['7.9'] }, { '7' => ['8.1'] }]
 
-  ref "https://learn.microsoft.com/en-us/powershell/module/exchange/get-malwarefilterpolicy?view=exchange-ps"
-  ref "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-malware-policies-configure?view=o365-worldwide"
-  ref "https://learn.microsoft.com/en-us/deployoffice/compat/office-file-format-reference"
+  ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/get-malwarefilterpolicy?view=exchange-ps'
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-malware-policies-configure?view=o365-worldwide'
+  ref 'https://learn.microsoft.com/en-us/deployoffice/compat/office-file-format-reference'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

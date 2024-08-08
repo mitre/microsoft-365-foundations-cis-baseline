@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-2.1.10" do
-  title "Ensure DMARC Records for all Exchange Online domains are published"
-  desc "DMARC, or Domain-based Message Authentication, Reporting, and Conformance, assists recipient mail systems in determining the appropriate action to take when messages from a domain fail to meet SPF or DKIM authentication criteria."
+control 'microsoft-365-foundations-2.1.10' do
+  title 'Ensure DMARC Records for all Exchange Online domains are published'
+  desc 'DMARC, or Domain-based Message Authentication, Reporting, and Conformance, assists recipient mail systems in determining the appropriate action to take when messages from a domain fail to meet SPF or DKIM authentication criteria.'
 
-  desc "check",
+  desc 'check',
        "Ensure DMARC Records for all Exchange Online domains are published:
         1.Open a command prompt.
         2.For each of the Accepted Domains in Exchange Online run the following in PowerShell:
@@ -19,7 +19,7 @@ control "microsoft-365-foundations-2.1.10" do
             Resolve-DnsName _dmarc.[tenant].onmicrosoft.com txt
         5.Ensure the record meets the same criteria listed in step #3."
 
-  desc "fix",
+  desc 'fix',
        "To add DMARC records, use the following steps:
         1.For each Exchange Online Accepted Domain, add the following record to DNS: Record: _dmarc.domain1.com Type: TXT Value: v=DMARC1; p=none; rua=mailto:<rua-report@example.com>; ruf=mailto:<ruf-report@example.com>
         2.This will create a basic DMARC policy that will allow the organization to start monitoring message statistics.
@@ -33,11 +33,11 @@ control "microsoft-365-foundations-2.1.10" do
     Note: The remediation portion involves a multi-staged approach over a period of time. First, a baseline of the current state of email will be established with p=none and rua and ruf. Once the environment is better understood and reports have been analyzed an organization will move to the final state with dmarc record values as outlined in the audit section."
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["9.5"] }, { "7" => ["7.8"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['9.5'] }, { '7' => ['7.8'] }]
 
-  ref "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/email-authentication-dmarc-configure?view=o365-worldwide"
-  ref "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/how-to-enable-dmarc-reporting-for-microsoft-online-email-routing-address-moera-and-parked-domains?view=o365-worldwide"
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/email-authentication-dmarc-configure?view=o365-worldwide'
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/how-to-enable-dmarc-reporting-for-microsoft-online-email-routing-address-moera-and-parked-domains?view=o365-worldwide'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

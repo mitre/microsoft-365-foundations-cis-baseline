@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-8.5.3" do
-  title "Ensure only people in my org can bypass the lobby"
+control 'microsoft-365-foundations-8.5.3' do
+  title 'Ensure only people in my org can bypass the lobby'
   desc "This policy setting controls who can join a meeting directly and who must wait in the lobby until they're admitted by an organizer, co-organizer, or presenter of the meeting."
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com.
         2. Click to expand Meetings select Meeting policies.
@@ -14,7 +14,7 @@ control "microsoft-365-foundations-8.5.3" do
             Get-CsTeamsMeetingPolicy -Identity Global | fl AutoAdmittedUsers
         3. Ensure the returned value is EveryoneInCompanyExcludingGuests"
 
-  desc "fix",
+  desc 'fix',
        'To remediate using the UI:
         1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com.
         2. Click to expand Meetings select Meeting policies.
@@ -26,11 +26,11 @@ control "microsoft-365-foundations-8.5.3" do
             Set-CsTeamsMeetingPolicy -Identity Global -AutoAdmittedUsers "EveryoneInCompanyExcludingGuests"'
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["6.8"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['6.8'] }]
 
-  ref "https://learn.microsoft.com/en-US/microsoftteams/who-can-bypass-meeting-lobby?WT.mc_id=TeamsAdminCenterCSH"
-  ref "https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps"
+  ref 'https://learn.microsoft.com/en-US/microsoftteams/who-can-bypass-meeting-lobby?WT.mc_id=TeamsAdminCenterCSH'
+  ref 'https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

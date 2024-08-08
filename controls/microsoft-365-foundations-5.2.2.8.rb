@@ -1,5 +1,5 @@
-control "microsoft-365-foundations-5.2.2.8" do
-  title "Ensure admin center access is limited to administrative roles"
+control 'microsoft-365-foundations-5.2.2.8' do
+  title 'Ensure admin center access is limited to administrative roles'
   desc "When a Conditional Access policy targets the Microsoft Admin Portals cloud app, the policy is enforced for tokens issued to application IDs of the following Microsoft administrative portals:
             • Azure portal
             • Exchange admin center
@@ -13,7 +13,7 @@ control "microsoft-365-foundations-5.2.2.8" do
             • Microsoft Teams admin center
         Microsoft Admin Portals should be restricted to specific pre-determined administrative roles."
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click expand Protection > Conditional Access select Policies.
@@ -48,7 +48,7 @@ control "microsoft-365-foundations-5.2.2.8" do
             • SharePoint administrator
             • User administrator"
 
-  desc "fix",
+  desc 'fix',
        "To remediate using the UI:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click expand Protection > Conditional Access select Policies.
@@ -62,9 +62,9 @@ control "microsoft-365-foundations-5.2.2.8" do
     Warning: Exclude Global Administrator at a minimum to avoid being locked out. Report-only is a good option to use when testing any Conditional Access policy for the first time. Note: In order for PIM to function a group of users eligible for PIM roles must be excluded from the policy."
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
 
-  ref "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals"
+  ref 'https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

@@ -1,9 +1,9 @@
-control "microsoft-365-foundations-2.1.6" do
-  title "Ensure Exchange Online Spam Policies are set to notify administrators"
+control 'microsoft-365-foundations-2.1.6' do
+  title 'Ensure Exchange Online Spam Policies are set to notify administrators'
   desc "In Microsoft 365 organizations with mailboxes in Exchange Online or standalone Exchange Online Protection (EOP) organizations without Exchange Online mailboxes, email messages are automatically protected against spam (junk email) by EOP.
         Configure Exchange Online Spam Policies to copy emails and notify someone when a sender in the organization has been blocked for sending spam emails."
 
-  desc "check",
+  desc 'check',
        "Ensure Exchange Online Spam Policies are set to notify administrators:
         1. Navigate to Microsoft 365 Defender https://security.microsoft.com.
         2. Click to expand Email & collaboration select Policies & rules > Threat policies.
@@ -17,7 +17,7 @@ control "microsoft-365-foundations-2.1.6" do
         3. Verify both BccSuspiciousOutboundMail and NotifyOutboundSpam are set to True and the email addresses to be notified are correct.
     Note: Audit and Remediation guidance may focus on the Default policy however, if a Custom Policy exists in the organization's tenant then ensure the setting is set as outlined in the highest priority policy listed."
 
-  desc "fix",
+  desc 'fix',
        "To set the Exchange Online Spam Policies:
         1. Navigate to Microsoft 365 Defender https://security.microsoft.com.
         2. Click to expand Email & collaboration select Policies & rules> Threat policies.
@@ -39,12 +39,12 @@ control "microsoft-365-foundations-2.1.6" do
     Note: Audit and Remediation guidance may focus on the Default policy however, if a Custom Policy exists in the organization's tenant then ensure the setting is set as outlined in the highest priority policy listed."
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
   tag cis_controls: [
-        { "8" => ["17.5"] },
-        { "7" => ["7.9"] },
-        { "7" => ["7.10"] }
-      ]
+    { '8' => ['17.5'] },
+    { '7' => ['7.9'] },
+    { '7' => ['7.10'] }
+  ]
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."
   end

@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-2.1.5" do
-  title "Ensure Safe Attachments for SharePoint, OneDrive, and Microsoft Teams is Enabled"
-  desc "Safe Attachments for SharePoint, OneDrive, and Microsoft Teams scans these services for malicious files."
+control 'microsoft-365-foundations-2.1.5' do
+  title 'Ensure Safe Attachments for SharePoint, OneDrive, and Microsoft Teams is Enabled'
+  desc 'Safe Attachments for SharePoint, OneDrive, and Microsoft Teams scans these services for malicious files.'
 
-  desc "check",
+  desc 'check',
        "Ensure Safe Attachments for SharePoint, OneDrive, and Microsoft Teams is Enabled:
         1. Navigate to Microsoft 365 Defender https://security.microsoft.com
         2. Under Email & collaboration select Policies & rules
@@ -20,7 +20,7 @@ control "microsoft-365-foundations-2.1.5" do
             EnableSafeDocs : True
             AllowSafeDocsOpen : False"
 
-  desc "fix",
+  desc 'fix',
        "To enable Safe Attachments for SharePoint, OneDrive, and Microsoft Teams:
         1. Navigate to Microsoft 365 Defender https://security.microsoft.com
         2. Under Email & collaboration select Policies & rules
@@ -36,13 +36,13 @@ control "microsoft-365-foundations-2.1.5" do
             Set-AtpPolicyForO365 -EnableATPForSPOTeamsODB $true -EnableSafeDocs $true -AllowSafeDocsOpen $false"
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
   tag cis_controls: [
-        { "8" => ["9.7"] },
-        { "8" => ["10.1"] },
-        { "7" => ["7.10"] },
-        { "7" => ["8.1"] }
-      ]
+    { '8' => ['9.7'] },
+    { '8' => ['10.1'] },
+    { '7' => ['7.10'] },
+    { '7' => ['8.1'] }
+  ]
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."
   end

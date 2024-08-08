@@ -1,9 +1,9 @@
-control "microsoft-365-foundations-5.1.3.1" do
-  title "Ensure a dynamic group for guest users is created"
+control 'microsoft-365-foundations-5.1.3.1' do
+  title 'Ensure a dynamic group for guest users is created'
   desc "A dynamic group is a dynamic configuration of security group membership for Microsoft Entra ID. Administrators can set rules to populate groups that are created in Entra ID based on user attributes (such as userType, department, or country/region). Members can be automatically added to or removed from a security group based on their attributes.
         The recommended state is to create a dynamic group that includes guest accounts."
 
-  desc "check",
+  desc 'check',
        'Ensure a dynamic guest group is created:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
         2. Click to expand Identity > Groups select All groups.
@@ -19,7 +19,7 @@ control "microsoft-365-foundations-5.1.3.1" do
             $groups | ft DisplayName,GroupTypes,MembershipRule
         3. Look for a dynamic group containing the rule (user.userType -eq "Guest")'
 
-  desc "fix",
+  desc 'fix',
        %q{Create a dynamic guest group:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
         2. Click to expand Identity > Groups select All groups.
@@ -37,12 +37,12 @@ control "microsoft-365-foundations-5.1.3.1" do
         2. In the script below edit DisplayName and MailNickname as needed and run:
             $params = @{ DisplayName = "Dynamic Test Group" MailNickname = "DynGuestUsers" MailEnabled = $false SecurityEnabled = $true GroupTypes = "DynamicMembership" MembershipRule = '(user.userType -eq "Guest")' MembershipRuleProcessingState = "On" } New-MgGroup @params}
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["3.3"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['3.3'] }]
 
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-create-rule"
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-dynamic-membership"
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/external-identities/use-dynamic-groups"
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-create-rule'
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-dynamic-membership'
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/external-identities/use-dynamic-groups'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

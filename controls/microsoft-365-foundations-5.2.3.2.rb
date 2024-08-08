@@ -1,5 +1,5 @@
-control "microsoft-365-foundations-5.2.3.2" do
-  title "Ensure custom banned passwords lists are used"
+control 'microsoft-365-foundations-5.2.3.2' do
+  title 'Ensure custom banned passwords lists are used'
   desc "With Entra Password Protection, default global banned password lists are automatically applied to all users in an Entra ID tenant. To support business and security needs, custom banned password lists can be defined. When users change or reset their passwords, these banned password lists are checked to enforce the use of strong passwords.
         A custom banned password list should include some of the following examples:
             • Brand names
@@ -8,7 +8,7 @@ control "microsoft-365-foundations-5.2.3.2" do
             • Company-specific internal terms
             • Abbreviations that have specific company meaning"
 
-  desc "check",
+  desc 'check',
        "Ensure a custom banned password list is in place:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/
         2. Click to expand Protection > Authentication methods
@@ -16,7 +16,7 @@ control "microsoft-365-foundations-5.2.3.2" do
         4. Verify Enforce custom list is set to Yes
         5. Verify Custom banned password list contains entries specific to the organization or matches a pre-determined list."
 
-  desc "fix",
+  desc 'fix',
        "Create a custom banned password list:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/
         2. Click to expand Protection > Authentication methods
@@ -32,11 +32,11 @@ control "microsoft-365-foundations-5.2.3.2" do
         • Abbreviations that have specific company meaning"
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["5.2"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['5.2'] }]
 
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-password-ban-bad#custom-banned-password-list"
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/authentication/tutorial-configure-custom-password-protection"
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-password-ban-bad#custom-banned-password-list'
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/tutorial-configure-custom-password-protection'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

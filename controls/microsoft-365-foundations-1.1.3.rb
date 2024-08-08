@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-1.1.3" do
-  title "Ensure that between two and four global admins are designated"
-  desc "More than one global administrator should be designated so a single admin can be monitored and to provide redundancy should a single admin leave an organization. Additionally, there should be no more than four global admins set for any tenant. Ideally global administrators will have no licenses assigned to them."
+control 'microsoft-365-foundations-1.1.3' do
+  title 'Ensure that between two and four global admins are designated'
+  desc 'More than one global administrator should be designated so a single admin can be monitored and to provide redundancy should a single admin leave an organization. Additionally, there should be no more than four global admins set for any tenant. Ideally global administrators will have no licenses assigned to them.'
 
-  desc "check",
+  desc 'check',
        'Ensure that between two and four global admins are designated:
         1. Navigate to the Microsoft 365 admin center https://admin.microsoft.com
         2. Select Users > Active Users.
@@ -18,7 +18,7 @@ control "microsoft-365-foundations-1.1.3" do
     This information is also available via the Microsoft Graph Security API: GET https://graph.microsoft.com/beta/security/secureScores
     Note: When tallying the number of Global Administrators the above does not account for Partner relationships. Those are located under Settings > Partner Relationships and should be reviewed on a reoccurring basis.'
 
-  desc "fix",
+  desc 'fix',
        "To correct the number of global tenant administrators:
         1. Navigate to the Microsoft 365 admin center https://admin.microsoft.com
         2. Select Users > Active Users.
@@ -37,11 +37,11 @@ control "microsoft-365-foundations-1.1.3" do
             4. Click Save changes."
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["5.1"] }, { "7" => ["4.1"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['5.1'] }, { '7' => ['4.1'] }]
 
-  ref "https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.identity.directorymanagement/get-mgdirectoryrole?view=graph-powershell-1.0"
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#role-template-ids"
+  ref 'https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.identity.directorymanagement/get-mgdirectoryrole?view=graph-powershell-1.0'
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#role-template-ids'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

@@ -1,4 +1,4 @@
-control "microsoft-365-foundations-5.3.3" do
+control 'microsoft-365-foundations-5.3.3' do
   title "Ensure 'Access reviews' for high privileged Azure AD roles are configured"
   desc "Access reviews enable administrators to establish an efficient automated process for reviewing group memberships, access to enterprise applications, and role assignments. These reviews can be scheduled to recur regularly, with flexible options for delegating the task of reviewing membership to different members of the organization.
         Ensure Access reviews for high privileged Entra ID roles are done no less frequently than weekly. These reviews should include at a minimum the roles listed below:
@@ -9,7 +9,7 @@ control "microsoft-365-foundations-5.3.3" do
             • Security Administrator
         NOTE: An access review is created for each role selected after completing the process."
 
-  desc "check",
+  desc 'check',
        "Verify access reviews for high privileged roles is in place:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/
         2. Click to expand Identity Governance and select Privileged Identity Management
@@ -30,7 +30,7 @@ control "microsoft-365-foundations-5.3.3" do
         NOTE: Reviewers will have the ability to revoke roles should be trusted individuals who understand the impact of the access reviews. The principal of separation of duties should be considered so that no one administrator is reviewing their own access levels.
         NOTE2: The setting If reviewers don't respond is recommended to be set to Remove access due to the potential of all Global Administrators being unassigned if the review is not addressed."
 
-  desc "fix",
+  desc 'fix',
        "Create an access review for high privileged roles:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/
         2. Click to expand Identity Governance and select Privileged Identity Management
@@ -54,11 +54,11 @@ control "microsoft-365-foundations-5.3.3" do
     NOTE: Reviewers will have the ability to revoke roles should be trusted individuals who understand the impact of the access reviews. The principle of separation of duties should be considered so that no one administrator is reviewing their own access levels."
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["5.1"] }, { "8" => ["5.3"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['5.1'] }, { '8' => ['5.3'] }]
 
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-create-azure-ad-roles-and-resource-roles-review"
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/governance/access-reviews-overview"
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-create-azure-ad-roles-and-resource-roles-review'
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/governance/access-reviews-overview'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

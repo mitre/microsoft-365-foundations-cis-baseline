@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-8.5.7" do
+control 'microsoft-365-foundations-8.5.7' do
   title "Ensure external participants can't give or request control"
-  desc "This policy setting allows control of who can present in meetings and who can request control of the presentation while a meeting is underway."
+  desc 'This policy setting allows control of who can present in meetings and who can request control of the presentation while a meeting is underway.'
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com.
         2. Click to expand Meetings select Meeting policies.
@@ -14,7 +14,7 @@ control "microsoft-365-foundations-8.5.7" do
             Get-CsTeamsMeetingPolicy -Identity Global | fl AllowExternalParticipantGiveRequestControl
         3. Ensure the returned value is False."
 
-  desc "fix",
+  desc 'fix',
        "To remediate using the UI:
         1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com.
         2. Click to expand Meetings select Meeting policies.
@@ -26,10 +26,10 @@ control "microsoft-365-foundations-8.5.7" do
             Set-CsTeamsMeetingPolicy -Identity Global -AllowExternalParticipantGiveRequestControl $false"
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
 
-  ref "https://learn.microsoft.com/en-us/microsoftteams/meeting-who-present-request-control"
-  ref "https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps"
+  ref 'https://learn.microsoft.com/en-us/microsoftteams/meeting-who-present-request-control'
+  ref 'https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

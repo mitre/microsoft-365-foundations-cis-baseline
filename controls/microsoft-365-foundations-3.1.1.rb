@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-3.1.1" do
-  title "Ensure Microsoft 365 audit log search is Enabled"
-  desc "When audit log search is enabled in the Microsoft Purview compliance portal, user and admin activity within the organization is recorded in the audit log and retained for 90 days. However, some organizations may prefer to use a third-party security information and event management (SIEM) application to access their auditing data. In this scenario, a global admin can choose to turn off audit log search in Microsoft 365."
+control 'microsoft-365-foundations-3.1.1' do
+  title 'Ensure Microsoft 365 audit log search is Enabled'
+  desc 'When audit log search is enabled in the Microsoft Purview compliance portal, user and admin activity within the organization is recorded in the audit log and retained for 90 days. However, some organizations may prefer to use a third-party security information and event management (SIEM) application to access their auditing data. In this scenario, a global admin can choose to turn off audit log search in Microsoft 365.'
 
-  desc "check",
+  desc 'check',
        "Ensure Microsoft 365 audit log search is Enabled:
         1.Navigate to Microsoft Purview https://compliance.microsoft.com.
         2.Select Audit to open the audit search.
@@ -14,7 +14,7 @@ control "microsoft-365-foundations-3.1.1" do
             Get-AdminAuditLogConfig | Select-Object UnifiedAuditLogIngestionEnabled
         3.Ensure UnifiedAuditLogIngestionEnabled is set to True."
 
-  desc "fix",
+  desc 'fix',
        "To enable Microsoft 365 audit log search:
         1.Navigate to Microsoft Purview https://compliance.microsoft.com.
         2.Select Audit to open the audit search.
@@ -26,11 +26,11 @@ control "microsoft-365-foundations-3.1.1" do
             Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true"
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["8.2"] }, { "7" => ["6.2"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['8.2'] }, { '7' => ['6.2'] }]
 
-  ref "https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-log-enable-disable?view=o365-worldwide"
-  ref "https://learn.microsoft.com/en-us/powershell/module/exchange/set-adminauditlogconfig?view=exchange-ps"
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-log-enable-disable?view=o365-worldwide'
+  ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-adminauditlogconfig?view=exchange-ps'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

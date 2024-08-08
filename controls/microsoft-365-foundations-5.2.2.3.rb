@@ -1,5 +1,5 @@
-control "microsoft-365-foundations-5.2.2.3" do
-  title "Enable Conditional Access policies to block legacy authentication"
+control 'microsoft-365-foundations-5.2.2.3' do
+  title 'Enable Conditional Access policies to block legacy authentication'
   desc "Entra ID supports the most widely used authentication and authorization protocols including legacy authentication. This authentication pattern includes basic authentication, a widely used industry-standard method for collecting username and password information.
         The following messaging protocols support legacy authentication:
             • Authenticated SMTP - Used to send authenticated email messages.
@@ -16,7 +16,7 @@ control "microsoft-365-foundations-5.2.2.3" do
             • Universal Outlook - Used by the Mail and Calendar app for Windows 10.
             • Other clients - Other protocols identified as utilizing legacy authentication."
 
-  desc "check",
+  desc 'check',
        "Ensure a Conditional Access policy to block legacy authentication is enabled:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click expand Protection > Conditional Access select Policies.
@@ -40,7 +40,7 @@ control "microsoft-365-foundations-5.2.2.3" do
             5. Verify Exchange Online users are configured to use the appropriate authentication policy (in this case Block Basic Auth) by running the following PowerShell command:
                 Get-User -ResultSize Unlimited | Select-Object UserPrincipalName, AuthenticationPolicy"
 
-  desc "fix",
+  desc 'fix',
        'To setup a conditional access policy to block legacy authentication, use the following steps:
         1. Navigate to the Microsoft Entra admin center https://entra.microsoft.com.
         2. Click expand Protection > Conditional Access select Policies.
@@ -67,12 +67,12 @@ control "microsoft-365-foundations-5.2.2.3" do
             Get-User -ResultSize Unlimited | ForEach-Object { Set-User -Identity $_.Identity -AuthenticationPolicy $AuthenticationPolicy.Identity -STSRefreshTokensValidFrom $([System.DateTime]::UtcNow) }'
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["4.8"] }, { "7" => ["9.2"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['4.8'] }, { '7' => ['9.2'] }]
 
-  ref "https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/disable-basic-authentication-in-exchange-online"
-  ref "https://learn.microsoft.com/en-us/exchange/mail-flow-best-practices/how-to-set-up-a-multifunction-device-or-application-to-send-email-using-microsoft-365-or-office-365"
-  ref "https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/deprecation-of-basic-authentication-exchange-online"
+  ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/disable-basic-authentication-in-exchange-online'
+  ref 'https://learn.microsoft.com/en-us/exchange/mail-flow-best-practices/how-to-set-up-a-multifunction-device-or-application-to-send-email-using-microsoft-365-or-office-365'
+  ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/deprecation-of-basic-authentication-exchange-online'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

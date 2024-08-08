@@ -1,4 +1,4 @@
-control "microsoft-365-foundations-2.4.2" do
+control 'microsoft-365-foundations-2.4.2' do
   title "Ensure Priority accounts have 'Strict protection' presets applied"
   desc "Preset security policies have been established by Microsoft, utilizing observations and experiences within datacenters to strike a balance between the exclusion of malicious content from users and limiting unwarranted disruptions. These policies can apply to all, or select users and encompass recommendations for addressing spam, malware, and phishing threats. The policy parameters are pre-determined and non-adjustable.
         Strict protection has the most aggressive protection of the 3 presets.
@@ -7,7 +7,7 @@ control "microsoft-365-foundations-2.4.2" do
             •Defender: Safe Links and Safe Attachments
         NOTE: The preset security polices cannot target Priority account TAGS currently, groups should be used instead."
 
-  desc "check",
+  desc 'check',
        "Verify strict preset security policies have been applied to Priority accounts:
         1.Navigate to Microsoft 365 Defender https://security.microsoft.com/
         2.Select to expand E-mail & collaboration.
@@ -15,7 +15,7 @@ control "microsoft-365-foundations-2.4.2" do
         4.From here visit each section in turn: Anti-phishing Anti-spam Anti-malware Safe Attachments Safe Links
         5.Ensure in each there is a policy named Strict Preset Security Policy which includes the organization's priority Accounts/Groups."
 
-  desc "fix",
+  desc 'fix',
        "Enable strict preset security policies for Priority accounts:
         1.Navigate to Microsoft 365 Defender https://security.microsoft.com/
         2.Select to expand E-mail & collaboration.
@@ -27,12 +27,12 @@ control "microsoft-365-foundations-2.4.2" do
         8.For Protected custom domains add the organization's domain name, along side other key partners.
         9.Click Next and finally Confirm"
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["9.7"] }, { "8" => ["10.7"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['9.7'] }, { '8' => ['10.7'] }]
 
-  ref "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/preset-security-policies?view=o365-worldwide"
-  ref "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/security-recommendations-for-priority-accounts"
-  ref "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/recommended-settings-for-eop-and-office365?view=o365-worldwide#impersonation-settings-in-anti-phishing-policies-in-microsoft-defender-for-office-365"
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/preset-security-policies?view=o365-worldwide'
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/security-recommendations-for-priority-accounts'
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/recommended-settings-for-eop-and-office365?view=o365-worldwide#impersonation-settings-in-anti-phishing-policies-in-microsoft-defender-for-office-365'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

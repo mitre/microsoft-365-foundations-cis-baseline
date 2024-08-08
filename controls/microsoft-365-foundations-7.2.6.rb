@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-7.2.6" do
-  title "Ensure SharePoint external sharing is managed through domain whitelist/blacklists"
-  desc "Control sharing of documents to external domains by either blocking domains or only allowing sharing with specific named domains."
+control 'microsoft-365-foundations-7.2.6' do
+  title 'Ensure SharePoint external sharing is managed through domain whitelist/blacklists'
+  desc 'Control sharing of documents to external domains by either blocking domains or only allowing sharing with specific named domains.'
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint
         2. Expand Policies then click Sharing.
@@ -14,7 +14,7 @@ control "microsoft-365-foundations-7.2.6" do
             Get-SPOTenant | fl SharingDomainRestrictionMode,SharingAllowedDomainList
         3. Ensure that SharingDomainRestrictionMode is set to AllowList and SharingAllowedDomainList contains domains trusted by the organization for external sharing."
 
-  desc "fix",
+  desc 'fix',
        'To remediate using the UI:
         1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint.
         2. Expand Policies then click Sharing.
@@ -27,12 +27,12 @@ control "microsoft-365-foundations-7.2.6" do
             Set-SPOTenant -SharingDomainRestrictionMode AllowList -SharingAllowedDomainList "domain1.com domain2.com"'
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
   tag cis_controls: [
-        { "8" => ["3.3"] },
-        { "7" => ["13.4"] },
-        { "7" => ["14.6"] }
-      ]
+    { '8' => ['3.3'] },
+    { '7' => ['13.4'] },
+    { '7' => ['14.6'] }
+  ]
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

@@ -1,10 +1,10 @@
-control "microsoft-365-foundations-9.1.2" do
-  title "Ensure external user invitations are restricted"
+control 'microsoft-365-foundations-9.1.2' do
+  title 'Ensure external user invitations are restricted'
   desc "This setting helps organizations choose whether new external users can be invited to the organization through Power BI sharing, permissions, and subscription experiences. This setting only controls the ability to invite through Power BI.
         The recommended state is Enabled for a subset of the organization or Disabled.
         Note: To invite external users to the organization, the user must also have the Microsoft Entra Guest Inviter role"
 
-  desc "check",
+  desc 'check',
        "Ensure external user invitations are restricted:
         1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal
         2. Select Tenant settings.
@@ -14,7 +14,7 @@ control "microsoft-365-foundations-9.1.2" do
             o State 2: Enabled with Specific security groups selected and defined.
     Important: If the organization doesn't actively use this feature it is recommended to keep it Disabled."
 
-  desc "fix",
+  desc 'fix',
        "Restrict external user invitations:
         1. Navigate to Microsoft Fabric https://app.powerbi.com/admin-portal
         2. Select Tenant settings.
@@ -25,11 +25,11 @@ control "microsoft-365-foundations-9.1.2" do
     Important: If the organization doesn't actively use this feature it is recommended to keep it Disabled."
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["6.8"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['6.8'] }]
 
-  ref "https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-export-sharing"
-  ref "https://learn.microsoft.com/en-us/power-bi/enterprise/service-admin-azure-ad-b2b#invite-guest-users"
+  ref 'https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-export-sharing'
+  ref 'https://learn.microsoft.com/en-us/power-bi/enterprise/service-admin-azure-ad-b2b#invite-guest-users'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

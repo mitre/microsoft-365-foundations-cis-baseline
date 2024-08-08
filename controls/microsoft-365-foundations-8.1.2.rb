@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-8.1.2" do
+control 'microsoft-365-foundations-8.1.2' do
   title "Ensure users can't send emails to a channel email address"
-  desc "Teams channel email addresses are an optional feature that allows users to email the Teams channel directly."
+  desc 'Teams channel email addresses are an optional feature that allows users to email the Teams channel directly.'
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com.
         2. Click to expand Teams select Teams settings.
@@ -13,7 +13,7 @@ control "microsoft-365-foundations-8.1.2" do
             Get-CsTeamsClientConfiguration -Identity Global | fl AllowEmailIntoChannel
         3. Ensure the returned value is False."
 
-  desc "fix",
+  desc 'fix',
        "To remediate using the UI:
         1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com.
         2. Click to expand Teams select Teams settings.
@@ -24,10 +24,10 @@ control "microsoft-365-foundations-8.1.2" do
             Set-CsTeamsClientConfiguration -Identity Global -AllowEmailIntoChannel $false"
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
 
-  ref "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/reducing-attack-surface-in-microsoft-teams?view=o365-worldwide#restricting-channel-email-messages-to-approved-domains"
-  ref "https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsclientconfiguration?view=skype-ps"
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/reducing-attack-surface-in-microsoft-teams?view=o365-worldwide#restricting-channel-email-messages-to-approved-domains'
+  ref 'https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsclientconfiguration?view=skype-ps'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

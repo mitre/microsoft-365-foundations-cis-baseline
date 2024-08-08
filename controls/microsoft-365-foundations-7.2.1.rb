@@ -1,8 +1,8 @@
-control "microsoft-365-foundations-7.2.1" do
-  title "Ensure modern authentication for SharePoint applications is required"
-  desc "Modern authentication in Microsoft 365 enables authentication features like multifactor authentication (MFA) using smart cards, certificate-based authentication (CBA), and third-party SAML identity providers."
+control 'microsoft-365-foundations-7.2.1' do
+  title 'Ensure modern authentication for SharePoint applications is required'
+  desc 'Modern authentication in Microsoft 365 enables authentication features like multifactor authentication (MFA) using smart cards, certificate-based authentication (CBA), and third-party SAML identity providers.'
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint.
         2. Click to expand Policies select Access control.
@@ -13,7 +13,7 @@ control "microsoft-365-foundations-7.2.1" do
             Get-SPOTenant | ft LegacyAuthProtocolsEnabled
         3. Ensure the returned value is False."
 
-  desc "fix",
+  desc 'fix',
        "To remediate using the UI:
         1. Navigate to SharePoint admin center https://admin.microsoft.com/sharepoint.
         2. Click to expand Policies select Access control.
@@ -26,10 +26,10 @@ control "microsoft-365-foundations-7.2.1" do
             Set-SPOTenant -LegacyAuthProtocolsEnabled $false"
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["3.10"] }, { "7" => ["16.3"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['3.10'] }, { '7' => ['16.3'] }]
 
-  ref "https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps"
+  ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

@@ -1,9 +1,9 @@
-control "microsoft-365-foundations-5.1.8.1" do
-  title "Ensure that password hash sync is enabled for hybrid deployments"
+control 'microsoft-365-foundations-5.1.8.1' do
+  title 'Ensure that password hash sync is enabled for hybrid deployments'
   desc "Password hash synchronization is one of the sign-in methods used to accomplish hybrid identity synchronization. Microsoft Entra Connect synchronizes a hash, of the hash, of a user's password from an on-premises Active Directory instance to a cloud-based Entra ID instance.
         Note: Audit and remediation procedures in this recommendation only apply to Microsoft 365 tenants operating in a hybrid configuration using Entra Connect sync."
 
-  desc "check",
+  desc 'check',
        'To audit using the UI:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
         2. Click to expand Identity > Hybrid management > Microsoft Entra Connect.
@@ -21,7 +21,7 @@ control "microsoft-365-foundations-5.1.8.1" do
             Get-MgOrganization | ft OnPremisesSyncEnabled
         3. If nothing returns then password sync is not enabled for the on premises AD.'
 
-  desc "fix",
+  desc 'fix',
        "To setup Password Hash Sync, use the following steps:
         1. Log in to the on premises server that hosts the Microsoft Entra Connect tool
         2. Double-click the Azure AD Connect icon that was created on the desktop
@@ -35,12 +35,12 @@ control "microsoft-365-foundations-5.1.8.1" do
         10. Once the configuration completes, click Exit."
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["6.7"] }, { "7" => ["16.4"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['6.7'] }, { '7' => ['16.4'] }]
 
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/hybrid/whatis-phs"
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/concept-identity-protection-risks#user-linked-detections"
-  ref "https://www.microsoft.com/en-us/download/details.aspx?id=47594"
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/hybrid/whatis-phs'
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/concept-identity-protection-risks#user-linked-detections'
+  ref 'https://www.microsoft.com/en-us/download/details.aspx?id=47594'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

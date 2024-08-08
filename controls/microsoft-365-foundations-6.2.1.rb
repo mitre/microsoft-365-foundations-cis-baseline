@@ -1,5 +1,5 @@
-control "microsoft-365-foundations-6.2.1" do
-  title "Ensure all forms of mail forwarding are blocked and/or disabled"
+control 'microsoft-365-foundations-6.2.1' do
+  title 'Ensure all forms of mail forwarding are blocked and/or disabled'
   desc "Exchange Online offers several methods of managing the flow of email messages. These are Remote domain, Transport Rules, and Anti-spam outbound policies. These methods work together to provide comprehensive coverage for potential automatic forwarding channels:
             • Outlook forwarding using inbox rules.
             • Outlook forwarding configured using OOF rule.
@@ -9,7 +9,7 @@ control "microsoft-365-foundations-6.2.1" do
         Ensure a Transport rule and Anti-spam outbound policy are used to block mail forwarding.
         NOTE: Any exclusions should be implemented based on organizational policy."
 
-  desc "check",
+  desc 'check',
        "Note: Audit is a two step procedure as follows:
         STEP 1: Transport rules To verify the mail transport rules do not forward email to external domains using the UI:
                 1. Select Exchange to open the Exchange admin center.
@@ -33,7 +33,7 @@ control "microsoft-365-foundations-6.2.1" do
                 3. In each outbound policy verify AutoForwardingMode is Off.
             Note: According to Microsoft if a recipient is defined in multiple policies of the same type (anti-spam, anti-phishing, etc.), only the policy with the highest priority is applied to the recipient. Any remaining policies of that type are not evaluated for the recipient (including the default policy). However, it is our recommendation to audit the default policy as well in the case a higher priority custom policy is removed. This will keep the organization's security posture strong."
 
-  desc "fix",
+  desc 'fix',
        "Note: Remediation is a two step procedure as follows: STEP 1: Transport rules To alter the mail transport rules so they do not forward email to external domains using the UI:
             1. Select Exchange to open the Exchange admin center.
             2. Select Mail Flow then Rules.
@@ -56,12 +56,12 @@ control "microsoft-365-foundations-6.2.1" do
             3. To remove AutoForwarding from all outbound policies you can also run: Get-HostedOutboundSpamFilterPolicy | Set-HostedOutboundSpamFilterPolicy -AutoForwardingMode Off"
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
 
-  ref "https://learn.microsoft.com/en-us/exchange/policy-and-compliance/mail-flow-rules/mail-flow-rule-procedures?view=exchserver-2019"
-  ref "https://techcommunity.microsoft.com/t5/exchange-team-blog/all-you-need-to-know-about-automatic-email-forwarding-in/ba-p/2074888#:~:text=%20%20%20Automatic%20forwarding%20option%20%20,%"
-  ref "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/outbound-spam-policies-external-email-forwarding?view=o365-worldwide"
-  ref "https://learn.microsoft.com/en-us/powershell/module/exchange/Remove-TransportRule?view=exchange-ps"
+  ref 'https://learn.microsoft.com/en-us/exchange/policy-and-compliance/mail-flow-rules/mail-flow-rule-procedures?view=exchserver-2019'
+  ref 'https://techcommunity.microsoft.com/t5/exchange-team-blog/all-you-need-to-know-about-automatic-email-forwarding-in/ba-p/2074888#:~:text=%20%20%20Automatic%20forwarding%20option%20%20,%'
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/outbound-spam-policies-external-email-forwarding?view=o365-worldwide'
+  ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/Remove-TransportRule?view=exchange-ps'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

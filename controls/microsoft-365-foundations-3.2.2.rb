@@ -1,9 +1,9 @@
-control "microsoft-365-foundations-3.2.2" do
-  title "Ensure DLP policies are enabled for Microsoft Teams"
+control 'microsoft-365-foundations-3.2.2' do
+  title 'Ensure DLP policies are enabled for Microsoft Teams'
   desc "The default Teams Data Loss Prevention (DLP) policy rule in Microsoft 365 is a preconfigured rule that is automatically applied to all Teams conversations and channels. The default rule helps prevent accidental sharing of sensitive information by detecting and blocking certain types of content that are deemed sensitive or inappropriate by the organization.
         By default, the rule includes a check for the sensitive info type Credit Card Number which is pre-defined by Microsoft."
 
-  desc "check",
+  desc 'check',
        'To audit the using the UI:
         1. Navigate to Microsoft Purview compliance portal https://compliance.microsoft.com.
         2. Under Solutions select Data loss prevention then Policies.
@@ -23,7 +23,7 @@ control "microsoft-365-foundations-3.2.2" do
         6. Verify TeamsLocationException includes only permitted exceptions.
     Note: Some tenants may not have a default policy for teams as Microsoft started creating these by default at a particular point in time. In this case a new policy will have to be created that includes a rule to protect data important to the organization such as credit cards and PII.'
 
-  desc "fix",
+  desc 'fix',
        "To remediate using the UI:
         1. Navigate to Microsoft Purview compliance portal https://compliance.microsoft.com.
         2. Under Solutions select Data loss prevention then Policies.
@@ -38,12 +38,12 @@ control "microsoft-365-foundations-3.2.2" do
     Note: Some tenants may not have a default policy for teams as Microsoft started creating these by default at a particular point in time. In this case a new policy will have to be created that includes a rule to protect data important to the organization such as credit cards and PII."
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["3.1"] }, { "7" => ["13"] }, { "7" => ["14.7"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['3.1'] }, { '7' => ['13'] }, { '7' => ['14.7'] }]
 
-  ref "https://learn.microsoft.com/en-us/powershell/exchange/connect-to-scc-powershell?view=exchange-ps"
-  ref "https://learn.microsoft.com/en-us/purview/dlp-teams-default-policy?view=o365-worldwide%2F1000"
-  ref "https://learn.microsoft.com/en-us/powershell/module/exchange/connect-ippssession?view=exchange-ps"
+  ref 'https://learn.microsoft.com/en-us/powershell/exchange/connect-to-scc-powershell?view=exchange-ps'
+  ref 'https://learn.microsoft.com/en-us/purview/dlp-teams-default-policy?view=o365-worldwide%2F1000'
+  ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/connect-ippssession?view=exchange-ps'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

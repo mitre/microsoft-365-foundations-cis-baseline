@@ -1,5 +1,5 @@
-control "microsoft-365-foundations-5.2.2.4" do
-  title "Ensure Sign-in frequency is enabled and browser sessions are not persistent for Administrative users"
+control 'microsoft-365-foundations-5.2.2.4' do
+  title 'Ensure Sign-in frequency is enabled and browser sessions are not persistent for Administrative users'
   desc 'In complex deployments, organizations might have a need to restrict authentication sessions. Conditional Access policies allow for the targeting of specific user accounts. Some scenarios might include:
             • Resource access from an unmanaged or shared device
             • Access to sensitive information from an external network
@@ -9,7 +9,7 @@ control "microsoft-365-foundations-5.2.2.4" do
         Ensure Persistent browser session is set to Never persist
         NOTE: This CA policy can be added to the previous CA policy in this benchmark "Ensure multifactor authentication is enabled for all users in administrative roles"'
 
-  desc "check",
+  desc 'check',
        "Ensure Sign-in frequency is enabled and browser sessions are not persistent for Administrative users:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
         2. Click to expand Protection > Conditional Access Select Policies.
@@ -17,7 +17,7 @@ control "microsoft-365-foundations-5.2.2.4" do
         4. Ensure Sign-in frequency does not exceed 4 hours for E3 tenants. E5 tenants using PIM may be set to a maximum of 24 hours.
             • A list of directory role applying to Administrators can be found in the remediation section."
 
-  desc "fix",
+  desc 'fix',
        "To configure Sign-in frequency and browser sessions persistence for Administrative users:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
         2. Click to expand Protection > Conditional Access Select Policies.
@@ -48,10 +48,10 @@ control "microsoft-365-foundations-5.2.2.4" do
         • User administrator"
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["4.3"] }, { "7" => ["16.3"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['4.3'] }, { '7' => ['16.3'] }]
 
-  ref "https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-session-lifetime"
+  ref 'https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-session-lifetime'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

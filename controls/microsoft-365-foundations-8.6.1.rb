@@ -1,11 +1,11 @@
-control "microsoft-365-foundations-8.6.1" do
-  title "Ensure users can report security concerns in Teams"
+control 'microsoft-365-foundations-8.6.1' do
+  title 'Ensure users can report security concerns in Teams'
   desc "User reporting settings allow a user to report a message as malicious for further analysis. This recommendation is composed of 3 different settings and all be configured to pass:
         • In the Teams admin center: On by default and controls whether users are able to report messages from Teams. When this setting is turned off, users can't report messages within Teams, so the corresponding setting in the Microsoft 365 Defender portal is irrelevant.
         • In the Microsoft 365 Defender portal: On by default for new tenants. Existing tenants need to enable it. If user reporting of messages is turned on in the Teams admin center, it also needs to be turned on the Defender portal for user reported messages to show up correctly on the User reported tab on the Submissions page.
         • Defender - Report message destinations: This applies to more than just Microsoft Teams and allows for an organization to keep their reports contained. Due to how the parameters are configured on the backend it is included in this assessment as a requirement."
 
-  desc "check",
+  desc 'check',
        "To audit using the UI:
         1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com.
         2. Click to expand Messaging select Messaging policies.
@@ -34,7 +34,7 @@ control "microsoft-365-foundations-8.6.1" do
             ReportChatMessageEnabled : False
             ReportChatMessageToCustomizedAddressEnabled : True"
 
-  desc "fix",
+  desc 'fix',
        'To remediate using the UI:
         1. Navigate to Microsoft Teams admin center https://admin.teams.microsoft.com.
         2. Click to expand Messaging select Messaging policies.
@@ -57,9 +57,9 @@ control "microsoft-365-foundations-8.6.1" do
             New-ReportSubmissionRule -Name DefaultReportSubmissionRule -ReportSubmissionPolicy DefaultReportSubmissionPolicy -SentTo $usersub'
 
   impact 0.5
-  tag severity: "medium"
+  tag severity: 'medium'
 
-  ref "https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/submissions-teams?view=o365-worldwide"
+  ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/submissions-teams?view=o365-worldwide'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

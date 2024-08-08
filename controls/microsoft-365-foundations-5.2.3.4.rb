@@ -1,9 +1,9 @@
-control "microsoft-365-foundations-5.2.3.4" do
+control 'microsoft-365-foundations-5.2.3.4' do
   title "Ensure all member users are 'MFA capable'"
   desc "Microsoft defines Multifactor authentication capable as being registered and enabled for a strong authentication method. The method must also be allowed by the authentication methods policy.
         Ensure all member users are MFA capable."
 
-  desc "check",
+  desc 'check',
        'To audit using the UI:
         1. Navigate to Microsoft Entra admin center https://entra.microsoft.com/.
         2. Click to expand Protection select Authentication methods.
@@ -20,7 +20,7 @@ control "microsoft-365-foundations-5.2.3.4" do
     Note: The CA rule must be in place for a successful deployment of Multifactor Authentication. This policy is outlined in the conditional access section 5.2.2
     Note 2: Possible exceptions include on-premises synchronization accounts.'
 
-  desc "fix",
+  desc 'fix',
        "Remediation steps will depend on the status of the personnel in question or configuration of Conditional Access policies and will not be covered in detail. Administrators should review each user identified on a case-by-case basis using the conditions below. User has never signed on:
         • Employment status should be reviewed, and appropriate action taken on the user account's roles, licensing and enablement.
     Conditional Access policy applicability:
@@ -32,13 +32,13 @@ control "microsoft-365-foundations-5.2.3.4" do
     Note: Conditional Access is covered step by step in section 5.2.2"
 
   impact 0.5
-  tag severity: "medium"
-  tag cis_controls: [{ "8" => ["6.3"] }, { "7" => ["16.3"] }]
+  tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['6.3'] }, { '7' => ['16.3'] }]
 
-  ref "https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.reports/update-mgreportauthenticationmethoduserregistrationdetail?view=graph-powershell-1.0#-ismfacapable"
-  ref "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/how-to-view-applied-conditional-access-policies"
-  ref "https://learn.microsoft.com/en-us/entra/identity/conditional-access/what-if-tool"
-  ref "https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-methods-activity"
+  ref 'https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.reports/update-mgreportauthenticationmethoduserregistrationdetail?view=graph-powershell-1.0#-ismfacapable'
+  ref 'https://learn.microsoft.com/en-us/entra/identity/monitoring-health/how-to-view-applied-conditional-access-policies'
+  ref 'https://learn.microsoft.com/en-us/entra/identity/conditional-access/what-if-tool'
+  ref 'https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-methods-activity'
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."
