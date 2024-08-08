@@ -32,6 +32,9 @@ control 'microsoft-365-foundations-2.1.4' do
         10. Leave Enable redirect unchecked.
         11. Click Next and finally Submit."
 
+  desc 'rationale',
+       "Enabling Safe Attachments policy helps protect against malware threats in email attachments by analyzing suspicious attachments in a secure, cloud-based environment before they are delivered to the user's inbox. This provides an additional layer of security and can prevent new or unseen types of malware from infiltrating the organization's network."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [
@@ -39,6 +42,9 @@ control 'microsoft-365-foundations-2.1.4' do
     { '7' => ['7.10'] },
     { '7' => ['8.1'] }
   ]
+  tag default_value: 'disabled'
+  tag nist: ['SI-3', 'SI-8', 'AU-1', 'AU-2']
+
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."
   end

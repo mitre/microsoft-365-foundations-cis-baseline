@@ -32,6 +32,9 @@ control 'microsoft-365-foundations-2.1.3' do
             Set-MalwareFilterPolicy -Identity '{Identity Name}' -EnableInternalSenderAdminNotifications $True -InternalSenderAdminAddress {admin@domain1.com}
     NOTE: Audit and Remediation guidance may focus on the Default policy however, if a Custom Policy exists in the organization's tenant then ensure the setting is set as outlined in the highest priority policy listed."
 
+  desc 'rationale',
+       'This setting alerts administrators that an internal user sent a message that contained malware. This may indicate an account or machine compromise that would need to be investigated.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [
@@ -39,6 +42,10 @@ control 'microsoft-365-foundations-2.1.3' do
     { '7' => ['7.1'] },
     { '7' => ['8.1'] }
   ]
+  tag default_value: "EnableInternalSenderAdminNotifications : False
+                      InternalSenderAdminAddress : $null"
+  tag nist: ['IR-1', 'IR-8', 'RA-5', 'AU-1', 'AU-2']
+
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."
   end

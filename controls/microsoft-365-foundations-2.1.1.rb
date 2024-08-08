@@ -82,7 +82,6 @@ control 'microsoft-365-foundations-2.1.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['10.1'] }, { '7' => ['7.4'] }]
-  tag default_value: ''
   tag nist: ['SI-3', 'RA-5', 'RA-7', 'SI-2', 'SI-2(2)']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-links-policies-configure?view=o365-worldwide'

@@ -35,6 +35,9 @@ control 'microsoft-365-foundations-2.1.5' do
         2. Run the following PowerShell command:
             Set-AtpPolicyForO365 -EnableATPForSPOTeamsODB $true -EnableSafeDocs $true -AllowSafeDocsOpen $false"
 
+  desc 'rationale',
+       "Safe Attachments for SharePoint, OneDrive, and Microsoft Teams protect organizations from inadvertently sharing malicious files. When a malicious file is detected that file is blocked so that no one can open, copy, move, or share it until further actions are taken by the organization's security team."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [
@@ -43,6 +46,8 @@ control 'microsoft-365-foundations-2.1.5' do
     { '7' => ['7.10'] },
     { '7' => ['8.1'] }
   ]
+  tag nist: ['SI-3', 'SI-8', 'AU-1', 'AU-2']
+
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."
   end
