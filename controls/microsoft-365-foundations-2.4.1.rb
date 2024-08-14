@@ -45,9 +45,22 @@ control 'microsoft-365-foundations-2.4.1' do
         19.Repeat steps 10 - 18 for the Activity field Activity is: Phishing email detected at time of delivery
     NOTE: Any additional activity types may be added as needed. Above are the minimum recommended."
 
+  desc 'rationale',
+       'Enabling priority account protection for users in Microsoft 365 is necessary to enhance
+        security for accounts with access to sensitive data and high privileges, such as CEOs,
+        CISOs, CFOs, and IT admins. These priority accounts are often targeted by spear
+        phishing or whaling attacks and require stronger protection to prevent account
+        compromise.
+        To address this, Microsoft 365 and Microsoft Defender for Office 365 offer several key
+        features that provide extra security, including the identification of incidents and alerts
+        involving priority accounts and the use of built-in custom protections designed
+        specifically for them.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['9.7'] }]
+  tag default_value: 'By default, priority accounts are undefined.'
+  tag nist: ['SI-3', 'SI-8']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/setup/priority-accounts'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/security-recommendations-for-priority-accounts'

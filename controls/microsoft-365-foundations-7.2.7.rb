@@ -26,9 +26,16 @@ control 'microsoft-365-foundations-7.2.7' do
         2. Run the following PowerShell command:
             Set-SPOTenant -DefaultSharingLinkType Direct"
 
+  desc 'rationale',
+       'By defaulting to specific people, the user will first need to consider whether or not the
+        content being shared should be accessible by the entire organization versus select
+        individuals. This aids in reinforcing the concept of least privilege.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.3'] }]
+  tag default_value: 'Only people in your organization (Internal)'
+  tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2']
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps'
 

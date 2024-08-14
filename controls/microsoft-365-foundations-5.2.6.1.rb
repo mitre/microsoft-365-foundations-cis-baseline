@@ -15,9 +15,14 @@ control 'microsoft-365-foundations-5.2.6.1' do
         3. Under Report click on Risky sign-ins.
         4. Review by Risk level (aggregate)."
 
+  desc 'rationale',
+       'Reviewing this report on a regular basis allows for identification and remediation of
+        compromised accounts.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['8.11'] }, { '7' => ['6.2'] }]
+  tag nist: ['AU-6', 'AU-6(1)', 'AU-7(1)', 'AC-1', 'AC-2', 'AC-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/overview-identity-protection'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/howto-identity-protection-remediate-unblock'

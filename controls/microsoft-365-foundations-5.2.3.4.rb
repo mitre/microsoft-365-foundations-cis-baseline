@@ -31,9 +31,19 @@ control 'microsoft-365-foundations-5.2.3.4' do
         • Review the user account in Sign-in logs. Under the Activity Details pane click the Conditional Access tab to view applied policies.
     Note: Conditional Access is covered step by step in section 5.2.2"
 
+  desc 'rationale',
+       'Multifactor authentication requires an individual to present a minimum of two separate
+        forms of authentication before access is granted.
+        Users who are not MFA Capable have never registered a strong authentication method
+        for multifactor authentication that is within policy and may not be using MFA. This could
+        be a result of having never signed in, exclusion from a Conditional Access (CA) policy
+        requiring MFA, or a CA policy does not exist. Reviewing this list of users will help
+        identify possible lapses in policy or procedure.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['6.3'] }, { '7' => ['16.3'] }]
+  tag nist: ['IA-2(1)', 'IA-2(2)', 'SI-2']
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.reports/update-mgreportauthenticationmethoduserregistrationdetail?view=graph-powershell-1.0#-ismfacapable'
   ref 'https://learn.microsoft.com/en-us/entra/identity/monitoring-health/how-to-view-applied-conditional-access-policies'

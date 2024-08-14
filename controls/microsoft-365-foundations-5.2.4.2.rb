@@ -11,9 +11,14 @@ control 'microsoft-365-foundations-5.2.4.2' do
         2. Click to expand Protection > Password reset select Audit logs.
         3. Review the list of users who have reset their passwords by setting the Date to Last 7 days and Service to Self-service Password Management"
 
+  desc 'rationale',
+       'An attacker will commonly compromise an account, then change the password to
+        something they control and can manage.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['8.11'] }, { '7' => ['6.2'] }]
+  tag nist: ['AU-6', 'AU-6(1)', 'AU-7(1)', 'AC-1', 'AC-2', 'AC-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/howto-sspr-reporting'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/troubleshoot-sspr'

@@ -34,9 +34,14 @@ control 'microsoft-365-foundations-5.2.2.7' do
         7. Click Create
     NOTE: for more information regarding risk levels refer to Microsoft's Identity Protection & Risk Doc"
 
+  desc 'rationale',
+       'Turning on the sign-in risk policy ensures that suspicious sign-ins are challenged for
+        multi-factor authentication.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['13.3'] }, { '7' => ['16.13'] }]
+  tag nist: ['SI-4', 'SI-4(4)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/howto-identity-protection-risk-feedback'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/concept-identity-protection-risks'

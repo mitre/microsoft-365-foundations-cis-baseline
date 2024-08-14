@@ -31,9 +31,18 @@ control 'microsoft-365-foundations-7.2.3' do
         2. Run the following cmdlet to establish the minimum recommended state: Set-SPOTenant -SharingCapability ExternalUserSharingOnly
     Note: Other acceptable values for this parameter that are more restrictive include: Disabled and ExistingExternalUserSharingOnly."
 
+  desc 'rationale',
+       "Forcing guest authentication on the organization's tenant enables the implementation of
+        controls and oversight over external file sharing. When a guest is registered with the
+        organization, they now have an identity which can be accounted for. This identity can
+        also have other restrictions applied to it through group membership and conditional
+        access rules."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.3'] }]
+  tag default_value: 'Anyone (ExternalUserAndGuestSharing)'
+  tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2']
 
   ref 'https://learn.microsoft.com/en-US/sharepoint/turn-external-sharing-on-or-off?WT.mc_id=365AdminCSH_spo'
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps'

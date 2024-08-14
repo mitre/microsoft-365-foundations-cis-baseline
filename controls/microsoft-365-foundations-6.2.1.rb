@@ -55,8 +55,15 @@ control 'microsoft-365-foundations-6.2.1' do
             2. Run the following PowerShell command: Set-HostedOutboundSpamFilterPolicy -Identity {policyName} -AutoForwardingMode Off
             3. To remove AutoForwarding from all outbound policies you can also run: Get-HostedOutboundSpamFilterPolicy | Set-HostedOutboundSpamFilterPolicy -AutoForwardingMode Off"
 
+  desc 'rationale',
+       'Attackers often create these rules to exfiltrate data from your tenancy, this could be
+        accomplished via access to an end-user account or otherwise. An insider could also use
+        one of these methods as a secondary channel to exfiltrate sensitive data.'
+
   impact 0.5
   tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['untracked'] }]
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/exchange/policy-and-compliance/mail-flow-rules/mail-flow-rule-procedures?view=exchserver-2019'
   ref 'https://techcommunity.microsoft.com/t5/exchange-team-blog/all-you-need-to-know-about-automatic-email-forwarding-in/ba-p/2074888#:~:text=%20%20%20Automatic%20forwarding%20option%20%20,%'

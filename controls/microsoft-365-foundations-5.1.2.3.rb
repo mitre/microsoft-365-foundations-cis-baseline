@@ -25,8 +25,20 @@ control 'microsoft-365-foundations-5.1.2.3' do
             $params = @{ AllowedToCreateTenants = $false }
             Update-MgPolicyAuthorizationPolicy -DefaultUserRolePermissions $params'
 
+  desc 'rationale',
+       "Restricting tenant creation prevents unauthorized or uncontrolled deployment of
+        resources and ensures that the organization retains control over its infrastructure. User
+        generation of shadow IT could lead to multiple, disjointed environments that can make it
+        difficult for IT to manage and secure the organization's data, especially if other users in
+        the organization began using these tenants for business purposes under the
+        misunderstanding that they were secured by the organization's security team."
+
   impact 0.5
   tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['untracked'] }]
+  tag default_value: 'No - Non-administrators can create tenants.
+                      AllowedToCreateTenants is True'
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions#restrict-member-users-default-permissions'
 

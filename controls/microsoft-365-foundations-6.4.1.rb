@@ -28,9 +28,17 @@ control 'microsoft-365-foundations-6.4.1' do
             $UserDelegates | Export-Csv MailboxDelegatePermissions.csv -NoTypeInformation
             $SMTPForwarding | Export-Csv Mailboxsmtpforwarding.csv -NoTypeInformation'
 
+  desc 'rationale',
+       'Reviewing mail forwarding rules will provide the Messaging Administrator with insight
+        into possible attempts to exfiltrate data from the organization. Weekly review helps
+        create a recognition of baseline, legitimate activity of users. This will aid in helping
+        identify the more malicious activity of bad actors when/if they choose to use this side-
+        channel.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['8.11'] }, { '7' => ['6.2'] }]
+  tag nist: ['AU-6', 'AU-6(1)', 'AU-7(1)', 'AC-1', 'AC-2', 'AC-2(1)']
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

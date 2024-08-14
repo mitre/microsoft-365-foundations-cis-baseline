@@ -35,9 +35,23 @@ control 'microsoft-365-foundations-5.2.3.1' do
             o Show geographic location in push and passwordless notifications is set to Enabled, Target All users
         Note: Valid groups such as break glass accounts can be excluded per organization policy."
 
+  desc 'rationale',
+       "As the use of strong authentication has become more widespread, attackers have
+        started to exploit the tendency of users to experience \"MFA fatigue.\" This occurs when
+        users are repeatedly asked to provide additional forms of identification, leading them to
+        eventually approve requests without fully verifying the source. To counteract this,
+        number matching can be employed to ensure the security of the authentication process.
+        With this method, users are prompted to confirm a number displayed on their original
+        device and enter it into the device being used for MFA. Additionally, other information
+        such as geolocation and application details are displayed to enhance the end user's
+        awareness. Among these 3 options, number matching provides the strongest net
+        security gain."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['6.4'] }]
+  tag default_value: 'Microsoft-managed'
+  tag nist: ['AC-19', 'IA-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-authentication-default-enablement'
   ref 'https://techcommunity.microsoft.com/t5/microsoft-entra-azure-ad-blog/defend-your-users-from-mfa-fatigue-attacks/ba-p/2365677'

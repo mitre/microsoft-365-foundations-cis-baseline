@@ -53,9 +53,19 @@ control 'microsoft-365-foundations-5.3.3' do
         19. Click Start to save the review.
     NOTE: Reviewers will have the ability to revoke roles should be trusted individuals who understand the impact of the access reviews. The principle of separation of duties should be considered so that no one administrator is reviewing their own access levels."
 
+  desc 'rationale',
+       'Regular review of critical high privileged roles in Entra ID will help identify role drift, or
+        potential malicious activity. This will enable the practice and application of "separation of
+        duties" where even non-privileged users like security auditors can be assigned to review
+        assigned roles in an organization. Furthermore, if configured these reviews can enable
+        a fail-closed mechanism to remove access to the subject if the reviewer does not
+        respond to the review.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['5.1'] }, { '8' => ['5.3'] }]
+  tag default_value: 'By default access reviews are not configured.'
+  tag nist: ['AC-2', 'AC-2(3)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-create-azure-ad-roles-and-resource-roles-review'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/governance/access-reviews-overview'

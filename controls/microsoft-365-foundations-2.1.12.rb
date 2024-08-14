@@ -17,9 +17,15 @@ control 'microsoft-365-foundations-2.1.12' do
             Get-BlockedSenderAddress
         3.Review."
 
+  desc 'rationale',
+       "Users who are found on the restricted users list have a high probability of having been
+        compromised. Review of this list will allow an organization to remediate these user
+        accounts, and then unblock them."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['8.11'] }, { '7' => ['6.2'] }]
+  tag nist: ['AU-6', 'AU-6(1)', 'AU-7(1)', 'AC-1', 'AC-2', 'AC-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/responding-to-a-compromised-email-account?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/removing-user-from-restricted-users-portal-after-spam?view=o365-worldwide'

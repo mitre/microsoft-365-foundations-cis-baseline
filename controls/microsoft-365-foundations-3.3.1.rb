@@ -18,6 +18,11 @@ control 'microsoft-365-foundations-3.3.1' do
         5. Select the label and click on the Publish label.
         6. Fill out the forms to create the policy."
 
+  desc 'rationale',
+       'By categorizing and applying policy-based protection, SharePoint Online Data
+        Classification Policies can help reduce the risk of data loss or exposure and enable
+        more effective incident response if a breach does occur.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [
@@ -25,6 +30,7 @@ control 'microsoft-365-foundations-3.3.1' do
     { '7' => ['13.1'] },
     { '7' => ['14.6'] }
   ]
+  tag nist: ['RA-2', 'AU-6(1)', 'AU-7', 'IR-4(1)', 'SI-4(2)', 'SI-4(5)', 'AT-2']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/compliance/data-classification-overview?view=o365-worldwide#top-sensitivity-labels-applied-to-content'
   ref 'https://learn.microsoft.com/en-us/purview/sensitivity-labels-sharepoint-onedrive-files'

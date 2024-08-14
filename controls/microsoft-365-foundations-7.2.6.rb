@@ -26,6 +26,11 @@ control 'microsoft-365-foundations-7.2.6' do
         2. Run the following PowerShell command:
             Set-SPOTenant -SharingDomainRestrictionMode AllowList -SharingAllowedDomainList "domain1.com domain2.com"'
 
+  desc 'rationale',
+       'Attackers will often attempt to expose sensitive information to external entities through
+        sharing, and restricting the domains that users can share documents with will reduce
+        that surface area.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [
@@ -33,6 +38,10 @@ control 'microsoft-365-foundations-7.2.6' do
     { '7' => ['13.4'] },
     { '7' => ['14.6'] }
   ]
+  tag default_value: 'Limit external sharing by domain is unchecked
+                      SharingDomainRestrictionMode: None
+                      SharingDomainRestrictionMode: <Undefined>'
+  tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2', 'CA-9', 'SC-7', 'AT-2']
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

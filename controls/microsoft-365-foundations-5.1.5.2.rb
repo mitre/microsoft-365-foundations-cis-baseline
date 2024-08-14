@@ -22,9 +22,18 @@ control 'microsoft-365-foundations-5.1.5.2' do
         4. Under User consent for applications select Do not allow user consent.
         5. Click the Save option at the top of the window."
 
+  desc 'rationale',
+       'Attackers commonly use custom applications to trick users into granting them access to
+        company data. Disabling future user consent operations setting mitigates this risk, and
+        helps to reduce the threat-surface. If user consent is disabled previous consent grants
+        will still be honored but all future consent operations must be performed by an
+        administrator.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.3'] }, { '7' => ['14.6'] }]
+  tag default_value: 'UI - Allow user consent for apps'
+  tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2', 'AT-2']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/manage-apps/configure-user-consent?tabs=azure-portal&pivots=portal'
 

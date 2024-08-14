@@ -33,9 +33,20 @@ control 'microsoft-365-foundations-5.3.2' do
         13. Check the following: Justification required, E-mail notifications, Reminders.
         14. Click Next: Review + Create and finally click Create."
 
+  desc 'rationale',
+       "Access to groups and applications for guests can change over time. If a guest user's
+        access to a particular folder goes unnoticed, they may unintentionally gain access to
+        sensitive data if a member adds new files or data to the folder or application. Access
+        reviews can help reduce the risks associated with outdated assignments by requiring a
+        member of the organization to conduct the reviews. Furthermore, these reviews can
+        enable a fail-closed mechanism to remove access to the subject if the reviewer does not
+        respond to the review."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['5.1'] }, { '8' => ['5.3'] }]
+  tag default_value: 'By default access reviews are not configured.'
+  tag nist: ['AC-2', 'AC-2(3)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/governance/create-access-review'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/governance/access-reviews-overview'

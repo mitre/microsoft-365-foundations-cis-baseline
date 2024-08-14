@@ -66,9 +66,19 @@ control 'microsoft-365-foundations-5.3.1' do
             Teams Service Administrator
             User Administrator"
 
+  desc 'rationale',
+       'Organizations want to minimize the number of people who have access to secure
+        information or resources, because that reduces the chance of a malicious actor getting
+        that access, or an authorized user inadvertently impacting a sensitive resource.
+        However, users still need to carry out privileged operations in Entra ID. Organizations
+        can give users just-in-time (JIT) privileged access to roles. There is a need for oversight
+        for what those users are doing with their administrator privileges. PIM helps to mitigate
+        the risk of excessive, unnecessary, or misused access rights.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['6.1'] }, { '8' => ['6.2'] }, { '7' => ['4.1'] }]
+  tag nist: ['IA-4', 'IA-5', 'AC-1', 'AC-2', 'AC-2(1)', 'CM-1', 'CM-2', 'CM-6', 'CM-7', 'CM-7(1)', 'CM-9', 'SA-3', 'SA-8', 'SA-10']
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

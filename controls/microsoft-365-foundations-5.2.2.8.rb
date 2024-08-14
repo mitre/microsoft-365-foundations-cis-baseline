@@ -61,8 +61,18 @@ control 'microsoft-365-foundations-5.2.2.8' do
         9. Ensure Enable Policy is On or Report-only then click Create.
     Warning: Exclude Global Administrator at a minimum to avoid being locked out. Report-only is a good option to use when testing any Conditional Access policy for the first time. Note: In order for PIM to function a group of users eligible for PIM roles must be excluded from the policy."
 
+  desc 'rationale',
+       'By default, users can sign into the various portals but are restricted by what they can
+        view. Blocking sign-in to Microsoft Admin Portals enhances security of sensitive data by
+        restricting access to privileged users. This mitigates potential exposure due to
+        administrative errors or software vulnerabilities introduced by a CSP, as well as acting
+        as a defense in depth measure against security breaches.'
+
   impact 0.5
   tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['untracked'] }]
+  tag default_value: 'No - Non-administrators can access the Microsoft admin portals.'
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals'
 

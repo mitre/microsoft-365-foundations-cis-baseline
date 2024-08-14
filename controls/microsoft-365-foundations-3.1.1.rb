@@ -25,9 +25,15 @@ control 'microsoft-365-foundations-3.1.1' do
         2.Run the following PowerShell command:
             Set-AdminAuditLogConfig -UnifiedAuditLogIngestionEnabled $true"
 
+  desc 'rationale',
+       'Enabling audit log search in the Microsoft Purview compliance portal can help
+        organizations improve their security posture, meet regulatory compliance requirements,
+        respond to security incidents, and gain valuable operational insights.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['8.2'] }, { '7' => ['6.2'] }]
+  tag nist: ['AU-2', 'AU-7', 'AU-12', 'AC-1', 'AC-2', 'AC-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-log-enable-disable?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-adminauditlogconfig?view=exchange-ps'

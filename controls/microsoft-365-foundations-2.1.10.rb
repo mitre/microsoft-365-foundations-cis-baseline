@@ -32,9 +32,16 @@ control 'microsoft-365-foundations-2.1.10' do
         5.Add a new record with the TXT name of _dmarc with the appropriate values outlined above.
     Note: The remediation portion involves a multi-staged approach over a period of time. First, a baseline of the current state of email will be established with p=none and rua and ruf. Once the environment is better understood and reports have been analyzed an organization will move to the final state with dmarc record values as outlined in the audit section."
 
+  desc 'rationale',
+       "DMARC strengthens the trustworthiness of messages sent from an organization's
+        domain to destination email systems. By integrating DMARC with SPF (Sender Policy
+        Framework) and DKIM (DomainKeys Identified Mail), organizations can significantly
+        enhance their defenses against email spoofing and phishing attempts."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['9.5'] }, { '7' => ['7.8'] }]
+  tag nist: ['SC-7']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/email-authentication-dmarc-configure?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/how-to-enable-dmarc-reporting-for-microsoft-online-email-routing-address-moera-and-parked-domains?view=o365-worldwide'

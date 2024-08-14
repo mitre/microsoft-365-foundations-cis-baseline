@@ -18,6 +18,13 @@ control 'microsoft-365-foundations-6.5.1' do
         3. Run the following PowerShell command:
             Set-OrganizationConfig -OAuth2ClientProfileEnabled $True"
 
+  desc 'rationale',
+       'Strong authentication controls, such as the use of multifactor authentication, may be
+        circumvented if basic authentication is used by Exchange Online email clients such as
+        Outlook 2016 and Outlook 2013. Enabling modern authentication for Exchange Online
+        ensures strong authentication mechanisms are used when establishing sessions
+        between email clients and Exchange Online.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [
@@ -25,6 +32,8 @@ control 'microsoft-365-foundations-6.5.1' do
     { '7' => ['16.3'] },
     { '7' => ['16.5'] }
   ]
+  tag default_value: 'True'
+  tag nist: ['AC-17(2)', 'IA-5', 'IA-5(1)', 'SC-8', 'SC-8(1)', 'SI-2', 'SR-11']
 
   ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/enable-or-disable-modern-authentication-in-exchange-online'
 

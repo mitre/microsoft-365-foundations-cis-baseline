@@ -17,9 +17,15 @@ control 'microsoft-365-foundations-2.1.8' do
             v=spf1 include:spf.protection.outlook.com -all
         2.If there are other systems that send email in the environment, refer to this article for the proper SPF configuration: https://docs.microsoft.com/en-us/office365/SecurityCompliance/set-up-spf-in-office-365-to-help-prevent-spoofing."
 
+  desc 'rationale',
+       "SPF records allow Exchange Online Protection and other mail systems to know where
+        messages from domains are allowed to originate. This information can be used by that
+        system to determine how to treat the message based on if it is being spoofed or is valid."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['9.5'] }, { '7' => ['7.8'] }]
+  tag nist: ['SC-7']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/email-authentication-spf-configure?view=o365-worldwide'
 

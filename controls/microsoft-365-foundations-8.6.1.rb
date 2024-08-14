@@ -56,8 +56,22 @@ control 'microsoft-365-foundations-8.6.1' do
             Set-ReportSubmissionPolicy @params
             New-ReportSubmissionRule -Name DefaultReportSubmissionRule -ReportSubmissionPolicy DefaultReportSubmissionPolicy -SentTo $usersub'
 
+  desc 'rationale',
+       "Users will be able to more quickly and systematically alert administrators of suspicious
+        malicious messages within Teams. The content of these messages may be sensitive in
+        nature and therefore should be kept within the organization and not shared with
+        Microsoft without first consulting company policy.
+        Note:
+            • The reported message remains visible to the user in the Teams client.
+            • Users can report the same message multiple times.
+            • The message sender isn't notified that messages were reported."
+
   impact 0.5
   tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['untracked'] }, { '7' => ['untracked'] }]
+  tag default_value: 'On (True)
+                    Report message destination: Microsoft Only'
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/submissions-teams?view=o365-worldwide'
 

@@ -28,8 +28,20 @@ control 'microsoft-365-foundations-7.2.9' do
         2. Run the following cmdlet:
             Set-SPOTenant -ExternalUserExpireInDays 30 -ExternalUserExpirationRequired $True"
 
+  desc 'rationale',
+       'This setting ensures that guests who no longer need access to the site or link no longer
+        have access after a set period of time. Allowing guest access for an indefinite amount of
+        time could lead to loss of data confidentiality and oversight.
+        Note: Guest membership applies at the Microsoft 365 group level. Guests who have
+        permission to view a SharePoint site or use a sharing link may also have access to a
+        Microsoft Teams team or security group.'
+
   impact 0.5
   tag severity: 'medium'
+  tag default_value: 'ExternalUserExpirationRequired $false
+                      ExternalUserExpireInDays 60 days'
+  tag cis_controls: [{ '8' => ['untracked'] }, { '7' => ['untracked'] }]
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-US/sharepoint/turn-external-sharing-on-or-off?WT.mc_id=365AdminCSH_spo#change-the-organization-level-external-sharing-setting'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/community/sharepoint-security-a-team-effort'

@@ -18,8 +18,18 @@ control 'microsoft-365-foundations-6.2.2' do
         2. Run the following PowerShell command:
             Set-ExternalInOutlook -Enabled $true"
 
+  desc 'rationale',
+       "Tagging emails from external senders helps to inform end users about the origin of the
+        email. This can allow them to proceed with more caution and make informed decisions
+        when it comes to identifying spam or phishing emails.
+        Note: Existing emails in a user's inbox from external senders are not tagged
+        retroactively."
+
   impact 0.5
   tag severity: 'medium'
+  tag default_value: 'Disabled (False)'
+  tag cis_controls: [{ '8' => ['untracked'] }, { '7' => ['untracked'] }]
+  tag nist: ['CM-6']
 
   ref 'https://techcommunity.microsoft.com/t5/exchange-team-blog/native-external-sender-callouts-on-email-in-outlook/ba-p/2250098'
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-externalinoutlook?view=exchange-ps'

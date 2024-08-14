@@ -12,9 +12,15 @@ control 'microsoft-365-foundations-5.1.5.1' do
         3. Under Activity select Usage & insights.
         4. Review the information."
 
+  desc 'rationale',
+       'Review the list of app registrations on a regular basis to look for risky apps that users
+        have enabled that could cause data spillage or accidental elevation of privilege.
+        Attackers can often get access to data illicitly through third-party SaaS applications.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['8.11'] }, { '7' => ['6.2'] }]
+  tag nist: ['AU-6', 'AU-6(1)', 'AU-7(1)', 'AC-1', 'AC-2', 'AC-2(1)']
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

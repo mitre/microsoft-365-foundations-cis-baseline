@@ -24,9 +24,25 @@ control 'microsoft-365-foundations-7.3.3' do
             o Select Prevent users from running custom script on personal sites.
             o Select Prevent users from running custom script on self-service created sites."
 
+  desc 'rationale',
+       "Custom scripts could contain malicious instructions unknown to the user or
+        administrator. When users are allowed to run custom script, the organization can no
+        longer enforce governance, scope the capabilities of inserted code, block specific parts
+        of code, or block all custom code that has been deployed. If scripting is allowed the
+        following things can't be audited:
+          • What code has been inserted
+          • Where the code has been inserted
+          • Who inserted the code
+        Note: Microsoft recommends using the SharePoint Framework instead of custom
+        scripts."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['2.7'] }]
+  tag default_value: 'Selected Prevent users from running custom script on personal sites
+                      Selected Prevent users from running custom script on self-service created
+                      sites'
+  tag nist: ['CM-7', 'CM-7(1)', 'SI-7', 'SI-7(1)']
 
   ref 'https://learn.microsoft.com/en-us/sharepoint/allow-or-prevent-custom-script'
   ref 'https://learn.microsoft.com/en-us/sharepoint/security-considerations-of-allowing-custom-script'

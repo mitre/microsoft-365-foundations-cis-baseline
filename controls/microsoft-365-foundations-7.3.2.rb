@@ -29,8 +29,22 @@ control 'microsoft-365-foundations-7.3.2' do
             Set-SPOTenantSyncClientRestriction -Enable -DomainGuids "786548DD-877B-4760-A749-6B1EFBC1190A; 877564FF-877B-4760-A749-6B1EFBC1190A"
         Note: Utilize the -BlockMacSync:$true parameter if you are not using conditional access to ensure Macs cannot sync.'
 
+  desc 'rationale',
+       'Unmanaged devices pose a risk, since their security cannot be verified through existing
+        security policies, brokers or endpoint protection. Allowing users to sync data to these
+        devices takes that data out of the control of the organization. This increases the risk of
+        the data either being intentionally or accidentally leaked.
+        Note: This setting is only applicable to Active Directory domains when operating in a
+        hybrid configuration. It does not apply to Entra ID domains. If there are devices which
+        are only Entra ID joined, consider using a Conditional Access Policy instead.'
+
   impact 0.5
   tag severity: 'medium'
+  tag default_value: 'By default there are no restrictions applied to the syncing of OneDrive.
+                      TenantRestrictionEnabled : False
+                      AllowedDomainList : {}'
+  tag cis_controls: [{ '8' => ['untracked'] }]
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-US/sharepoint/allow-syncing-only-on-specific-domains?WT.mc_id=365AdminCSH_spo'
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps'

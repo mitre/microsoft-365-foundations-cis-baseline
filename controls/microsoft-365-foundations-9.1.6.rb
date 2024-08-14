@@ -23,9 +23,21 @@ control 'microsoft-365-foundations-9.1.6' do
             o State 1: Enabled
             o State 2: Enabled with Specific security groups selected and defined."
 
+  desc 'rationale',
+       "Establishing data classifications and affixing labels to data at creation enables
+        organizations to discern the data's criticality, sensitivity, and value. This initial
+        identification enables the implementation of appropriate protective measures, utilizing
+        technologies like Data Loss Prevention (DLP) to avert inadvertent exposure and
+        enforcing access controls to safeguard against unauthorized access.
+        This practice can also promote user awareness and responsibility in regard to the
+        nature of the data they interact with. Which in turn can foster awareness in other areas
+        of data management across the organization."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.2'] }, { '8' => ['3.7'] }]
+  tag default_value: 'Disabled'
+  tag nist: ['CM-12', 'PM-5(1)', 'RA-2']
 
   ref 'https://learn.microsoft.com/en-us/power-bi/enterprise/service-security-enable-data-sensitivity-labels'
   ref 'https://learn.microsoft.com/en-us/power-bi/enterprise/service-security-dlp-policies-for-power-bi-overview'

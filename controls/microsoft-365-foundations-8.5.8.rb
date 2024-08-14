@@ -25,9 +25,16 @@ control 'microsoft-365-foundations-8.5.8' do
         2. Run the following command to set the recommended state:
             Set-CsTeamsMeetingPolicy -Identity Global -AllowExternalNonTrustedMeetingChat $false"
 
+  desc 'rationale',
+       'Restricting access to chat in meetings hosted by external organizations limits the
+        opportunity for an exploit like GIFShell or DarkGate malware from being delivered to
+        users.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['16.10'] }]
+  tag default_value: 'On(True)'
+  tag nist: ['PL-8', 'SA-8']
 
   ref 'https://learn.microsoft.com/en-US/microsoftteams/settings-policies-reference?WT.mc_id=TeamsAdminCenterCSH#meeting-engagement'
 

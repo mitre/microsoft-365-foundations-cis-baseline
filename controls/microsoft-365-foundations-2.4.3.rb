@@ -33,6 +33,12 @@ control 'microsoft-365-foundations-2.4.3' do
         3.Check all Azure and Office 365 boxes then click Connect Office 365.
         4.Repeat for the Microsoft Azure application."
 
+  desc 'rationale',
+       "Security teams can receive notifications of triggered alerts for atypical or suspicious
+        activities, see how the organization's data in Microsoft 365 is accessed and used,
+        suspend user accounts exhibiting suspicious activity, and require users to log back in to
+        Microsoft 365 apps after an alert has been triggered."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [
@@ -41,6 +47,8 @@ control 'microsoft-365-foundations-2.4.3' do
     { '7' => ['6.2'] },
     { '7' => ['16'] }
   ]
+  tag default_value: 'Disabled'
+  tag nist: ['SI-3', 'SI-16', 'AC-1', 'AC-2', 'AC-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/defender-cloud-apps/connect-office-365'
   ref 'https://learn.microsoft.com/en-us/defender-cloud-apps/connect-azure'

@@ -21,9 +21,23 @@ control 'microsoft-365-foundations-7.3.4' do
             Set-SPOSite -Identity <SiteUrl> -DenyAddAndCustomizePages $true
         Note: The property DenyAddAndCustomizePages cannot be set on the MySite host, which is displayed with a URL like https://tenant id-my.sharepoint.com/"
 
+  desc 'rationale',
+       "Custom scripts could contain malicious instructions unknown to the user or
+        administrator. When users are allowed to run custom script, the organization can no
+        longer enforce governance, scope the capabilities of inserted code, block specific parts
+        of code, or block all custom code that has been deployed. If scripting is allowed the
+        following things can't be audited:
+          • What code has been inserted
+          • Where the code has been inserted
+          • Who inserted the code
+        Note: Microsoft recommends using the SharePoint Framework instead of custom
+        scripts."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['2.7'] }]
+  tag default_value: 'DenyAddAndCustomizePages $true or Enabled'
+  tag nist: ['CM-7', 'CM-7(1)', 'SI-7', 'SI-7(1)']
 
   ref 'https://learn.microsoft.com/en-us/sharepoint/allow-or-prevent-custom-script'
   ref 'https://learn.microsoft.com/en-us/sharepoint/security-considerations-of-allowing-custom-script'

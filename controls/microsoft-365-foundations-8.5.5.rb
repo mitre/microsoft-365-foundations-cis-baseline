@@ -25,8 +25,16 @@ control 'microsoft-365-foundations-8.5.5' do
         2. Run the following command to set the recommended state:
             Set-CsTeamsMeetingPolicy -Identity Global -MeetingChatEnabledType "EnabledExceptAnonymous"'
 
+  desc 'rationale',
+       'Ensuring that only authorized individuals can read and write chat messages during a
+        meeting reduces the risk that a malicious user can inadvertently show content that is not
+        appropriate or view sensitive information.'
+
   impact 0.5
   tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['untracked'] }, { '7' => ['untracked'] }]
+  tag default_value: 'On for everyone (Enabled)'
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps#-meetingchatenabledtype'
 

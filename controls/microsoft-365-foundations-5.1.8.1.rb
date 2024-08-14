@@ -34,9 +34,22 @@ control 'microsoft-365-foundations-5.1.8.1' do
         9. On the Ready to configure screen click Configure.
         10. Once the configuration completes, click Exit."
 
+  desc 'rationale',
+       "Password hash synchronization helps by reducing the number of passwords your users
+        need to maintain to just one and enables leaked credential detection for your hybrid
+        accounts. Leaked credential protection is leveraged through Entra ID Protection and is a
+        subset of that feature which can help identify if an organization's user account
+        passwords have appeared on the dark web or public spaces.
+        Using other options for your directory synchronization may be less resilient as Microsoft
+        can still process sign-ins to 365 with Hash Sync even if a network connection to your
+        on-premises environment is not available."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['6.7'] }, { '7' => ['16.4'] }]
+  tag default_value: "• Microsoft Entra Connect sync disabled by default
+                      • Password Hash Sync is Microsoft's recommended setting for new deployments"
+  tag nist: ['AC-2(1)', 'AC-3', 'CM-8']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/hybrid/whatis-phs'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/concept-identity-protection-risks#user-linked-detections'

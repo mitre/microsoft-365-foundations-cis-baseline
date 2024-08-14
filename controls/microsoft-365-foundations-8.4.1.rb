@@ -23,9 +23,17 @@ control 'microsoft-365-foundations-8.4.1' do
         6. For Custom apps set Let users install and use available apps by default to Off.
         7. For Custom apps set Upload custom apps for personal use to Off."
 
+  desc 'rationale',
+       'Allowing users to install third-party or unverified apps poses a potential risk of
+        introducing malicious software to the environment.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['2.5'] }, { '7' => ['2.7'] }]
+  tag default_value: 'Microsoft apps: On
+                      Third-party apps: On
+                      Custom apps: On'
+  tag nist: ['CM-7(5)', 'CM-10', 'CM-7', 'CM-7(1)', 'SI-7', 'SI-7(1)']
 
   ref 'https://learn.microsoft.com/en-us/microsoftteams/app-centric-management'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/reducing-attack-surface-in-microsoft-teams?view=o365-worldwide#disabling-third-party--custom-apps'

@@ -31,9 +31,18 @@ control 'microsoft-365-foundations-5.2.3.2' do
         • Company-specific internal terms
         • Abbreviations that have specific company meaning"
 
+  desc 'rationale',
+       "Creating a new password can be difficult regardless of one's technical background. It is
+        common to look around one's environment for suggestions when building a password,
+        however, this may include picking words specific to the organization as inspiration for a
+        password. An adversary may employ what is called a 'mangler' to create permutations
+        of these specific words in an attempt to crack passwords or hashes making it easier to
+        reach their goal."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['5.2'] }]
+  tag nist: ['IA-5(1)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-password-ban-bad#custom-banned-password-list'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/tutorial-configure-custom-password-protection'

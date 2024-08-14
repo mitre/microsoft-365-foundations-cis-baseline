@@ -36,9 +36,18 @@ control 'microsoft-365-foundations-5.1.3.1' do
         1. Connect to Microsoft Graph using Connect-MgGraph -Scopes "Group.ReadWrite.All"
         2. In the script below edit DisplayName and MailNickname as needed and run:
             $params = @{ DisplayName = "Dynamic Test Group" MailNickname = "DynGuestUsers" MailEnabled = $false SecurityEnabled = $true GroupTypes = "DynamicMembership" MembershipRule = '(user.userType -eq "Guest")' MembershipRuleProcessingState = "On" } New-MgGroup @params}
+
+  desc 'rationale',
+       'Dynamic groups allow for an automated method to assign group membership.
+        Guest user accounts will be automatically added to this group and through this existing
+        conditional access rules, access controls and other security measures will ensure that
+        new guest accounts are restricted in the same manner as existing guest accounts.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.3'] }]
+  tag default_value: 'Undefined'
+  tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-create-rule'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-dynamic-membership'

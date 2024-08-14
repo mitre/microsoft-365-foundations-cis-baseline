@@ -41,9 +41,13 @@ control 'microsoft-365-foundations-2.1.7' do
         2. Run the following Exchange Online PowerShell command:
             New-AntiPhishPolicy -Name \"Office365 AntiPhish Policy\""
 
+  desc 'rationale',
+       'Protects users from phishing attacks (like impersonation and spoofing), and uses safety tips to warn users about potentially harmful messages.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['9.7'] }, { '7' => ['7'] }]
+  tag nist: ['SI-3', 'SI-8']
 
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."

@@ -17,6 +17,12 @@ control 'microsoft-365-foundations-7.3.1' do
             Set-SPOTenant –DisallowInfectedFileDownload $true
     Note: The Global Reader role cannot access SharePoint using PowerShell according to Microsoft. See the reference section for more information.'
 
+  desc 'rationale',
+       "Defender for Office 365 for SharePoint, OneDrive, and Microsoft Teams protects your
+        organization from inadvertently sharing malicious files. When an infected file is detected
+        that file is blocked so that no one can open, copy, move, or share it until further actions
+        are taken by the organization's security team."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [
@@ -24,6 +30,8 @@ control 'microsoft-365-foundations-7.3.1' do
     { '7' => ['7.10'] },
     { '7' => ['8.1'] }
   ]
+  tag default_value: 'False'
+  tag nist: ['SI-3', 'AU-1', 'AU-2']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-attachments-for-spo-odfb-teams-configure?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-malware-protection-for-spo-odfb-teams-about?view=o365-worldwide'

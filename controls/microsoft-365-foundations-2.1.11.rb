@@ -17,9 +17,16 @@ control 'microsoft-365-foundations-2.1.11' do
             Get-SpoofIntelligenceInsight
         3.Review."
 
+  desc 'rationale',
+       "Bad actors spoof domains to trick users into conducting actions they normally would not
+        or should not via phishing emails. Running this report will inform the message
+        administrators of current activities, and the phishing techniques used by bad actors.
+        This information can be used to inform end users and plan against future campaigns."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['8.11'] }, { '7' => ['6.2'] }]
+  tag nist: ['AU-6', 'AU-6(1)', 'AU-7(1)', 'AC-1', 'AC-2', 'AC-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spoofing-spoof-intelligence?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/get-spoofintelligenceinsight?view=exchange-ps'

@@ -33,9 +33,15 @@ control 'microsoft-365-foundations-5.2.2.6' do
         6. You may opt to begin in a state of Report Only as you step through implementation however, the policy will need to be set to On to be in effect.
         7. Click Create."
 
+  desc 'rationale',
+       'With the user risk policy turned on, Entra ID protection detects the probability that a user
+        account has been compromised. Administrators can configure a user risk conditional
+        access policy to automatically respond to a specific user risk level.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['13.3'] }, { '7' => ['16.13'] }]
+  tag nist: ['SI-4', 'SI-4(4)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/howto-identity-protection-risk-feedback'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/concept-identity-protection-risks'

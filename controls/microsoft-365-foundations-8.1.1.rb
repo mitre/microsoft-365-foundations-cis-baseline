@@ -25,9 +25,19 @@ control 'microsoft-365-foundations-8.1.1' do
             $storageParams = @{ AllowGoogleDrive = $false AllowShareFile = $false AllowBox = $false AllowDropBox = $false AllowEgnyte = $false }
             Set-CsTeamsClientConfiguration @storageParams"
 
+  desc 'rationale',
+       'Ensuring that only authorized cloud storage providers are accessible from Teams will
+        help to dissuade the use of non-approved storage providers.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.3'] }, { '7' => ['14.7'] }]
+  tag default_value: 'AllowDropBox : True
+                      AllowBox : True
+                      AllowGoogleDrive : True
+                      AllowShareFile : True
+                      AllowEgnyte : True'
+  tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2', 'AT-2']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/enterprise/manage-skype-for-business-online-with-microsoft-365-powershell?view=o365-worldwide'
 

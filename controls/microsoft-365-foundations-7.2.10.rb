@@ -28,8 +28,16 @@ control 'microsoft-365-foundations-7.2.10' do
         2. Run the following cmdlet:
             Set-SPOTenant -EmailAttestationRequired $true -EmailAttestationReAuthDays 15"
 
+  desc 'rationale',
+       'By increasing the frequency of times guests need to reauthenticate this ensures guest
+        user access to data is not prolonged beyond an acceptable amount of time.'
+
   impact 0.5
   tag severity: 'medium'
+  tag default_value: 'EmailAttestationRequired : False
+                      EmailAttestationReAuthDays : 30'
+  tag cis_controls: [{ '8' => ['untracked'] }, { '7' => ['untracked'] }]
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-US/sharepoint/what-s-new-in-sharing-in-targeted-release?WT.mc_id=365AdminCSH_spo'
   ref 'https://learn.microsoft.com/en-US/sharepoint/turn-external-sharing-on-or-off?WT.mc_id=365AdminCSH_spo#change-the-organization-level-external-sharing-setting'

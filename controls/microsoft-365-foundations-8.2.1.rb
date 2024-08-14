@@ -39,8 +39,27 @@ control 'microsoft-365-foundations-8.2.1' do
             • AllowFederatedUsers : True
             • AllowedDomains : AllowAllKnownDomains"
 
+  desc 'rationale',
+       'Allowing users to communicate with Skype or Teams users outside of an organization
+        presents a potential security threat as external users can interact with organization
+        users over Skype for Business or Teams. While legitimate, productivity-improving
+        scenarios exist, they are outweighed by the risk of data loss, phishing, and social
+        engineering attacks against organization users via Teams.
+        Some real-world attacks and exploits delivered via Teams over external access
+        channels include:
+        • DarkGate malware
+        • Social engineering / Phishing attacks by "Midnight Blizzard"
+        • GIFShell
+        • Username enumeration'
+
   impact 0.5
   tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['untracked'] }]
+  tag default_value: '• AllowTeamsConsumer : True
+                    • AllowPublicUsers : True
+                    • AllowFederatedUsers : True
+                    • AllowedDomains : AllowAllKnownDomains'
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/skypeforbusiness/set-up-skype-for-business-online/set-up-skype-for-business-online'
   ref 'https://learn.microsoft.com/en-US/microsoftteams/manage-external-access?WT.mc_id=TeamsAdminCenterCSH'

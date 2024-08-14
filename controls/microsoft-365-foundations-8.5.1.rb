@@ -26,8 +26,19 @@ control 'microsoft-365-foundations-8.5.1' do
         2. Run the following command to set the recommended state:
             Set-CsTeamsMeetingPolicy -Identity Global -AllowAnonymousUsersToJoinMeeting $false"
 
+  desc 'rationale',
+       "For meetings that could contain sensitive information, it is best to allow the meeting
+        organizer to vet anyone not directly sent an invite before admitting them to the meeting.
+        This will also prevent the anonymous user from using the meeting link to have meetings
+        at unscheduled times.
+        Note: Those companies that don't normally operate at a Level 2 environment, but do
+        deal with sensitive information, may want to consider this policy setting."
+
   impact 0.5
   tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['untracked'] }, { '7' => ['untracked'] }]
+  tag default_value: 'On (True)'
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/MicrosoftTeams/configure-meetings-sensitive-protection'
 

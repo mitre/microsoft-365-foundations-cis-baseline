@@ -22,9 +22,18 @@ control 'microsoft-365-foundations-2.3.1' do
             { $_.Operations -eq "add user." }
         3.Review the output.'
 
+  desc 'rationale',
+       "If the organization doesn't usually use a third-party provider to manage accounts, any
+        entry on the list is likely illicit. Otherwise, it is recommended to monitor transaction
+        volumes and look for new or unusual third party applications that may be managing
+        users. If anything unusual is observed, the provider should be contacted to determine
+        the legitimacy of the action."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['8.11'] }, { '7' => ['6.2'] }]
+  tag nist: ['AU-6', 'AU-6(1)', 'AU-7(1)', 'AC-1', 'AC-2', 'AC-2(1)']
+
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."
   end

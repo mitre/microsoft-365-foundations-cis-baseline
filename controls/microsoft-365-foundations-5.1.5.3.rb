@@ -21,9 +21,22 @@ control 'microsoft-365-foundations-5.1.5.3' do
         7. Set Selected users will receive email notifications for requests to Yes
         8. Select Save at the top of the window."
 
+  desc 'rationale',
+       'The admin consent workflow (Preview) gives admins a secure way to grant access to
+        applications that require admin approval. When a user tries to access an application but
+        is unable to provide consent, they can send a request for admin approval. The request
+        is sent via email to admins who have been designated as reviewers. A reviewer acts on
+        the request, and the user is notified of the action.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['2.5'] }, { '7' => ['18.3'] }]
+  tag default_value: ' Users can request admin consent to apps they are unable to consent to:No
+                        • Selected users to review admin consent requests: None
+                        • Selected users will receive email notifications for requests: Yes
+                        • Selected users will receive request expiration reminders: Yes
+                        • Consent request expires after (days): 30'
+  tag nist: ['CM-7(5)', 'CM-10']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/manage-apps/configure-admin-consent-workflow'
   describe "This control's test logic needs to be implemented." do

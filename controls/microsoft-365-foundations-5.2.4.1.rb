@@ -15,8 +15,15 @@ control 'microsoft-365-foundations-5.2.4.1' do
         2. Click to expand Protection > Password reset select Properties.
         3. Set Self service password reset enabled to All"
 
+  desc 'rationale',
+       'Users will no longer need to engage the helpdesk for password resets, and the
+        password reset mechanism will automatically block common, easily guessable
+        passwords.'
+
   impact 0.5
   tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['untracked'] }]
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/add-users/let-users-reset-passwords?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/tutorial-enable-sspr'

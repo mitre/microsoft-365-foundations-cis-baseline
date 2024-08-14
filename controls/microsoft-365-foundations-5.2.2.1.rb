@@ -51,9 +51,18 @@ control 'microsoft-365-foundations-5.2.2.1' do
         • User administrator
     Note: Report-only is an acceptable first stage when introducing any CA policy. The control, however, is not complete until the policy is on."
 
+  desc 'rationale',
+       'Multifactor authentication requires an individual to present a minimum of two separate
+        forms of authentication before access is granted. Multifactor authentication provides
+        additional assurance that the individual attempting to gain access is who they claim to
+        be. With multifactor authentication, an attacker would need to compromise at least two
+        different authentication mechanisms, increasing the difficulty of compromise and thus
+        reducing the risk.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['6.5'] }, { '7' => ['16.3'] }]
+  tag nist: ['IA-2(1)', 'SI-2']
 
   ref 'https://learn.microsoft.com/en-us/graph/api/resources/security-api-overview?view=graph-rest-beta'
 

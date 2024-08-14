@@ -16,8 +16,18 @@ control 'microsoft-365-foundations-7.2.2' do
         2. Run the following command:
             Set-SPOTenant -EnableAzureADB2BIntegration $true"
 
+  desc 'rationale',
+       "External users assigned guest accounts will be subject to Entra ID access policies, such
+        as multi-factor authentication. This provides a way to manage guest identities and
+        control access to SharePoint and OneDrive resources. Without this integration, files can
+        be shared without account registration, making it more challenging to audit and manage
+        who has access to the organization's data."
+
   impact 0.5
   tag severity: 'medium'
+  tag default_value: 'False'
+  tag cis_controls: [{ '8' => ['untracked'] }]
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/sharepoint/sharepoint-azureb2b-integration#enabling-the-integration'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/external-identities/what-is-b2b'

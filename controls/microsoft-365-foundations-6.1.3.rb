@@ -64,9 +64,35 @@ control 'microsoft-365-foundations-6.1.3' do
             $MBX | Set-Mailbox -AuditEnabled $true ` -AuditLogAgeLimit 180 -AuditAdmin $AuditAdmin -AuditDelegate $AuditDelegate ` -AuditOwner $AuditOwner
     Note: When running this script mailboxes without an E5 or Azure Audit Premium license applied will generate an error as they are not licensed for the additional actions which come default with E5.'
 
+  desc 'rationale',
+       'Whether it is for regulatory compliance or for tracking unauthorized configuration
+        changes in Microsoft 365, enabling mailbox auditing and ensuring the proper mailbox
+        actions are accounted for allows for Microsoft 365 teams to run security operations,
+        forensics or general investigations on mailbox activities.
+        The following mailbox types ignore the organizational default and must have
+        AuditEnabled set to True at the mailbox level in order to capture relevant audit data.
+            • Resource Mailboxes
+            • Public Folder Mailboxes
+            • DiscoverySearch Mailbox
+        NOTE: Without advanced auditing (E5 function) the logs are limited to 90 days.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['8.2'] }, { '7' => ['6.2'] }]
+  tag default_value: 'AuditEnabled: True for all mailboxes except below:
+                        • Resource Mailboxes
+                        • Public Folder Mailboxes
+                        • DiscoverySearch Mailbox
+                    AuditAdmin: ApplyRecord, Create, HardDelete, MailItemsAccessed,
+                    MoveToDeletedItems, Send, SendAs, SendOnBehalf, SoftDelete, Update,
+                    UpdateCalendarDelegation, UpdateFolderPermissions, UpdateInboxRules
+                    AuditDelegate: ApplyRecord, Create, HardDelete, MailItemsAccessed,
+                    MoveToDeletedItems, SendAs, SendOnBehalf, SoftDelete, Update,
+                    UpdateFolderPermissions, UpdateInboxRules
+                    AuditOwner: ApplyRecord, HardDelete, MailItemsAccessed, MoveToDeletedItems,
+                    Send, SoftDelete, Update, UpdateCalendarDelegation, UpdateFolderPermissions,
+                    UpdateInboxRules'
+  tag nist: ['AU-2', 'AU-7', 'AU-12', 'AC-1', 'AC-2', 'AC-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-mailboxes?view=o365-worldwide'
 

@@ -45,9 +45,19 @@ control 'microsoft-365-foundations-7.2.4' do
             $OneDriveSite = Get-SPOSite -Filter { Url -like "*-my.sharepoint.com/" }
             Set-SPOSite -Identity $OneDriveSite -SharingCapability Disabled'
 
+  desc 'rationale',
+       'OneDrive, designed for end-user cloud storage, inherently provides less oversight and
+        control compared to SharePoint, which often involves additional content overseers or
+        site administrators. This autonomy can lead to potential risks such as inadvertent
+        sharing of privileged information by end users. Restricting external OneDrive sharing
+        will require users to transfer content to SharePoint folders first which have those tighter
+        controls.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.3'] }]
+  tag default_value: 'Anyone (ExternalUserAndGuestSharing)'
+  tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2']
 
   ref 'https://learn.microsoft.com/en-us/sharepoint/dev/embedded/concepts/app-concepts/sharing-and-perm#container-partition'
 

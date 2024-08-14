@@ -10,7 +10,7 @@ control 'microsoft-365-foundations-2.4.4' do
         4.Under Exclude these participants review the list of exclusions and ensure they are justified and within tolerance for the organization.
     To audit using PowerShell:
         1.Connect to Exchange Online using Connect-ExchangeOnline.
-end        2.Run the following cmdlets:
+          2.Run the following cmdlets:
             Get-TeamsProtectionPolicy | fl ZapEnabled
             Get-TeamsProtectionPolicyRule | fl ExceptIf*
         3.Ensure ZapEnabled is True.
@@ -26,9 +26,17 @@ end        2.Run the following cmdlets:
         2.Run the following cmdlet:
             Set-TeamsProtectionPolicy -Identity "Teams Protection Policy" -ZapEnabled $true'
 
+  desc 'rationale',
+       'ZAP is intended to protect users that have received zero-day malware messages or
+        content that is weaponized after being delivered to users. It does this by continually
+        monitoring spam and malware signatures taking automated retroactive action on
+        messages that have already been delivered.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['10.1'] }]
+  tag default_value: 'On (Default)'
+  tag nist: ['SI-3']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/zero-hour-auto-purge?view=o365-worldwide#zero-hour-auto-purge-zap-in-microsoft-teams'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/mdo-support-teams-about?view=o365-worldwide#configure-zap-for-teams-protection-in-defender-for-office-365-plan-2'

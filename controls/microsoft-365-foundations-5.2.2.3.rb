@@ -66,9 +66,16 @@ control 'microsoft-365-foundations-5.2.2.3' do
             Set-AuthenticationPolicy -Identity $AuthenticationPolicy.Identity -AllowBasicAuthActiveSync:$false -AllowBasicAuthAutodiscover:$false -AllowBasicAuthImap:$false -AllowBasicAuthMapi:$false -AllowBasicAuthOfflineAddressBook:$false -AllowBasicAuthOutlookService:$false -AllowBasicAuthPop:$false -AllowBasicAuthPowershell:$false -AllowBasicAuthReportingWebServices:$false -AllowBasicAuthRpc:$false -AllowBasicAuthSmtp:$false -AllowBasicAuthWebServices:$false
             Get-User -ResultSize Unlimited | ForEach-Object { Set-User -Identity $_.Identity -AuthenticationPolicy $AuthenticationPolicy.Identity -STSRefreshTokensValidFrom $([System.DateTime]::UtcNow) }'
 
+  desc 'rationale',
+       'Legacy authentication protocols do not support multi-factor authentication. These
+        protocols are often used by attackers because of this deficiency. Blocking legacy
+        authentication makes it harder for attackers to gain access.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.8'] }, { '7' => ['9.2'] }]
+  tag default_value: 'Basic authentication is disabled by default as of January 2023.'
+  tag nist: ['CM-6', 'CM-7', 'SI-8']
 
   ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/disable-basic-authentication-in-exchange-online'
   ref 'https://learn.microsoft.com/en-us/exchange/mail-flow-best-practices/how-to-set-up-a-multifunction-device-or-application-to-send-email-using-microsoft-365-or-office-365'

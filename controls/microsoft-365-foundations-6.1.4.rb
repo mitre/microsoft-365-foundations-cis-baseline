@@ -24,9 +24,21 @@ control 'microsoft-365-foundations-6.1.4' do
                 Write-Host "Audit Bypass disabled for mailbox Identity: $mailboxName" -ForegroundColor Green
             }'
 
+  desc 'rationale',
+       'If a mailbox audit bypass association is added for an account, the account can access
+        any mailbox in the organization to which it has been assigned access permissions,
+        without generating any mailbox audit logging entries for such access or recording any
+        actions taken, such as message deletions.
+        Enabling this parameter, whether intentionally or unintentionally, could allow insiders or
+        malicious actors to conceal their activity on specific mailboxes. Ensuring proper logging
+        of user actions and mailbox operations in the audit log will enable comprehensive
+        incident response and forensics.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['8.5'] }]
+  tag default_value: 'AuditBypassEnabled False'
+  tag nist: ['AU-3', 'AU-3(1)', 'AU-7', 'AU-12']
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/get-mailboxauditbypassassociation?view=exchange-ps'
 

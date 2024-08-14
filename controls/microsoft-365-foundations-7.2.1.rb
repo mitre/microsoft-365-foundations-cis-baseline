@@ -25,9 +25,18 @@ control 'microsoft-365-foundations-7.2.1' do
         2. Run the following SharePoint Online PowerShell command:
             Set-SPOTenant -LegacyAuthProtocolsEnabled $false"
 
+  desc 'rationale',
+       'Strong authentication controls, such as the use of multifactor authentication, may be
+        circumvented if basic authentication is used by SharePoint applications. Requiring
+        modern authentication for SharePoint applications ensures strong authentication
+        mechanisms are used when establishing sessions between these applications,
+        SharePoint, and connecting users.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.10'] }, { '7' => ['16.3'] }]
+  tag default_value: "True (Apps that don't use modern authentication are allowed)"
+  tag nist: ['AC-17(2)', 'IA-5', 'IA-5(1)', 'SC-8', 'SC-8(1)', 'SI-2']
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps'
 

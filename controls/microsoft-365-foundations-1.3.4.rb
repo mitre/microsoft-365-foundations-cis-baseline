@@ -26,8 +26,8 @@ control 'microsoft-365-foundations-1.3.4' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.8'] }, { '7' => ['5.1'] }]
-  tag default_value: 'Let users access the Office Store is Checked
-                      Let users start trials on behalf of your organization is Checked'
+  tag default_value: "Let users access the Office Store is Checked
+                      Let users start trials on behalf of your organization is Checked"
   tag nist: ['CM-6', 'CM-7', 'AC-2']
 
   describe "This control's test logic needs to be implemented." do

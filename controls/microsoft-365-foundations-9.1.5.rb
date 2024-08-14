@@ -16,9 +16,17 @@ control 'microsoft-365-foundations-9.1.5' do
         3. Scroll to R and Python visuals settings.
         4. Set Interact with and share R and Python visuals to Disabled"
 
+  desc 'rationale',
+       'Disabling this feature can reduce the attack surface by preventing potential malicious
+        code execution leading to data breaches, or unauthorized access. The potential for
+        sensitive or confidential data being leaked to unintended users is also increased with
+        the use of scripts.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.8'] }]
+  tag default_value: 'Enabled'
+  tag nist: ['CM-6', 'CM-7']
 
   ref 'https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-r-python-visuals'
   ref 'https://learn.microsoft.com/en-us/power-bi/visuals/service-r-visuals'

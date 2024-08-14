@@ -16,9 +16,16 @@ control 'microsoft-365-foundations-5.1.6.1' do
         2. Click to expand Identity > External Identities select External collaboration settings.
         3. Under Collaboration restrictions, select Allow invitations only to the specified domains (most restrictive) is selected. Then specify the allowed domains under Target domains."
 
+  desc 'rationale',
+       'By specifying allowed domains for collaborations, external user’s companies are
+        explicitly identified. Also, this prevents internal users from inviting unknown external
+        users such as personal accounts and granting them access to resources.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['6.1'] }, { '7' => ['13.1'] }]
+  tag default_value: 'Allow invitations to be sent to any domain (most inclusive)'
+  tag nist: ['IA-4', 'IA-5', 'AC-1', 'AC-2', 'AC-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/external-identities/allow-deny-list'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/external-identities/what-is-b2b'

@@ -38,6 +38,9 @@ control 'microsoft-365-foundations-2.1.6' do
             NotifyOutboundSpamRecipients $NotifyEmailAddress
     Note: Audit and Remediation guidance may focus on the Default policy however, if a Custom Policy exists in the organization's tenant then ensure the setting is set as outlined in the highest priority policy listed."
 
+  desc 'rationale',
+       'A blocked account is a good indication that the account in question has been breached and an attacker is using it to send spam emails to other people.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [
@@ -45,6 +48,12 @@ control 'microsoft-365-foundations-2.1.6' do
     { '7' => ['7.9'] },
     { '7' => ['7.10'] }
   ]
+  tag default_value: "BccSuspiciousOutboundAdditionalRecipients : {}
+                      BccSuspiciousOutboundMail : False
+                      NotifyOutboundSpamRecipients : {}
+                      NotifyOutboundSpam : False"
+  tag nist: ['IR-1', 'IR-8']
+
   describe "This control's test logic needs to be implemented." do
     skip "This control's test logic needs to be implemented."
   end

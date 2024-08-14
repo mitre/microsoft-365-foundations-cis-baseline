@@ -26,9 +26,23 @@ control 'microsoft-365-foundations-2.4.2' do
         7.For Impersonation protection click Next and add valid e-mails or priority accounts both internal and external that may be subject to impersonation.
         8.For Protected custom domains add the organization's domain name, along side other key partners.
         9.Click Next and finally Confirm"
+
+  desc 'rationale',
+       'Enabling priority account protection for users in Microsoft 365 is necessary to enhance
+        security for accounts with access to sensitive data and high privileges, such as CEOs,
+        CISOs, CFOs, and IT admins. These priority accounts are often targeted by spear
+        phishing or whaling attacks and require stronger protection to prevent account
+        compromise.
+        The implementation of stringent, pre-defined policies may result in instances of false
+        positive, however, the benefit of requiring the end-user to preview junk email before
+        accessing their inbox outweighs the potential risk of mistakenly perceiving a malicious
+        email as safe due to its placement in the inbox.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['9.7'] }, { '8' => ['10.7'] }]
+  tag default_value: 'By default, presets are not applied to any users or groups.'
+  tag nist: ['SI-3', 'SI-8', 'SI-4']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/preset-security-policies?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/security-recommendations-for-priority-accounts'

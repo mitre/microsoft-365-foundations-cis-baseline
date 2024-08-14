@@ -37,9 +37,19 @@ control 'microsoft-365-foundations-3.2.2' do
         10. Once the policy has been successfully submitted click Done.
     Note: Some tenants may not have a default policy for teams as Microsoft started creating these by default at a particular point in time. In this case a new policy will have to be created that includes a rule to protect data important to the organization such as credit cards and PII."
 
+  desc 'rationale',
+       "Enabling the default Teams DLP policy rule in Microsoft 365 helps protect an
+        organization's sensitive information by preventing accidental sharing or leakage Credit
+        Card information in Teams conversations and channels.
+        DLP rules are not one size fits all, but at a minimum something should be defined. The
+        organization should identify sensitive information important to them and seek to
+        intercept it using DLP."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.1'] }, { '7' => ['13'] }, { '7' => ['14.7'] }]
+  tag default_value: 'Enabled (On)'
+  tag nist: ['AU-11', 'CM-12', 'SI-12', 'AT-2']
 
   ref 'https://learn.microsoft.com/en-us/powershell/exchange/connect-to-scc-powershell?view=exchange-ps'
   ref 'https://learn.microsoft.com/en-us/purview/dlp-teams-default-policy?view=o365-worldwide%2F1000'

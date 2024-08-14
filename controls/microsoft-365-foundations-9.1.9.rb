@@ -17,9 +17,19 @@ control 'microsoft-365-foundations-9.1.9' do
         3. Scroll to Developer settings.
         4. Set Block ResourceKey Authentication to Enabled"
 
+  desc 'rationale',
+       "Resource keys are a form of authentication that allows users to access Power BI
+        resources (such as reports, dashboards, and datasets) without requiring individual user
+        accounts. While convenient, this method bypasses the organization's centralized
+        identity and access management controls. Enabling ensures that access to Power BI
+        resources is tied to the organization's authentication mechanisms, providing a more
+        secure and controlled environment."
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.8'] }]
+  tag default_value: 'Disabled for the entire organization'
+  tag nist: ['CM-6', 'CM-7']
 
   ref 'https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-developer'
   ref 'https://learn.microsoft.com/en-us/power-bi/connect-data/service-real-time-streaming'

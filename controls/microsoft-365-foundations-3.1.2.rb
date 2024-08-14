@@ -22,9 +22,17 @@ control 'microsoft-365-foundations-3.1.2' do
             AzureActiveDirectory -Operations "Add member to role."
         3. Review the output.'
 
+  desc 'rationale',
+       'Weekly reviews provide an opportunity to identify rights changes in an organization and
+        are a large part of maintaining Least Privilege and preventing Privilege creep. Insider
+        Threats, either intentional or unintentional, can occur when a user has higher than
+        needed privileges. Maintaining accountability of role membership will keep insiders and
+        malicious actors limited in the scope of potential damaging activities.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['8.11'] }, { '7' => ['6.2'] }]
+  tag nist: ['AU-6', 'AU-6(1)', 'AU-7(1)', 'AC-1', 'AC-2', 'AC-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/search-unifiedauditlog?view=exchange-ps'
 

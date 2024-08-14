@@ -49,9 +49,17 @@ control 'microsoft-365-foundations-5.2.2.5' do
         • User administrator
     Warning: Ensure administrators are pre-registered with strong authentication before enforcing the policy. After which the policy must be set to On."
 
+  desc 'rationale',
+       'Sophisticated attacks targeting MFA are more prevalent as the use of it becomes more
+        widespread. These 3 methods are considered phishing-resistant as they remove
+        passwords from the login workflow. It also ensures that public/private key exchange can
+        only happen between the devices and a registered provider which prevents login to fake
+        or phishing websites.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['6.5'] }]
+  tag nist: ['IA-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-authentication-passwordless#fido2-security-keys'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/howto-authentication-passwordless-security-key'

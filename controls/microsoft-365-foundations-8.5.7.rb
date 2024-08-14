@@ -25,8 +25,18 @@ control 'microsoft-365-foundations-8.5.7' do
         2. Run the following command to set the recommended state:
             Set-CsTeamsMeetingPolicy -Identity Global -AllowExternalParticipantGiveRequestControl $false"
 
+  desc 'rationale',
+       'Ensuring that only authorized individuals and not external participants are able to
+        present and request control reduces the risk that a malicious user can inadvertently
+        show content that is not appropriate.
+        External participants are categorized as follows: external users, guests, and anonymous
+        users.'
+
   impact 0.5
   tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['untracked'] }, { '7' => ['untracked'] }]
+  tag default_value: 'Off (False)'
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/microsoftteams/meeting-who-present-request-control'
   ref 'https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps'

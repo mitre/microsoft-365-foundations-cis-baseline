@@ -16,8 +16,16 @@ control 'microsoft-365-foundations-6.5.2' do
             $TipsParams = @{ MailTipsAllTipsEnabled = $true MailTipsExternalRecipientsTipsEnabled = $true MailTipsGroupMetricsEnabled = $true MailTipsLargeAudienceThreshold = '25' }
             Set-OrganizationConfig @TipsParams"
 
+  desc 'rationale',
+       'Setting up MailTips gives a visual aid to users when they send emails to large groups of
+        recipients or send emails to recipients not within the tenant.'
+
   impact 0.5
   tag severity: 'medium'
+  tag default_value: 'MailTipsAllTipsEnabled: True MailTipsExternalRecipientsTipsEnabled: False
+                      MailTipsGroupMetricsEnabled: True MailTipsLargeAudienceThreshold: 25'
+  tag cis_controls: [{ '8' => ['untracked'] }]
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/mailtips/mailtips'
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-organizationconfig?view=exchange-ps'

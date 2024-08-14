@@ -47,9 +47,17 @@ control 'microsoft-365-foundations-5.2.2.4' do
         • SharePoint administrator
         • User administrator"
 
+  desc 'rationale',
+       'Forcing a time out for MFA will help ensure that sessions are not kept alive for an
+        indefinite period of time, ensuring that browser sessions are not persistent will help in
+        prevention of drive-by attacks in web browsers, this also prevents creation and saving of
+        session cookies leaving nothing for an attacker to take.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.3'] }, { '7' => ['16.3'] }]
+  tag default_value: 'The default configuration for user sign-in frequency is a rolling window of 90 days.'
+  tag nist: ['AC-2(5)', 'AC-11', 'AC-11(1)', 'AC-12', 'SI-2']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-session-lifetime'
 

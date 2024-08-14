@@ -14,9 +14,14 @@ control 'microsoft-365-foundations-3.2.1' do
         2. Under Solutions select Data loss prevention then Policies.
         3. Click Create policy."
 
+  desc 'rationale',
+       'Enabling DLP policies alerts users and administrators that specific types of data should
+        not be exposed, helping to protect the data from accidental exposure.'
+
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.1'] }, { '7' => ['13'] }, { '7' => ['14.7'] }]
+  tag nist: ['AU-11', 'CM-12', 'SI-12', 'AT-2']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/compliance/dlp-learn-about-dlp?view=o365-worldwide'
 

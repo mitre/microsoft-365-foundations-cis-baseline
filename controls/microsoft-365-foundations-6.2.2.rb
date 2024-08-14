@@ -24,8 +24,15 @@ control 'microsoft-365-foundations-6.2.2' do
         3. Verify the rules no longer exists.
             Get-TransportRule | Where-Object {($_.setscl -eq -1 -and $_.SenderDomainIs -ne $null)} | ft Name,SenderDomainIs"
 
+  desc 'rationale',
+       'Whitelisting domains in transport rules bypasses regular malware and phishing
+        scanning, which can enable an attacker to launch attacks against your users from a
+        safe haven domain.'
+
   impact 0.5
   tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['untracked'] }]
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/configuration-best-practices'
   ref 'https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/mail-flow-rules'

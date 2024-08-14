@@ -33,8 +33,21 @@ control 'microsoft-365-foundations-5.1.1.1' do
             Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy -BodyParameter $params
     Warning: It is recommended not to disable security defaults until you are ready to implement conditional access rules in the benchmark. Rules such as requiring MFA for all users and blocking legacy protocols are required in CA to make up for the gap created by disabling defaults. Plan accordingly. See the reference section for more details on what coverage Security Defaults provide.'
 
+  desc 'rationale',
+       'Security defaults provide secure default settings that are managed on behalf of
+        organizations to keep customers safe until they are ready to manage their own identity
+        security settings.
+        For example, doing the following:
+          • Requiring all users and admins to register for MFA.
+          • Challenging users with MFA - mostly when they show up on a new device or app,
+        but more often for critical roles and tasks.
+          • Disabling authentication from legacy authentication clients, which can’t do MFA.'
+
   impact 0.5
   tag severity: 'medium'
+  tag cis_controls: [{ '8' => ['untracked'] }]
+  tag default_value: 'Enabled.'
+  tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/concept-fundamentals-security-defaults'
   ref 'https://techcommunity.microsoft.com/t5/azure-active-directory-identity/introducing-security-defaults/ba-p/1061414'
