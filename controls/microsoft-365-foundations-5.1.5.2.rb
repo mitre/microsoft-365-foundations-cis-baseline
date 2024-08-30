@@ -37,7 +37,27 @@ control 'microsoft-365-foundations-5.1.5.2' do
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/manage-apps/configure-user-consent?tabs=azure-portal&pivots=portal'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_user_cant_access_company_data_script = %{
+    $appName = 'cisBenchmarkL512'
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $clientSecret = '#{input('client_secret')}' #This should not be stored inside of any script; supplied to transmit detail
+    import-module microsoft.graph
+    $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
+    $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
+    Connect-MgGraph -TenantId "$tenantid" -ClientSecretCredential $ClientSecretCredential -NoWelcome
+    (Get-MgPolicyAuthorizationPolicy).DefaultUserRolePermissions | Select-Object -ExpandProperty PermissionGrantPoliciesAssigned
+}
+
+  powershell_output = powershell(ensure_user_cant_access_company_data_script)
+
+  describe.one do
+    describe powershell_output do
+      its('stdout.strip') { should_not include('ManagePermissionGrantsForSelf.microsoft-user-default-low') }
+    end
+
+    describe powershell_output do
+      its('stdout.strip') { should be_empty }
+    end
   end
 end

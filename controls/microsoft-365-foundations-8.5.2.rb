@@ -43,7 +43,21 @@ control 'microsoft-365-foundations-8.5.2' do
   ref 'https://learn.microsoft.com/en-us/microsoftteams/anonymous-users-in-meetings'
   ref 'https://learn.microsoft.com/en-US/microsoftteams/who-can-bypass-meeting-lobby?WT.mc_id=TeamsAdminCenterCSH#overview-of-lobby-settings-and-policies'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_anonymous_users_cant_start_script = %{
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
+    $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
+    $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
+    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
+    Write-Output (Get-CsTeamsMeetingPolicy -Identity Global).AllowAnonymousUsersToStartMeeting
+  }
+
+  powershell_output = powershell(ensure_anonymous_users_cant_start_script)
+  describe 'Ensure that AllowAnonymousUsersToStartMeeting state' do
+    subject { powershell_output.stdout.strip }
+    it 'is set to False' do
+      expect(subject).to eq('False')
+    end
   end
 end

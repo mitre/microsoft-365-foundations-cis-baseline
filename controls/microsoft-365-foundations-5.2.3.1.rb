@@ -57,7 +57,7 @@ control 'microsoft-365-foundations-5.2.3.1' do
   ref 'https://techcommunity.microsoft.com/t5/microsoft-entra-azure-ad-blog/defend-your-users-from-mfa-fatigue-attacks/ba-p/2365677'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/how-to-mfa-number-match'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  describe 'manual' do
+    skip 'The test for this control needs to be done manually'
   end
 end

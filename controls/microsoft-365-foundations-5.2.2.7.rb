@@ -46,7 +46,7 @@ control 'microsoft-365-foundations-5.2.2.7' do
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/howto-identity-protection-risk-feedback'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/concept-identity-protection-risks'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  describe 'manual' do
+    skip 'The test for this control needs to be done manually'
   end
 end

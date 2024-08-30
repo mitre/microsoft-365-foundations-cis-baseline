@@ -39,7 +39,7 @@ control 'microsoft-365-foundations-5.1.5.3' do
   tag nist: ['CM-7(5)', 'CM-10']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/manage-apps/configure-admin-consent-workflow'
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  describe 'manual' do
+    skip 'The test for this control needs to be done manually'
   end
 end

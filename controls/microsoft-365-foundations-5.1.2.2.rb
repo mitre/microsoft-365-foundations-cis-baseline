@@ -40,7 +40,25 @@ control 'microsoft-365-foundations-5.1.2.2' do
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-how-applications-are-added'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_third_party_apps_not_allowed_script = %{
+  $appName = 'cisBenchmarkL512'
+  $client_id = '#{input('client_id')}'
+  $tenantid = '#{input('tenant_id')}'
+  $clientSecret = '#{input('client_secret')}' #This should not be stored inside of any script; supplied to transmit detail
+  import-module microsoft.graph
+  $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
+  $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
+  Connect-MgGraph -TenantId "$tenantid" -ClientSecretCredential $ClientSecretCredential -NoWelcome
+  Connect-MgGraph -Scopes "Policy.Read.All" -NoWelcome
+  $thirdPartyAllowance = (Get-MgPolicyAuthorizationPolicy).DefaultUserRolePermissions
+  Write-Output $thirdPartyAllowance.AllowedToCreateApps
+  }
+
+  powershell_output = powershell(ensure_third_party_apps_not_allowed_script)
+  describe 'Ensure DefaultUserRolePermissions.AllowedToCreateApps' do
+    subject { powershell_output.stdout.strip }
+    it 'is set to false' do
+      expect(subject).to eq('False')
+    end
   end
 end

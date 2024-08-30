@@ -48,7 +48,7 @@ control 'microsoft-365-foundations-2.4.2' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/security-recommendations-for-priority-accounts'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/recommended-settings-for-eop-and-office365?view=o365-worldwide#impersonation-settings-in-anti-phishing-policies-in-microsoft-defender-for-office-365'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  describe 'manual' do
+    skip 'The test for this control needs to be done manually'
   end
 end

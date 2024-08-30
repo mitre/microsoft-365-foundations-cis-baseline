@@ -47,7 +47,26 @@ control 'microsoft-365-foundations-1.1.3' do
   ref 'https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.identity.directorymanagement/get-mgdirectoryrole?view=graph-powershell-1.0'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#role-template-ids'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  get_admin_user_count_script = %{
+    $appName = 'cisBenchmarkL512'
+    $client_id = '#{input('client_id')}'
+    $appObjectID = '136a849a-74bc-47ed-9bec-dde306688a6a' #hardly ever used
+    $tenantid = '#{input('tenant_id')}'
+    $clientSecret = '#{input('client_secret')}' #This should not be stored inside of any script; supplied to transmit detail
+    import-module microsoft.graph
+    $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
+    $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
+    Connect-MgGraph -TenantId $tenantid -ClientSecretCredential $ClientSecretCredential -NoWelcome
+    $globalAdminRole = Get-MgDirectoryRole -Filter "RoleTemplateId eq '62e90394-69f5-4237-9190-012177145e10'"
+    $globalAdmins = Get-MgDirectoryRoleMember -DirectoryRoleId $globalAdminRole.Id
+    Write-Host $globalAdmins.AdditionalProperties.Count
+    }
+
+  powershell_output = powershell(get_admin_user_count_script)
+  describe 'Ensure global tenant administrator count' do
+    subject { powershell_output.stdout.strip }
+    it 'should be between two to four' do
+      expect(subject).to cmp(2..4)
+    end
   end
 end

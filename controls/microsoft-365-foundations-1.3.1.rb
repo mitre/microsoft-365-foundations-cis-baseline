@@ -36,7 +36,24 @@ control 'microsoft-365-foundations-1.3.1' do
   ref 'https://www.cisecurity.org/insights/white-papers/cis-password-policy-guide'
   ref 'https://learn.microsoft.com/en-US/microsoft-365/admin/misc/password-policy-recommendations?view=o365-worldwide'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  password_expiration_days_script = %{
+     $appName = 'cisBenchmarkL512'
+     $client_id = '#{input('client_id')}'
+     $tenantid = '#{input('tenant_id')}'
+     $clientSecret = '#{input('client_secret')}' #This should not be stored inside of any script; supplied to transmit detail
+     import-module microsoft.graph
+     $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
+     $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
+     Connect-MgGraph -TenantId "$tenantid" -ClientSecretCredential $ClientSecretCredential -NoWelcome
+     $passwordValidityPeriod = (Get-MgDomain -DomainId 'mitredev.onmicrosoft.com').PasswordValidityPeriodInDays
+     Write-Output $passwordValidityPeriod
+  }
+
+  powershell_output = powershell(password_expiration_days_script)
+  describe 'The password validity period' do
+    subject { powershell_output.stdout.to_i }
+    it 'should be at integer max value' do
+      expect(subject).to cmp(2_147_483_647)
+    end
   end
 end

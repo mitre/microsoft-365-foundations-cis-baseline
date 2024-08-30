@@ -42,7 +42,18 @@ control 'microsoft-365-foundations-8.5.1' do
 
   ref 'https://learn.microsoft.com/en-us/MicrosoftTeams/configure-meetings-sensitive-protection'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_anonymous_users_cant_join_script = %{
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
+    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
+    Write-Output (Get-CsTeamsMeetingPolicy -Identity Global).AllowAnonymousUsersToJoinMeeting
+  }
+  powershell_output = powershell(ensure_anonymous_users_cant_join_script)
+  describe 'Ensure that AllowAnonymousUsersToJoinMeeting state' do
+    subject { powershell_output.stdout.strip }
+    it 'is set to False' do
+      expect(subject).to eq('False')
+    end
   end
 end

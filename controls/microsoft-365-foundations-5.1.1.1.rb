@@ -52,7 +52,24 @@ control 'microsoft-365-foundations-5.1.1.1' do
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/concept-fundamentals-security-defaults'
   ref 'https://techcommunity.microsoft.com/t5/azure-active-directory-identity/introducing-security-defaults/ba-p/1061414'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_security_defaults_disabled_script = %{
+    $appName = 'cisBenchmarkL512'
+    $client_id = '#{input('client_id')}' # SAME AS APPLICATION ID.   TERMS often interchangeable
+    $tenantid = '#{input('tenant_id')}'
+    $clientSecret = '#{input('client_secret')}' #This should not be stored inside of any script; supplied to transmit detail
+    import-module microsoft.graph
+    $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
+    $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
+    Connect-MgGraph -TenantId "$tenantid" -ClientSecretCredential $ClientSecretCredential -NoWelcome
+    Connect-MgGraph -Scopes "Policy.Read.All" -NoWelcome
+    Write-Output (Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy).IsEnabled
+    }
+
+  powershell_output = powershell(ensure_security_defaults_disabled_script)
+  describe 'Ensure security defaults option MgPolicyIdentitySecurityDefaultEnforcementPolicy on Azure Active Directory' do
+    subject { powershell_output.stdout.strip }
+    it 'is disabled' do
+      expect(subject).to eq('False')
+    end
   end
 end

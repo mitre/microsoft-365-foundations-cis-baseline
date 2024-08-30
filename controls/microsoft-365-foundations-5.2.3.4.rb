@@ -50,7 +50,25 @@ control 'microsoft-365-foundations-5.2.3.4' do
   ref 'https://learn.microsoft.com/en-us/entra/identity/conditional-access/what-if-tool'
   ref 'https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-methods-activity'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_member_users_mfa_capable_script = %{
+    $appName = 'cisBenchmarkL512'
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $clientSecret = '#{input('client_secret')}' #This should not be stored inside of any script; supplied to transmit detail
+    import-module microsoft.graph
+    $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
+    $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
+    Connect-MgGraph -TenantId "$tenantid" -ClientSecretCredential $ClientSecretCredential -NoWelcome
+    Connect-MgGraph -Scopes "UserAuthenticationMethod.Read.All,AuditLog.Read.All" -NoWelcome
+    $count = Get-MgReportAuthenticationMethodUserRegistrationDetail ` -Filter "IsMfaCapable eq false and UserType eq 'Member'" | Measure-Object
+    Write-Output $count.Count
+  }
+
+  powershell_output = powershell(ensure_member_users_mfa_capable_script)
+  describe 'Ensure count for IsMfaCapable equals false' do
+    subject { powershell_output.stdout.strip }
+    it 'should be 0 for all member users' do
+      expect(subject).to eq(0)
+    end
   end
 end

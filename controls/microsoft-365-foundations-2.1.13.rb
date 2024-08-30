@@ -25,7 +25,7 @@ control 'microsoft-365-foundations-2.1.13' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/reports-email-security?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/threat-explorer-real-time-detections-about?view=o365-worldwide'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  describe 'manual' do
+    skip 'The test for this control needs to be done manually'
   end
 end

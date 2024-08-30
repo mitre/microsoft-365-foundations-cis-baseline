@@ -32,7 +32,7 @@ control 'microsoft-365-foundations-1.1.4' do
   tag default_value: 'By default, Allow users to remember multi-factor authentication on devices they trust is disabled.'
   tag nist: ['AC-2', 'AC-2(3)', 'AC-1', 'AC-2', 'AC-2(1)']
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  describe 'manual' do
+    skip 'The test for this control needs to be done manually'
   end
 end

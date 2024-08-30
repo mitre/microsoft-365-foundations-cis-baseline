@@ -41,7 +41,33 @@ control 'microsoft-365-foundations-8.1.1' do
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/enterprise/manage-skype-for-business-online-with-microsoft-365-powershell?view=o365-worldwide'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_file_sharing_enabled_cloud_script = %{
+     $appName = 'cisBenchmarkL512'
+     $client_id = '#{input('client_id')}'
+     $tenantid = '#{input('tenant_id')}'
+     $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
+     Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
+
+     $teamsClientConfig = Get-CsTeamsClientConfiguration | Select-Object AllowDropbox,AllowBox,AllowGoogleDrive,AllowShareFile,AllowEgnyte
+     $allTrue = $false
+     foreach ($property in @('AllowDropbox', 'AllowBox', 'AllowGoogleDrive', 'AllowShareFile', 'AllowEgnyte')) {
+        if ($teamsClientConfig.$property -ne $true) {
+          $allTrue = $false
+          break
+        }
+      }
+      if ($allTrue) {
+          Write-Output "True"
+      } else {
+          Write-Output "False"
+      }
+    }
+
+  powershell_output = powershell(ensure_file_sharing_enabled_cloud_script)
+  describe 'Ensure that all the authorized cloud storage services ' do
+    subject { powershell_output.stdout.strip }
+    it 'are set to true' do
+      expect(subject).to eq('True')
+    end
   end
 end

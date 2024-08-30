@@ -48,7 +48,7 @@ control 'microsoft-365-foundations-7.3.3' do
   ref 'https://learn.microsoft.com/en-us/sharepoint/security-considerations-of-allowing-custom-script'
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-sposite?view=sharepoint-ps'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  describe 'manual' do
+    skip 'The test for this control needs to be done manually'
   end
 end

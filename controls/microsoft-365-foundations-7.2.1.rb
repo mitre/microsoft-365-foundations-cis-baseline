@@ -39,8 +39,4 @@ control 'microsoft-365-foundations-7.2.1' do
   tag nist: ['AC-17(2)', 'IA-5', 'IA-5(1)', 'SC-8', 'SC-8(1)', 'SI-2']
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps'
-
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
-  end
 end

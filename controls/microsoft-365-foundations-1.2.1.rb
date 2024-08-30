@@ -34,7 +34,24 @@ control 'microsoft-365-foundations-1.2.1' do
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-self-service-management'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/create-groups/compare-groups?view=o365-worldwide'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  all_groups_private_script = %{
+    $appName = 'cisBenchmarkL512'
+    $client_id = '#{input('client_id')}' # SAME AS APPLICATION ID.   TERMS often interchangeable
+    $tenantid = '#{input('tenant_id')}'
+    $clientSecret = '#{input('client_secret')}' #This should not be stored inside of any script; supplied to transmit detail
+    import-module microsoft.graph
+    $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
+    $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
+    Connect-MgGraph -TenantId "$tenantid" -ClientSecretCredential $ClientSecretCredential -NoWelcome
+    # Determine Id of role using the immutable RoleTemplateId value.
+    Write-Host (Get-MgGroup | where {$_.Visibility -eq "Public"} | select DisplayName,Visibility).Count
+  }
+
+  powershell_output = powershell(all_groups_private_script)
+  describe 'Public groups count' do
+    subject { powershell_output.stdout.to_i }
+    it 'should be 0' do
+      expect(subject).to cmp(0)
+    end
   end
 end

@@ -46,12 +46,7 @@ control 'microsoft-365-foundations-1.2.2' do
   tag cis_controls: [{ '8' => ['untracked'] }, { '7' => ['untracked'] }]
   tag default_value: 'AccountEnabled: True'
   tag nist: ['CM-6']
-
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/email/about-shared-mailboxes?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/email/create-a-shared-mailbox?view=o365-worldwide#block-sign-in-for-the-shared-mailbox-account'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/enterprise/block-user-accounts-with-microsoft-365-powershell?view=o365-worldwide#block-individual-user-accounts'
-
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
-  end
 end

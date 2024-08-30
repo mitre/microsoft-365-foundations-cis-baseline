@@ -37,7 +37,22 @@ control 'microsoft-365-foundations-8.1.2' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/reducing-attack-surface-in-microsoft-teams?view=o365-worldwide#restricting-channel-email-messages-to-approved-domains'
   ref 'https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsclientconfiguration?view=skype-ps'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_users_cant_send_emails_script = %{
+     $appName = 'cisBenchmarkL512'
+     $client_id = '#{input('client_id')}'
+     $tenantid = '#{input('tenant_id')}'
+     $clientSecret = '#{input('client_secret')}' #This should not be stored inside of any script; supplied to transmit detail #This should not be stored inside of any script; supplied to transmit detail
+     $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')     $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
+     $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
+     Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
+     Write-Output (Get-CsTeamsClientConfiguration -Identity Global).AllowEmailIntoChannel
+  }
+
+  powershell_output = powershell(ensure_users_cant_send_emails_script)
+  describe 'Ensure that AllowEmailIntoChannel state' do
+    subject { powershell_output.stdout.strip }
+    it 'is set to False' do
+      expect(subject).to eq('False')
+    end
   end
 end

@@ -19,3 +19,40 @@ inputs:
   type: Boolean
   value: false
   required: false
+
+#Write controls using this input here
+- name: client_id
+  sensitive: true
+  description: 'Client ID for Microsoft 365'
+  type: String
+  required: true
+
+#Write controls using this input here
+- name: tenant_id
+  sensitive: true
+  description: 'Tenant ID for Microsoft 365'
+  type: String
+  required: true
+
+#Write controls using this input here
+- name: client_secret
+  sensitive: true
+  description: 'Client Secret for Microsoft 365'
+  type: String
+  required: true
+
+#Write controls using this input here
+- name: certificate_path
+  sensitive: true
+  description: 'Certificate path for M365'
+  type: String
+  required: true
+  
+#Write controls using this input here
+- name: certificate_password
+  sensitive: true
+  description: 'Password for certificate for M365'
+  type: String
+  required: true
+
+

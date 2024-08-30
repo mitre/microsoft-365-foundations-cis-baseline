@@ -32,7 +32,7 @@ control 'microsoft-365-foundations-9.1.5' do
   ref 'https://learn.microsoft.com/en-us/power-bi/visuals/service-r-visuals'
   ref 'https://www.r-project.org/'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  describe 'manual' do
+    skip 'The test for this control needs to be done manually'
   end
 end
