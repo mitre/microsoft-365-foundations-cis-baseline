@@ -37,7 +37,21 @@ control 'microsoft-365-foundations-6.5.1' do
 
   ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/enable-or-disable-modern-authentication-in-exchange-online'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_modern_authentication_for_exchange_enabled_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    (Get-OrganizationConfig).OAuth2ClientProfileEnabled
+ }
+
+  powershell_output = powershell(ensure_modern_authentication_for_exchange_enabled_script)
+  describe 'Ensure the OAuth2ClientProfileEnabled state from Get-OrganizationConfig' do
+    subject { powershell_output.stdout.strip }
+    it 'is set to True' do
+      expect(subject).to eq('True')
+    end
   end
 end

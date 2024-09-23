@@ -29,7 +29,27 @@ control 'microsoft-365-foundations-2.1.8' do
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/email-authentication-spf-configure?view=o365-worldwide'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  # This does not work on Mac - need to find a different way to test. Additionally, CIS Benchmark says manual
+  domain_list = input('spf_domains')
+  domain_list.each do |domain|
+    resolve_domain_script = %{
+      $client_id = '#{input('client_id')}'
+      $certificate_password = '#{input('certificate_password')}'
+      $certificate_path = '#{input('certificate_path')}'
+      $organization = '#{input('organization')}'
+      import-module exchangeonlinemanagement
+      Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+      Import-Module DNSClient
+      Resolve-DnsName #{domain} txt | fl
+    }
+    describe "Ensure the following domain (#{domain})" do
+      subject { powershell(resolve_domain_script).stdout.strip }
+      it 'should exist' do
+        expect(subject).should_not be_empty
+      end
+      it 'should contain the following string: v=spf1 include:spf.protection.outlook.com' do
+        expect(subject).should include 'v=spf1 include:spf.protection.outlook.com'
+      end
+    end
   end
 end

@@ -38,7 +38,21 @@ control 'microsoft-365-foundations-3.1.1' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-log-enable-disable?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-adminauditlogconfig?view=exchange-ps'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_m365_audit_log_enabled_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    (Get-AdminAuditLogConfig | Select-Object -ExpandProperty UnifiedAuditLogIngestionEnabled)
+ }
+
+  powershell_output = powershell(ensure_m365_audit_log_enabled_script)
+  describe 'Ensure the UnifiedAuditLogIngestionEnabled option for audit logs' do
+    subject { powershell_output.stdout.strip }
+    it 'is set to True' do
+      expect(subject).to eq('True')
+    end
   end
 end

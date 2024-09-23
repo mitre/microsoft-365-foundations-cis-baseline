@@ -37,7 +37,22 @@ control 'microsoft-365-foundations-6.2.2' do
   ref 'https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/configuration-best-practices'
   ref 'https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/mail-flow-rules'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_mail_transport_rules_dont_whitelist_specific_domains_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    Get-TransportRule | Where-Object { ($_.SetScl -eq -1 -and $_.SenderDomainIs -ne $null) } | Select-Object -ExpandProperty Name
+ }
+  powershell_output = powershell(ensure_mail_transport_rules_dont_whitelist_specific_domains_script).stdout.strip
+  whitelisted_domain_rules = powershell_output.split("\n") unless powershell_output.empty?
+  describe 'Ensure the mail transport rules' do
+    subject { powershell_output }
+    it 'do not have specific domains whitelisted' do
+      failure_message = "Rules with specific whitelisted domains: #{whitelisted_domain_rules}"
+      expect(subject).to be_empty, failure_message
+    end
   end
 end

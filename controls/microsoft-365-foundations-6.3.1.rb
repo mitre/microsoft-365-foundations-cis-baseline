@@ -60,7 +60,34 @@ control 'microsoft-365-foundations-6.3.1' do
   ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/add-ins-for-outlook/specify-who-can-install-and-manage-add-ins?source=recommendations'
   ref 'https://learn.microsoft.com/en-us/exchange/permissions-exo/role-assignment-policies'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_installing_outlook_addins_not_allowed_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    Get-EXOMailbox |
+    Select-Object -Unique RoleAssignmentPolicy |
+    ForEach-Object {
+        $policy = Get-RoleAssignmentPolicy -Identity $_.RoleAssignmentPolicy
+        $appsRoles = $policy.AssignedRoles | Where-Object {$_ -like "*Apps*"}
+
+        if ($appsRoles -contains "My Custom Apps" -or
+            $appsRoles -contains "My Marketplace Apps" -or
+            $appsRoles -contains "My ReadWriteMailbox Apps") {
+
+            $policy.Identity
+        }
+    }
+    }
+  powershell_output = powershell(ensure_installing_outlook_addins_not_allowed_script).stdout.strip
+  error_identities = powershell_output.split("\n") unless powershell_output.empty?
+  describe 'Ensure the number of policies that contain My Custom Apps, My Marketplace Apps, or My ReadWriteMailboxApps' do
+    subject { powershell_output }
+    it 'is 0' do
+      failure_message = "Identites of policies breaking the rules: #{error_identities}"
+      expect(subject).to be_empty, failure_message
+    end
   end
 end

@@ -784,6 +784,7 @@ DEPENDENCIES
   inspec (>= 6.8.1)
   inspec-bin
   inspec-core
+  json
   kitchen-ansible
   kitchen-inspec
   kitchen-sync

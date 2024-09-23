@@ -46,7 +46,37 @@ control 'microsoft-365-foundations-2.1.3' do
                       InternalSenderAdminAddress : $null"
   tag nist: ['IR-1', 'IR-8', 'RA-5', 'AU-1', 'AU-2']
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_notifications_for_internal_users_sending_malware_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    Get-MalwareFilterPolicy | Select-Object Identity, EnableInternalSenderAdminNotifications, InternalSenderAdminAddress | ConvertTo-Json
+ }
+  powershell_output = JSON.parse(powershell(ensure_notifications_for_internal_users_sending_malware_script).stdout.strip)
+  case powershell_output
+  when Hash
+    describe "Ensure the following policy (#{powershell_output['Identity']})" do
+      it 'should have EnableInternalSenderAdminNotifications set to true' do
+        expect(powershell_output['EnableInternalSenderAdminNotifications']).to eq(true)
+      end
+
+      it 'should have a non-empty InternalSenderAdminAddress' do
+        expect(powershell_output['InternalSenderAdminAddress']).not_to be_empty
+      end
+    end
+  when Array
+    powershell_output.each do |policy|
+      describe %(Ensure the following policy (#{policy['Identity']})) do
+        it 'should have EnableInternalSenderAdminNotifications set to true' do
+          expect(policy['EnableInternalSenderAdminNotifications']).to eq(true)
+        end
+        it 'should have a non-empty InternalSenderAdminAddress' do
+          expect(policy['InternalSenderAdminAddress']).not_to be_empty
+        end
+      end
+    end
   end
 end

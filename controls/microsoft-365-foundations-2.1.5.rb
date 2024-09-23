@@ -48,7 +48,43 @@ control 'microsoft-365-foundations-2.1.5' do
   ]
   tag nist: ['SI-3', 'SI-8', 'AU-1', 'AU-2']
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_safe_attachments_for_msproducts_enabled_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    Get-AtpPolicyForO365 | Select-Object Name, EnableATPForSPOTeamsODB, EnableSafeDocs, AllowSafeDocsOpen | ConvertTo-Json
+  }
+
+  powershell_output = JSON.parse(powershell(ensure_safe_attachments_for_msproducts_enabled_script).stdout.strip)
+  case powershell_output
+  when Hash
+    describe "Ensure the following Safe Attachment Policy (#{powershell_output['Name']})" do
+      it 'should have EnableATPForSPOTeamsODB set to True' do
+        expect(powershell_output['EnableATPForSPOTeamsODB']).to eq(true)
+      end
+      it 'should have EnableSafeDocs set to True' do
+        expect(powershell_output['EnableSafeDocs']).to eq(true)
+      end
+      it 'should have AllowSafeDocsOpen set to False' do
+        expect(powershell_output['AllowSafeDocsOpen']).to eq(false)
+      end
+    end
+  when Array
+    powershell_output.each do |policy|
+      describe %(Ensure the Safe Attachment Policy #{policy['Name']}) do
+        it 'should have EnableATPForSPOTeamsODB set to True' do
+          expect(powershell_output['EnableATPForSPOTeamsODB']).to eq(true)
+        end
+        it 'should have EnableSafeDocs set to True' do
+          expect(powershell_output['EnableSafeDocs']).to eq(true)
+        end
+        it 'should have AllowSafeDocsOpen set to False' do
+          expect(powershell_output['AllowSafeDocsOpen']).to eq(false)
+        end
+      end
+    end
   end
 end

@@ -47,8 +47,7 @@ control 'microsoft-365-foundations-8.5.2' do
     $client_id = '#{input('client_id')}'
     $tenantid = '#{input('tenant_id')}'
     $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
-    $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
-    $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
+    import-module MicrosoftTeams
     Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
     Write-Output (Get-CsTeamsMeetingPolicy -Identity Global).AllowAnonymousUsersToStartMeeting
   }

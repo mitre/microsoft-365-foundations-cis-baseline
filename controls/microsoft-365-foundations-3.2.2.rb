@@ -55,7 +55,52 @@ control 'microsoft-365-foundations-3.2.2' do
   ref 'https://learn.microsoft.com/en-us/purview/dlp-teams-default-policy?view=o365-worldwide%2F1000'
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/connect-ippssession?view=exchange-ps'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_dlp_policies_enabled_teams_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-IPPSSession -AppID $client_id -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force) -Organization $organization -ShowBanner:$false
+    $DlpPolicy = Get-DlpCompliancePolicy
+    $DlpPolicy | Where-Object {$_.Workload -match "Teams"} | Select-Object Name, Mode, TeamsLocation, TeamsLocationException | ConvertTo-Json
+ }
+
+  powershell_output = JSON.parse(powershell(ensure_dlp_policies_enabled_teams_script).stdout.strip)
+  case powershell_output
+  when Hash
+    describe "Ensure the following DLP policy (#{powershell_output['Name']})" do
+      it 'should have its Mode state set to Enable' do
+        expect(powershell_output['Mode']).to eq('Enable')
+      end
+      it %(should have its TeamsLocation state include 'All') do
+        expect(powershell_output['TeamsLocation'][0]['DisplayName']).to include('All')
+      end
+      it 'should have its TeamsLocationException state to be empty or include only permitted exceptions' do
+        permitted_exceptions = input('permitted_exceptions_teams_locations')
+        actual_exceptions = powershell_output['TeamsLocationException']
+        expect(actual_exceptions.empty? ||
+        (actual_exceptions - permitted_exceptions).empty? ||
+        actual_exceptions.sort == permitted_exceptions.sort).to eq(true)
+      end
+    end
+  when Array
+    powershell_output.each do |policy|
+      describe %(Ensure the following DLP policy (#{policy['Identity']})) do
+        it 'should have its Mode state set to Enable' do
+          expect(powershell_output['Mode']).to eq('Enable')
+        end
+        it %(should have its TeamsLocation state include 'All') do
+          expect(powershell_output['TeamsLocation'][0]['DisplayName']).to include('All')
+        end
+        it 'should have its TeamsLocationException state to be empty or include only permitted exceptions' do
+          permitted_exceptions = input('permitted_exceptions_teams_locations')
+          actual_exceptions = powershell_output['TeamsLocationException']
+          expect(actual_exceptions.empty? ||
+          (actual_exceptions - permitted_exceptions).empty? ||
+          actual_exceptions.sort == permitted_exceptions.sort).to eq(true)
+        end
+      end
+    end
   end
 end

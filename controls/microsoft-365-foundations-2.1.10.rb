@@ -46,7 +46,43 @@ control 'microsoft-365-foundations-2.1.10' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/email-authentication-dmarc-configure?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/how-to-enable-dmarc-reporting-for-microsoft-online-email-routing-address-moera-and-parked-domains?view=o365-worldwide'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  # This does not work on Mac - need to find a different way to test. Additionally, CIS Benchmark says manual
+  domain_list = input('dmarc_domain')
+  domain_list.each do |domain|
+    check_dmarc_domain_script = %{
+      $client_id = '#{input('client_id')}'
+      $certificate_password = '#{input('certificate_password')}'
+      $certificate_path = '#{input('certificate_path')}'
+      $organization = '#{input('organization')}'
+      import-module exchangeonlinemanagement
+      Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+      Import-Module DNSClient
+      Resolve-DnsName _dmarc.#{domain} txt
+    }
+    describe "Ensure the following DMARC domain (#{domain})" do
+      subject { powershell(check_dmarc_domain_script).stdout.strip }
+      it %{should contain all parts following string: v=DMARC1; (p=quarantine OR p=reject), pct=100, rua=mailto:#{input('reporting_mail_address')} and ruf=mailto:#{input('reporting_mail_address')}} do
+        expect(subject).should match %{v=DMARC1;.*p=(quarantine|reject);.*pct=100;.*rua=mailto:.*ruf=mailto:#{input('reporting_mail_address')}}
+      end
+    end
+  end
+  domain_list_moera = input('moera_domain')
+  domain_list_moera.each do |domain|
+    check_moera_domain_script = %{
+      $client_id = '#{input('client_id')}'
+      $certificate_password = '#{input('certificate_password')}'
+      $certificate_path = '#{input('certificate_path')}'
+      $organization = '#{input('organization')}'
+      import-module exchangeonlinemanagement
+      Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+      Import-Module DNSClient
+      Resolve-DnsName _dmarc.#{domain}.onmicrosoft.com txt
+    }
+    describe "Ensure the following MOERA domain (#{domain})" do
+      subject { powershell(check_moera_domain_script).stdout.strip }
+      it %{should contain all parts following string: v=DMARC1; (p=quarantine OR p=reject), pct=100, rua=mailto:#{input('reporting_mail_address')} and ruf=mailto:#{input('reporting_mail_address')}} do
+        expect(subject).should match %{v=DMARC1;.*p=(quarantine|reject);.*pct=100;.*rua=mailto:.*ruf=mailto:#{input('reporting_mail_address')}}
+      end
+    end
   end
 end

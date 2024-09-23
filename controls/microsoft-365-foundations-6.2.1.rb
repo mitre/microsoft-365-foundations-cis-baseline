@@ -70,7 +70,45 @@ control 'microsoft-365-foundations-6.2.1' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/outbound-spam-policies-external-email-forwarding?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/Remove-TransportRule?view=exchange-ps'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_no_external_address_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    Get-TransportRule | Where-Object {
+    $_.RedirectMessageTo -ne $null -and
+    $_.RedirectMessageTo -notmatch '#{input('internal_domains_transport_rule').join('|')}'
+  } | Select-Object -ExpandProperty Name
+ }
+  powershell_output_address = powershell(ensure_no_external_address_script).stdout.strip
+  external_rules = powershell_output_address.split("\n") unless powershell_output_address.empty?
+  describe 'Ensure only internal domains' do
+    subject { powershell_output_address }
+    it 'are present in transport rules' do
+      failure_message = "Rules with external domains present: #{external_rules}"
+      expect(subject).to be_empty, failure_message
+    end
+  end
+
+  ensure_all_mail_forwarding_blocked_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    Get-HostedOutboundSpamFilterPolicy | Where-Object { $_.AutoForwardingMode -ne "Off" } | Select-Object Name, AutoForwardingMode | ConvertTo-Json
+ }
+
+  powershell_output = powershell(ensure_all_mail_forwarding_blocked_script).stdout.strip
+  mailboxes_without_off = JSON.parse(powershell_output) unless powershell_output.empty?
+  describe 'Ensure the number of mailboxes with the AutoForwardingMode state not set to Off' do
+    subject { powershell_output }
+    it 'is 0' do
+      failure_message = "Mailboxes that failed: #{JSON.pretty_generate(mailboxes_without_off)}"
+      expect(subject).to be_empty, failure_message
+    end
   end
 end

@@ -42,7 +42,24 @@ control 'microsoft-365-foundations-6.1.4' do
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/get-mailboxauditbypassassociation?view=exchange-ps'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_auditbybass_not_enabled_mailbox_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    $MBX = Get-MailboxAuditBypassAssociation -ResultSize unlimited
+    $MBX | where {$_.AuditBypassEnabled -eq $true} | Select-Object Name, AuditBypassEnabled | ConvertTo-Json
+ }
+
+  powershell_output = powershell(ensure_auditbybass_not_enabled_mailbox_script).stdout.strip
+  mailboxes_with_true = JSON.parse(powershell_output) unless powershell_output.empty?
+  describe 'Ensure the number of mailboxes with the AuditBypassEnabled state set to True' do
+    subject { powershell_output }
+    it 'is 0' do
+      failure_message = "Mailboxes that failed: #{JSON.pretty_generate(mailboxes_with_true)}"
+      expect(subject).to be_empty, failure_message
+    end
   end
 end

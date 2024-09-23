@@ -67,7 +67,50 @@ control 'microsoft-365-foundations-8.2.1' do
   ref 'https://www.microsoft.com/en-us/security/blog/2023/08/02/midnight-blizzard-conducts-targeted-social-engineering-over-microsoft-teams/'
   ref 'https://www.bitdefender.com/blog/hotforsecurity/gifshell-attack-lets-hackers-create-reverse-shell-through-microsoft-teams-gifs/'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  authorized_domains = input('authorized_domains_teams_admin_center')
+  domain_pattern = authorized_domains.map { |domain| "'#{domain}'" }.join(', ')
+  ensure_external_access_restricted_teams_admin_center_script = %{
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
+    import-module MicrosoftTeams
+    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
+    $authorizedDomains = @(#{domain_pattern})
+
+    $federationConfig = Get-CsTenantFederationConfiguration
+
+    $allowTeamsConsumer = $federationConfig.AllowTeamsConsumer -eq $false
+    $allowPublicUsers = $federationConfig.AllowPublicUsers -eq $false
+    $allowFederatedUsers = $federationConfig.AllowFederatedUsers
+
+    if ($allowTeamsConsumer) {
+    } else {
+        Write-Host "AllowTeamsConsumer is not False"
+    }
+
+    if ($allowPublicUsers) {
+    } else {
+        Write-Host "AllowPublicUsers is not False"
+    }
+
+    if (-not $allowFederatedUsers) {
+    } else {
+        $allowedDomains = $federationConfig.AllowedDomains
+        $unauthorizedDomains = $allowedDomains | Where-Object { $_ -notin $authorizedDomains }
+
+        if ($unauthorizedDomains.Count -eq 0) {
+        } else {
+            Write-Host "There are also unauthorized domains: $unauthorizedDomains"
+        }
+    }
+  }
+
+  powershell_output = powershell(ensure_external_access_restricted_teams_admin_center_script).stdout.strip
+  describe 'Ensure the AllowTeamsConsumer, AllowPublicUsers, AllowFederatedUsers, and AllowedDomains' do
+    subject { powershell_output }
+    it 'are set to appropriate values and authorized domains present' do
+      failure_message = "The following failed:\n#{powershell_output}"
+      expect(subject).to be_empty, failure_message
+    end
   end
 end

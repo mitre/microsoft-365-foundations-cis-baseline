@@ -34,7 +34,7 @@ control 'microsoft-365-foundations-2.3.1' do
   tag cis_controls: [{ '8' => ['8.11'] }, { '7' => ['6.2'] }]
   tag nist: ['AU-6', 'AU-6(1)', 'AU-7(1)', 'AC-1', 'AC-2', 'AC-2(1)']
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  describe 'manual' do
+    skip 'The test for this control needs to be done manually'
   end
 end

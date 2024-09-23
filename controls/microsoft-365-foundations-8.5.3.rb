@@ -40,7 +40,20 @@ control 'microsoft-365-foundations-8.5.3' do
   ref 'https://learn.microsoft.com/en-US/microsoftteams/who-can-bypass-meeting-lobby?WT.mc_id=TeamsAdminCenterCSH'
   ref 'https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_people_in_org_bypass_lobby_script = %{
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
+    import-module MicrosoftTeams
+    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
+    Write-Output (Get-CsTeamsMeetingPolicy -Identity Global).AutoAdmittedUsers
+  }
+
+  powershell_output = powershell(ensure_people_in_org_bypass_lobby_script)
+  describe 'Ensure that the AutoAdmittedUsers state' do
+    subject { powershell_output.stdout.strip }
+    it 'is set to EveryoneInCompanyExcludingGuests' do
+      expect(subject).to eq('EveryoneInCompanyExcludingGuests')
+    end
   end
 end

@@ -38,7 +38,20 @@ control 'microsoft-365-foundations-8.5.5' do
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps#-meetingchatenabledtype'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_meeting_chat_not_allow_anon_users = %{
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
+    import-module MicrosoftTeams
+    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
+    Write-Output (Get-CsTeamsMeetingPolicy -Identity Global).MeetingChatEnabledType
+  }
+
+  powershell_output = powershell(ensure_meeting_chat_not_allow_anon_users)
+  describe 'Ensure that the MeetingChatEnabledType state' do
+    subject { powershell_output.stdout.strip }
+    it 'is set to EnabledExceptAnonymous' do
+      expect(subject).to eq('EnabledExceptAnonymous')
+    end
   end
 end

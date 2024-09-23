@@ -38,7 +38,20 @@ control 'microsoft-365-foundations-8.5.8' do
 
   ref 'https://learn.microsoft.com/en-US/microsoftteams/settings-policies-reference?WT.mc_id=TeamsAdminCenterCSH#meeting-engagement'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_external_meeting_chat_off_script = %{
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
+    import-module MicrosoftTeams
+    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
+    Write-Output (Get-CsTeamsMeetingPolicy -Identity Global).AllowExternalNonTrustedMeetingChat
+  }
+
+  powershell_output = powershell(ensure_external_meeting_chat_off_script)
+  describe 'Ensure that the AllowExternalNonTrustedMeetingChat state' do
+    subject { powershell_output.stdout.strip }
+    it 'is set to False' do
+      expect(subject).to eq('False')
+    end
   end
 end

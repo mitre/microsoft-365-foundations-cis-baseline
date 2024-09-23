@@ -75,7 +75,76 @@ control 'microsoft-365-foundations-8.6.1' do
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/submissions-teams?view=o365-worldwide'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  microsoft_teams_script = %{
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
+    import-module MicrosoftTeams
+    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
+    (Get-CsTeamsMessagingPolicy -Identity Global).AllowSecurityEndUserReporting
+ }
+  powershell_output_teams = powershell(microsoft_teams_script).stdout.strip
+  describe 'Ensure the AllowSecurityEndUserReporting state from Get-CsTeamsMessagingPolicy' do
+    subject { powershell_output_teams }
+    it 'is set to True' do
+      expect(subject).to eq('True')
+    end
+  end
+
+  microsoft_defender_script = %{
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
+    import-module MicrosoftTeams
+    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
+    Get-ReportSubmissionPolicy | Select-Object -Property ReportJunkToCustomizedAddress, ReportNotJunkToCustomizedAddress, ReportPhishToCustomizedAddress, ReportJunkAddresses, ReportNotJunkAddresses, ReportPhishAddresses, ReportChatMessageEnabled, ReportChatMessageToCustomizedAddressEnabled | ConvertTo-Json
+  }
+
+  reporting_email_addresses = input('reporting_email_addresses_for_malicious_messages')
+  powershell_output = powershell(microsoft_defender_script).stdout.strip
+  submission_policy_data = JSON.parse(powershell_output)
+  describe 'Ensure that the following states:' do
+    subject { powershell_output }
+    it 'ReportJunkToCustomizedAddress should be True' do
+      expect(submission_policy_data['ReportJunkToCustomizedAddress']).to eq(true)
+    end
+
+    it 'ReportNotJunkToCustomizedAddress should be True' do
+      expect(submission_policy_data['ReportNotJunkToCustomizedAddress']).to eq(true)
+    end
+
+    it 'ReportPhishToCustomizedAddress should be True' do
+      expect(submission_policy_data['ReportPhishToCustomizedAddress']).to eq(true)
+    end
+
+    it "ReportJunkAddresses should be #{reporting_email_addresses}" do
+      expect(submission_policy_data['ReportJunkAddresses']).to match_array(reporting_email_addresses)
+    end
+
+    it "ReportNotJunkAddresses should be #{reporting_email_addresses}" do
+      expect(submission_policy_data['ReportNotJunkAddresses']).to match_array(reporting_email_addresses)
+    end
+
+    it "ReportPhishAddresses should be #{reporting_email_addresses}" do
+      expect(submission_policy_data['ReportPhishAddresses']).to match_array(reporting_email_addresses)
+    end
+
+    it 'ReportChatMessageEnabled should be False' do
+      expect(submission_policy_data['ReportChatMessageEnabled']).to eq(false)
+    end
+
+    it 'ReportChatMessageToCustomizedAddressEnabled should be True' do
+      expect(submission_policy_data['ReportChatMessageToCustomizedAddressEnabled']).to eq(true)
+    end
   end
 end

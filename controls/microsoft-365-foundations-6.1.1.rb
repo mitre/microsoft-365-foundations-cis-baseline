@@ -37,7 +37,21 @@ control 'microsoft-365-foundations-6.1.1' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-mailboxes?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-organizationconfig?view=exchange-ps#-auditdisabled'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_auditdisabled_set_false_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    (Get-OrganizationConfig).AuditDisabled
+ }
+
+  powershell_output = powershell(ensure_auditdisabled_set_false_script)
+  describe 'Ensure the AuditDisabled state from Get-OrganizationConfig' do
+    subject { powershell_output.stdout.strip }
+    it 'is set to False' do
+      expect(subject).to eq('False')
+    end
   end
 end

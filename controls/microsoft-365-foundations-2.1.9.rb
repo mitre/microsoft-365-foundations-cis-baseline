@@ -54,7 +54,20 @@ control 'microsoft-365-foundations-2.1.9' do
 
   ref 'https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dkim-configure?view=o365-worldwide'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_dkim_enabled_for_exchange_domains_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    Get-DkimSigningConfig | Where-Object { $_.Enabled -eq $false } | Measure-Object | Select-Object -ExpandProperty Count
+ }
+  powershell_output = powershell(ensure_dkim_enabled_for_exchange_domains_script)
+  describe 'Ensure the count of Exchange Online Domains with the DKIM Enabled setting set to False' do
+    subject { powershell_output.stdout.strip }
+    it 'is 0' do
+      expect(subject).to cmp(0)
+    end
   end
 end

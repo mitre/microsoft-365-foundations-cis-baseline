@@ -36,7 +36,21 @@ control 'microsoft-365-foundations-6.5.3' do
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-owamailboxpolicy?view=exchange-ps'
   ref 'https://support.microsoft.com/en-us/topic/3rd-party-cloud-storage-services-supported-by-office-apps-fce12782-eccc-4cf5-8f4b-d1ebec513f72'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_additional_storage_providers_restricted_web_outlook_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    (Get-OwaMailboxPolicy).AdditionalStorageProvidersAvailable
+ }
+
+  powershell_output = powershell(ensure_additional_storage_providers_restricted_web_outlook_script)
+  describe 'Ensure the AdditionalStorageProvidersAvailable option from Get-OwaMailboxPolicy' do
+    subject { powershell_output.stdout.strip }
+    it 'is set to False' do
+      expect(subject).to eq('False')
+    end
   end
 end

@@ -55,4 +55,96 @@ inputs:
   type: String
   required: true
 
+#Write controls using this input here
+- name: organization
+  sensitive: true
+  description: 'M365 Organization'
+  type: String
+  required: true
+
+#Write controls using this input here
+#Control 2.1.6
+- name: notify_outbound_spam_recipients
+  sensitive: true
+  description: 'Email address to notify administrator for Exchange Online Spam Policies'
+  type: String
+  required: true
+
+#Write controls using this input here
+#Control 2.1.6
+- name: bcc_suspicious_outbound_additional_recipients
+  sensitive: true
+  description: 'BCC email address to notify additional recipients for Exchange Online Spam Policies'
+  type: String
+  required: true
+
+#Write controls using this input here
+#Control 2.1.8
+- name: spf_domains
+  sensitive: true
+  description: 'Array of domains needed to check for SPF record'
+  type: Array
+  required: true
+
+#Control 2.1.10
+- name: dmarc_domains
+  sensitive: true
+  description: 'Array of DMARC records to check'
+  type: Array
+  required: true
+
+#Control 2.1.10
+- name: reporting_mail_address
+  sensitive: true
+  description: 'Reporting mail address needed for DMARC check'
+  type: String
+  required: true
+
+#Control 2.1.10
+- name: moera_domains
+  sensitive: true
+  description: 'Array of MOERA records to check'
+  type: Array
+  required: true
+
+#Control 3.2.2
+- name: permitted_exceptions_teams_locations
+  sensitive: true
+  description: 'Permitted exceptions for teams locations'
+  type: Array
+  required: true
+
+#Control 6.2.1
+- name: internal_domains_transport_rule
+  sensitive: true
+  description: 'Domains internal to the organization to be checked'
+  type: Array
+  required: true
+
+#Control 6.2.3
+- name: email_addresses_bypass_external_tagging
+  sensitive: true
+  description: 'Email address list that are allowed to bypass external tagging'
+  type: Array
+  required: true
+
+#Control 6.5.2
+- name: mailtipslargeaudiencethreshold_value
+  sensitive: true
+  description: 'MailTipsLargeAudienceThreshold value to check for in MailTips setting'
+  required: true
+
+#Control 6.5.2
+- name: authorized_domains_teams_admin_center
+  sensitive: true
+  description: 'List of authorized domains for AllowedDomains option in Teams Admin Center'
+  type: Array
+  required: true
+
+#Control 8.6.1
+- name: reporting_email_addresses_for_malicious_messages
+  sensitive: true
+  description: 'Email addresses to check to report malicious messages in Teams and Defender'
+  type: Array
+  required: true
 

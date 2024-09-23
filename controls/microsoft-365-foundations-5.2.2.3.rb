@@ -81,7 +81,47 @@ control 'microsoft-365-foundations-5.2.2.3' do
   ref 'https://learn.microsoft.com/en-us/exchange/mail-flow-best-practices/how-to-set-up-a-multifunction-device-or-application-to-send-email-using-microsoft-365-or-office-365'
   ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/deprecation-of-basic-authentication-exchange-online'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  check_basic_authentication_types_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    $defaultPolicy = Get-OrganizationConfig | Select-Object -ExpandProperty DefaultAuthenticationPolicy
+    $authSettings = Get-AuthenticationPolicy $defaultPolicy | Select-Object AllowBasicAuth*
+    $trueSettings = $authSettings.PSObject.Properties | Where-Object { $_.Value -eq $true } | Select-Object Name, Value
+    $jsonOutput = $trueSettings | ConvertTo-Json
+  }
+  powershell_authentication_types_output = powershell(check_basic_authentication_types_script).stdout.strip
+
+  authentication_policy_data = JSON.parse(powershell_authentication_types_output) unless powershell_authentication_types_output.empty?
+  describe 'Ensure there is no Conditional Access policy that' do
+    subject { authentication_policy_data }
+    it 'with a AllowBasicAuth* state set to True' do
+      failure_message = "Policies that failed: #{JSON.pretty_generate(authentication_policy_data)}"
+      expect(subject).to be_nil, failure_message
+    end
+  end
+  check_authentication_block_basic_auth_policy_script = %{
+    $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    $users = Get-User -ResultSize Unlimited | Where-Object { $_.AuthenticationPolicy -ne "Block Basic Auth" } | Select-Object UserPrincipalName, AuthenticationPolicy
+    $jsonOutput = $users | ConvertTo-Json
+    $jsonOutput
+    }
+  powershell_block_basic_output = powershell(check_authentication_block_basic_auth_policy_script).stdout.strip
+
+  block_basic_policy_data = JSON.parse(powershell_block_basic_output) unless powershell_block_basic_output.empty?
+  describe 'Ensure there is no Exchange Online User' do
+    subject { block_basic_policy_data }
+    it 'with AuthenticationPolicy state that is not Block Basic Auth' do
+      failure_message = "Users that failed: #{JSON.pretty_generate(block_basic_policy_data)}"
+      expect(subject).to be_nil, failure_message
+    end
   end
 end

@@ -60,8 +60,7 @@ control 'microsoft-365-foundations-2.1.14' do
                         $MissingCount++
                         $ExtensionReport += @{
                             Identity = $policy.Identity
-                            MissingExtensions = $MissingExtensions -join ',
-       '
+                            MissingExtensions = $MissingExtensions -join
                         }
                     }
                 }
@@ -140,7 +139,105 @@ control 'microsoft-365-foundations-2.1.14' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-malware-policies-configure?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/deployoffice/compat/office-file-format-reference'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  def ruby_to_powershell(dictionary)
+    powershell_script = "@{\n"
+    dictionary.each do |key, value|
+      if value.is_a?(Array)
+        powershell_script += "    '#{key}' = @(\n"
+        value.each do |item|
+          powershell_script += "        '#{item}',\n"
+        end
+        powershell_script.chomp!(",\n")
+        powershell_script += "\n    )\n"
+      else
+        powershell_script += "    '#{key}' = #{value.inspect}\n"
+      end
+    end
+    powershell_script += '}'
+    powershell_script
+  end
+
+  get_policies_script = %{
+   $client_id = '#{input('client_id')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $organization = '#{input('organization')}'
+    import-module exchangeonlinemanagement
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    $ExtensionPolicies = Get-MalwareFilterPolicy | Where-Object {$_.FileTypes.Count -gt 120 }
+    $ExtensionPolicies | ConvertTo-Json
+    }
+
+  get_polices_output = powershell(get_policies_script).stdout.strip
+  policy_list = JSON.parse(get_polices_output) unless get_polices_output.empty?
+  describe 'Ensure there is at least one policy that' do
+    subject { policy_list }
+    it 'covers at least 120 malware extensions' do
+      expect(subject).not_to be_nil
+    end
+  end
+  policy_list&.each do |_policy|
+    file_ext_list = _policy.map { |file_ext| "'#{file_ext}'" }.join(', ')
+    ensure_comprehensive_attachment_filtering_applied_script = %{
+        $client_id = '#{input('client_id')}'
+        $certificate_password = '#{input('certificate_password')}'
+        $certificate_path = '#{input('certificate_path')}'
+        $organization = '#{input('organization')}'
+        import-module exchangeonlinemanagement
+        Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+        $L2Extensions = @( "7z", "a3x", "ace", "ade", "adp", "ani", "app", "appinstaller", "applescript", "application", "appref-ms", "appx", "appxbundle", "arj", "asd", "asx", "bas", "bat", "bgi", "bz2", "cab", "chm", "cmd", "com", "cpl", "crt", "cs", "csh", "daa", "dbf", "dcr", "deb", "desktopthemepackfile", "dex", "diagcab", "dif", "dir", "dll", "dmg", "doc", "docm", "dot", "dotm", "elf", "eml", "exe", "fxp", "gadget", "gz", "hlp", "hta", "htc", "htm", "htm", "html", "html", "hwpx", "ics", "img", "inf", "ins", "iqy", "iso", "isp", "jar", "jnlp", "js", "jse", "kext", "ksh", "lha", "lib", "library-ms", "lnk", "lzh", "macho", "mam", "mda", "mdb", "mde", "mdt", "mdw", "mdz", "mht", "mhtml", "mof", "msc", "msi", "msix", "msp", "msrcincident", "mst", "ocx", "odt", "ops", "oxps", "pcd", "pif", "plg", "pot", "potm", "ppa", "ppam", "ppkg", "pps", "ppsm", "ppt", "pptm", "prf", "prg", "ps1", "ps11", "ps11xml", "ps1xml", "ps2", "ps2xml", "psc1", "psc2", "pub", "py", "pyc", "pyo", "pyw", "pyz", "pyzw", "rar", "reg", "rev", "rtf", "scf", "scpt", "scr", "sct", "searchConnector-ms", "service", "settingcontent-ms", "sh", "shb", "shs", "shtm", "shtml", "sldm", "slk", "so", "spl", "stm", "svg", "swf", "sys", "tar", "theme", "themepack", "timer", "uif", "url", "uue", "vb", "vbe", "vbs", "vhd", "vhdx", "vxd", "wbk", "website", "wim", "wiz", "ws", "wsc", "wsf", "wsh", "xla", "xlam", "xlc", "xll", "xlm", "xls", "xlsb", "xlsm", "xlt", "xltm", "xlw", "xml", "xnk", "xps", "xsl", "xz", "z" )
+        $MissingCount = 0
+        $ExtensionPolicies = $null
+        $RLine = $ExtensionReport = @()
+        $FilterRules = Get-MalwareFilterRule
+        $DateTime = $(((Get-Date).ToUniversalTime()).ToString("yyyyMMddTHHmmssZ"))
+        $OutputFilePath = "$PWD\\CIS-Report_$($DateTime).txt"
+        function Test-MalwarePolicy {
+          param ( $PolicyId )
+          $FoundRule = $null
+          $FoundRule = $FilterRules | Where-Object { $_.MalwareFilterPolicy -eq $PolicyId }
+          if ($PolicyId.EnableFileFilter -eq $false) { $script:RLine += "WARNING: Common attachments filter is disabled." }
+          if ($FoundRule.State -eq 'Disabled') { $script:RLine += "WARNING: The Anti-malware rule is disabled." }
+          $script:RLine += "`nManual review needed - Domains, inclusions and exclusions must be valid:"
+          $script:RLine += $FoundRule | Format-List Name, RecipientDomainIs, Sent*, Except*
+        }
+        $ExtensionPolicies = Get-MalwareFilterPolicy | Where-Object {$_.FileTypes.Count -gt 120 }
+        if (!$ExtensionPolicies) {
+          Write-Host "`nFAIL: A policy containing the minimum number of extensions was not found." -ForegroundColor Red
+          Write-Host "Only policies with over 120 extensions defined will be evaluated." -ForegroundColor Red
+          Exit
+        }
+
+        $MissingExtensions = $L2Extensions | Where-Object { $extension = $_; -not @(#{file_ext_list}).Contains($extension) }
+        if ($MissingExtensions.Count -eq 0) {
+            $RLine += "[FOUND] $(#{_policy['Identity']})"
+            $RLine += "PASS: Policy contains all extensions"
+            Test-MalwarePolicy -PolicyId #{ruby_to_powershell(_policy)}
+        } else {
+            $MissingCount++
+            $ExtensionReport += @{ Identity = #{_policy['Identity']}; MissingExtensions = $MissingExtensions -join ', ' }
+        }
+
+        if ($MissingCount -gt 0) {
+            $RLine += "[PARTIAL Extentions Missing] $(#{_policy['Identity']})"
+            $RLine += "NOTICE - The following extensions were not found:`n"
+            $RLine += "$(#{_policy['MissingExtensions']})`n"
+            Test-MalwarePolicy -PolicyId #{ruby_to_powershell(_policy)}
+        }
+        Write-Output $RLine
+      }
+
+    describe "Ensure the following malware policy (#{_policy['Identity']})" do
+      subject { powershell(ensure_comprehensive_attachment_filtering_applied_script).stdout.strip }
+      it 'should cover and contain all malware extensions' do
+        expect(subject).to include 'PASS: Policy contains all extensions'
+      end
+      it 'should be enabled' do
+        expect(subject).to_not include 'WARNING: The Anti-malware rule is disabled.'
+      end
+      it 'should have its EnableFileFilter state be enabled' do
+        expect(subject).to_not include 'WARNING: Common attachments filter is disabled.'
+      end
+    end
   end
 end
