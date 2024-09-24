@@ -43,7 +43,55 @@ control 'microsoft-365-foundations-7.2.6' do
                       SharingDomainRestrictionMode: <Undefined>'
   tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2', 'CA-9', 'SC-7', 'AT-2']
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_sharingdomainrestriction_set_to_allowlist_script = %{
+    $appName = 'cisBenchmarkL512'
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $clientSecret = '#{input('client_secret')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
+    import-module pnp.powershell
+    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
+    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
+	  (Get-PnPTenant).SharingDomainRestrictionMode
+  }
+  powershell_output_allowlist = powershell(ensure_sharingdomainrestriction_set_to_allowlist_script).stdout.strip
+  describe 'Ensure the SharingDomainRestrictionMode option for SharePoint' do
+    subject { powershell_output_allowlist }
+    it 'is set to AllowList' do
+      expect(subject).to eq('AllowList')
+    end
+  end
+
+  trusted_domains = input('domains_trusted_by_organization')
+  domain_pattern = trusted_domains.map { |domain| "'#{domain}'" }.join(', ')
+  ensure_trusted_domains_allowed_script = %{
+    $appName = 'cisBenchmarkL512'
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $clientSecret = '#{input('client_secret')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
+    import-module pnp.powershell
+    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
+    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
+    $trustedDomains = @("trusted.com", "example.com", "secure.org")
+    $domain_data = (Get-PnPTenant).SharingAllowedDomainList
+    $trustedDomains = @(#{domain_pattern})
+    $domainList = $domain_data -split ' '
+    $untrustedDomains = $domainList | Where-Object { -not ($trustedDomains -contains $_) }
+    if ($untrustedDomains.Count -gt 0) {
+        Write-Output "Some domains are not in the list of trusted domains: $($untrustedDomains -join ', ')"
+    }
+  }
+  powershell_output_domains = powershell(ensure_trusted_domains_allowed_script).stdout.strip
+  describe 'Ensure the number of domains not trusted by the organization outputted by SharingAllowedDomainList option on SharePoint' do
+    subject { powershell_output_domains }
+    failure_message = "Failure: #{powershell_output_domains}"
+    it 'is 0' do
+      expect(subject).to be_empty, failure_message
+    end
   end
 end

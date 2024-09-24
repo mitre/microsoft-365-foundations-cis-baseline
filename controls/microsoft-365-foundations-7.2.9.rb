@@ -46,7 +46,28 @@ control 'microsoft-365-foundations-7.2.9' do
   ref 'https://learn.microsoft.com/en-US/sharepoint/turn-external-sharing-on-or-off?WT.mc_id=365AdminCSH_spo#change-the-organization-level-external-sharing-setting'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/community/sharepoint-security-a-team-effort'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_guest_access_to_od_will_expire_automatically_script = %{
+    $appName = 'cisBenchmarkL512'
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $clientSecret = '#{input('client_secret')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
+    import-module pnp.powershell
+    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
+    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
+	  Get-PnPTenant | Select-Object ExternalUserExpirationRequired, ExternalUserExpireInDays | ConvertTo-Json
+  }
+
+  powershell_output = JSON.parse(powershell(ensure_guest_access_to_od_will_expire_automatically_script).stdout.strip)
+  describe 'Ensure the following setting' do
+    subject { powershell_output }
+    it 'ExternalUserExpirationRequired in SharePoint/OneDrive is set to True' do
+      expect(subject['ExternalUserExpirationRequired']).to eq(true)
+    end
+    it 'ExternalUserExpireInDays in SharePoint/OneDrive is less than or equal to 30' do
+      expect(subject['ExternalUserExpireInDays']).to be <= 30
+    end
   end
 end

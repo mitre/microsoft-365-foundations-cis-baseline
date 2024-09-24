@@ -39,7 +39,24 @@ control 'microsoft-365-foundations-7.2.7' do
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_link_sharing_restricted_spo_od_script = %{
+    $appName = 'cisBenchmarkL512'
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $clientSecret = '#{input('client_secret')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
+    import-module pnp.powershell
+    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
+    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
+	  (Get-PnPTenant).DefaultSharingLinkType
+  }
+  powershell_output = powershell(ensure_link_sharing_restricted_spo_od_script).stdout.strip
+  describe 'Ensure the DefaultSharingLinkType option for SharePoint' do
+    subject { powershell_output }
+    it 'is set to Direct' do
+      expect(subject).to eq('Direct')
+    end
   end
 end

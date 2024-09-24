@@ -33,7 +33,24 @@ control 'microsoft-365-foundations-7.2.2' do
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/external-identities/what-is-b2b'
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_spo_od_integration_with_azure_script = %{
+    $appName = 'cisBenchmarkL512'
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $clientSecret = '#{input('client_secret')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
+    import-module pnp.powershell
+    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
+    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
+	  (Get-PnPTenant).EnableAzureADB2BIntegration
+  }
+  powershell_output = powershell(ensure_spo_od_integration_with_azure_script).stdout.strip
+  describe 'Ensure the EnableAzureADB2BIntegration option for SharePoint' do
+    subject { powershell_output }
+    it 'is set to True' do
+      expect(subject).to eq('True')
+    end
   end
 end

@@ -49,7 +49,54 @@ control 'microsoft-365-foundations-7.3.2' do
   ref 'https://learn.microsoft.com/en-US/sharepoint/allow-syncing-only-on-specific-domains?WT.mc_id=365AdminCSH_spo'
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  tenantrestrictionenabled_script = %{
+    $appName = 'cisBenchmarkL512'
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $clientSecret = '#{input('client_secret')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
+    import-module pnp.powershell
+    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
+    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
+	  (Get-PnPTenantSyncClientRestriction).TenantRestrictionEnabled
+  }
+  powershell_output_tenant = powershell(tenantrestrictionenabled_script).stdout.strip
+  describe 'Ensure the TenantRestrictionEnabled option for SharePoint/OneDrive Sync' do
+    subject { powershell_output_tenant }
+    it 'is set to True' do
+      expect(subject).to eq('True')
+    end
+  end
+
+  trusted_domains = input('trusted_domains_guids')
+  domain_pattern = trusted_domains.map { |domain| "'#{domain}'" }.join(', ')
+  ensure_trusted_domains_guids = %{
+    $appName = 'cisBenchmarkL512'
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $clientSecret = '#{input('client_secret')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
+    import-module pnp.powershell
+    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
+    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
+    $allowedDomains = (Get-PnPTenant).AllowedDomainList
+    $trustedDomains = @(#{domain_pattern})
+    $domainList = $domain_data -split ' '
+    $untrustedDomains = $allowedDomains | Where-Object { -not ($trustedDomains -contains $_) }
+    if ($untrustedDomains.Count -gt 0) {
+        Write-Output "Some domains are not in the list of trusted domains: $($untrustedDomains -join ', ')"
+    }
+  }
+  powershell_output_domains = powershell(ensure_trusted_domains_guids).stdout.strip
+  describe 'Ensure the number of domains GUIDs not trusted from AllowedDomainList option on SharePoint' do
+    subject { powershell_output_domains }
+    failure_message = "Failure: #{powershell_output_domains}"
+    it 'is 0' do
+      expect(subject).to be_empty, failure_message
+    end
   end
 end

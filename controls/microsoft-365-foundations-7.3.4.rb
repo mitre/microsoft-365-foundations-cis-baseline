@@ -43,7 +43,26 @@ control 'microsoft-365-foundations-7.3.4' do
   ref 'https://learn.microsoft.com/en-us/sharepoint/security-considerations-of-allowing-custom-script'
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-sposite?view=sharepoint-ps'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_spo_guest_users_cannot_share_items_dont_own_script = %{
+    $appName = 'cisBenchmarkL512'
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $clientSecret = '#{input('client_secret')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
+    import-module pnp.powershell
+    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
+    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
+	  Get-PnPTenantSite | Where-Object { $_.DenyAddAndCustomizePages -eq "Disabled" -and $_.Url -notlike "*-my.sharepoint.com/" } | Select-Object -ExpandProperty Url
+  }
+  powershell_output = powershell(ensure_spo_guest_users_cannot_share_items_dont_own_script).stdout.strip
+  disabled_urls = powershell_output.split("\n") unless powershell_output.empty?
+  describe 'Ensure the number of sites with DenyAddAndCustomizePages setting as Disabled' do
+    subject { powershell_output }
+    it 'is 0' do
+      failure_message = "URLS with DenyAddAndCustomizePages setting as Disabled: #{disabled_urls}"
+      expect(subject).to be_empty, failure_message
+    end
   end
 end

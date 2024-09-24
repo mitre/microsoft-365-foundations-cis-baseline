@@ -37,7 +37,25 @@ control 'microsoft-365-foundations-7.3.1' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-malware-protection-for-spo-odfb-teams-about?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#global-reader'
 
-  describe "This control's test logic needs to be implemented." do
-    skip "This control's test logic needs to be implemented."
+  ensure_office_m365spo_infected_files_disallowed_download_script = %{
+    $appName = 'cisBenchmarkL512'
+    $client_id = '#{input('client_id')}'
+    $tenantid = '#{input('tenant_id')}'
+    $clientSecret = '#{input('client_secret')}'
+    $certificate_password = '#{input('certificate_password')}'
+    $certificate_path = '#{input('certificate_path')}'
+    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
+    import-module pnp.powershell
+    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
+    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
+	  (Get-PnPTenant).DisallowInfectedFileDownload
+  }
+
+  powershell_output = powershell(ensure_office_m365spo_infected_files_disallowed_download_script).stdout.strip
+  describe 'Ensure the DisallowInfectedFileDownload option for Office 365 SharePoint' do
+    subject { powershell_output }
+    it 'is set to True' do
+      expect(subject).to eq('True')
+    end
   end
 end
