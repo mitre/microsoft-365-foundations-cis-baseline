@@ -47,7 +47,7 @@ control 'microsoft-365-foundations-2.1.10' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/how-to-enable-dmarc-reporting-for-microsoft-online-email-routing-address-moera-and-parked-domains?view=o365-worldwide'
 
   # This does not work on Mac - need to find a different way to test. Additionally, CIS Benchmark says manual
-  domain_list = input('dmarc_domain')
+  domain_list = input('dmarc_domains')
   domain_list.each do |domain|
     check_dmarc_domain_script = %{
       $client_id = '#{input('client_id')}'
@@ -66,7 +66,7 @@ control 'microsoft-365-foundations-2.1.10' do
       end
     end
   end
-  domain_list_moera = input('moera_domain')
+  domain_list_moera = input('moera_domains')
   domain_list_moera.each do |domain|
     check_moera_domain_script = %{
       $client_id = '#{input('client_id')}'
