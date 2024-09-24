@@ -1,4 +1,4 @@
-name: M365 Testing Env
+name: Test the CIS M365 Profile
 
 on:
   pull_request:
@@ -16,7 +16,7 @@ jobs:
       PLATFORM: "m365"
       LC_ALL: "en_US.UTF-8"
     steps:
-      - name: add needed packages
+      - name: Add needed packages
         run: |
           sudo apt-get update
           sudo apt-get -y install jq
@@ -44,7 +44,7 @@ jobs:
       - name: Run Bundle Install
         run: bundle install
 
-      - name: Installed Inspec
+      - name: Check Inspec version
         run: bundle exec inspec version
 
       - name: Vendor the Profile
@@ -52,51 +52,44 @@ jobs:
 
       - name: Collect certificate file
         shell: pwsh
-        run: [IO.File]::WriteAllBytes(cert.pfx,(${{secrets.SAF_365_CERTIFICATE}} | ConvertFrom-Json | %{[byte]$_}))
+        run: |
+          "[IO.File]::WriteAllBytes(cert.pfx,(${{secrets.SAF_365_CERTIFICATE}} | ConvertFrom-Json | %{[byte]$_}))"
 
-      - name: Run inspec test
-        continue-on-error: true
-        run: | 
-          bundle exec inspec exec . \
-          --input client_id=${{secrets.SAF_365_CLIENT_ID}} tenant_id=${{secrets.SAF_365_TENANT_ID}} client_secret=${{secrets.SAF_365_CLIENT_SECRET}} certificate_path=cert.pfx certificate_password=${{secrets.SAF_365_CERTIFICATE_PASSWORD}} organization=${{secrets.SAF_365_ORGANIZATION}} \ 
-          --input-file=inputs.yml #All non-secret inputs are in inputs.yml \
-          --reporter json:m365_results.json
-
-
-      - name: Save our results summary
-        continue-on-error: true
-        uses: mitre/saf_action@v1.5.2
-        with:
-          command_string: "view summary -j -i spec/results/${{ env.PLATFORM }}.json -o spec/results/${{ env.PLATFORM }}-data.json"
-
-      - name: Save Test Result JSON
-        if: ${{ !contains(steps.commit.outputs.message, 'only-validate-profile') }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.PLATFORM }}.json
-          path: spec/results/
-
-      - name: Upload to Heimdall
-        if: ${{ !contains(steps.commit.outputs.message, 'only-validate-profile') }}
+      - name: Run Inspec test
         continue-on-error: true
         run: |
-          curl -# -s -F data=@spec/results/${{ env.PLATFORM }}.json -F "filename=${{ env.PLATFORM }}_${{ env.COMMIT_SHORT_SHA }}.json" -F "public=true" -F "evaluationTags=${{ env.COMMIT_SHORT_SHA }},${{ github.repository }},${{ github.workflow }}" -H "Authorization: Api-Key ${{ secrets.SAF_HEIMDALL_UPLOAD_KEY }}" "${{ vars.SAF_HEIMDALL_URL }}/evaluations"
+          bundle exec inspec exec . \
+          --input client_id=${{secrets.SAF_365_CLIENT_ID}} tenant_id=${{secrets.SAF_365_TENANT_ID}} client_secret=${{secrets.SAF_365_CLIENT_SECRET}} certificate_path=cert.pfx certificate_password=${{secrets.SAF_365_CERTIFICATE_PASSWORD}} organization=${{secrets.SAF_365_ORGANIZATION}} \
+          --input-file=inputs.yml \
+          --enhanced-outcomes \
+          --reporter json:${{ env.PLATFORM }}-results.json
 
-      - name: Display our results summary
-        if: ${{ !contains(steps.commit.outputs.message, 'only-validate-profile') }}
+      - name: View results summary
+        continue-on-error: true
         uses: mitre/saf_action@v1.5.2
         with:
-          command_string: "view summary -i spec/results/${{ env.PLATFORM }}.json"
+          command_string: "view summary -j -i ${{ env.PLATFORM }}-results.json -o ${{ env.PLATFORM }}-summary.json"
+
+      - name: Upload to Heimdall
+        continue-on-error: true
+        run: |
+          curl -# -s -F data=@${{ env.PLATFORM }}-results.json -F "filename=${{ env.PLATFORM }}_${{ env.COMMIT_SHORT_SHA }}.json" -F "public=true" -F "evaluationTags=${{ env.COMMIT_SHORT_SHA }},${{ github.repository }},${{ github.workflow }}" -H "Authorization: Api-Key ${{ secrets.SAF_HEIMDALL_UPLOAD_KEY }}" "${{ vars.SAF_HEIMDALL_URL }}/evaluations"
 
       - name: Generate Markdown Summary
         continue-on-error: true
         id: generate-summary
         run: |
-          cat spec/results/${{ env.PLATFORM }}-data.json | python markdown-summary.py > spec/results/${{ env.PLATFORM }}_${{ matrix.suite }}-markdown-summary.md
-          cat spec/results/${{ env.PLATFORM }}-markdown-summary.md >> $GITHUB_STEP_SUMMARY
+          cat ${{ env.PLATFORM }}-summary.json | python markdown-summary.py > ${{ env.PLATFORM }}-markdown-summary.md
+          cat ${{ env.PLATFORM }}-markdown-summary.md >> $GITHUB_STEP_SUMMARY
 
       - name: Ensure the scan meets our results threshold
-        if: ${{ !contains(steps.commit.outputs.message, 'only-validate-profile') }}
         uses: mitre/saf_action@v1.5.2
         with:
-          command_string: "validate threshold -i spec/results/${{ env.PLATFORM }}.json -F threshold.yml"
+          command_string: "validate threshold -i ${{ env.PLATFORM }}-results.json -F threshold.yml"
+
+      - name: Save Files from the Workflow
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.COMMIT_SHORT_SHA }}-artifacts
+          path: |
+              ./*.json
