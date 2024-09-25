@@ -50,9 +50,9 @@ control 'microsoft-365-foundations-1.1.3' do
   get_admin_user_count_script = %{
     $appName = 'cisBenchmarkL512'
     $client_id = '#{input('client_id')}'
-    $appObjectID = '136a849a-74bc-47ed-9bec-dde306688a6a' #hardly ever used
+    $appObjectID = '136a849a-74bc-47ed-9bec-dde306688a6a'
     $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}' #This should not be stored inside of any script; supplied to transmit detail
+    $clientSecret = '#{input('client_secret')}'
     import-module microsoft.graph
     $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
     $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
