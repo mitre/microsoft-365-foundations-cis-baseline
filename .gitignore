@@ -18,6 +18,7 @@ inspec.lock
 .kitchen
 vendor/**
 saf-cli.log
+*-results.json
 
 # Used by dotenv library to load environment variables.
 # .env
