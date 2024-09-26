@@ -59,6 +59,8 @@ control 'microsoft-365-foundations-2.1.7' do
     Get-AntiPhishPolicy | Select-Object Name, Enabled, PhishThresholdLevel, EnableMailboxIntelligenceProtection, EnableMailboxIntelligence, EnableSpoofIntelligence | ConvertTo-Json
   }
   powershell_output = powershell(ensure_anti_phishing_policy_created_script).stdout.strip
+  print('2.1.7')
+  print(powershell(ensure_anti_phishing_policy_created_script).stderr.strip)
   powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
   case powershell_data
   when Hash

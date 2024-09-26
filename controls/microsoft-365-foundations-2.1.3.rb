@@ -57,6 +57,8 @@ control 'microsoft-365-foundations-2.1.3' do
  }
 
   powershell_output = powershell(ensure_notifications_for_internal_users_sending_malware_script).stdout.strip
+  print('2.1.3')
+  print(powershell(ensure_notifications_for_internal_users_sending_malware_script).stderr.strip)
   powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
   case powershell_data
   when Hash
