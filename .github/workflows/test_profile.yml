@@ -54,14 +54,8 @@ jobs:
         env:
           AUTH: ${{ secrets.SAF_M365_CERTIFICATE }}
         run: |
-          echo "$AUTH" | base64 --decode > cert.pfx
-
-      - name: Validate certificate contents
-        shell: bash
-        run: |
-          pwd
-          ls -la cert.pfx
-          openssl pkcs12 -info -in cert.pfx -passin pass: -passout pass:
+          echo "$AUTH" | base64 --decode > cert.pfx 
+          chmod 0400 cert.pfx
 
       - name: Run Inspec test
         continue-on-error: true
