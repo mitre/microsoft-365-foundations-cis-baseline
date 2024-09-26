@@ -59,6 +59,9 @@ control 'microsoft-365-foundations-2.1.5' do
   }
 
   powershell_output = powershell(ensure_safe_attachments_for_msproducts_enabled_script).stdout.strip
+  # test to see workflow issue; remove later
+  print('here')
+  print(powershell(ensure_safe_attachments_for_msproducts_enabled_script).stderr.strip)
   powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
   case powershell_data
   when Hash
