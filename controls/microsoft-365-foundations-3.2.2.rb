@@ -60,6 +60,7 @@ control 'microsoft-365-foundations-3.2.2' do
     $certificate_password = '#{input('certificate_password')}'
     $certificate_path = '#{input('certificate_path')}'
     $organization = '#{input('organization')}'
+    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
     import-module exchangeonlinemanagement
     Connect-IPPSSession -AppID $client_id -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force) -Organization $organization -ShowBanner:$false
     $DlpPolicy = Get-DlpCompliancePolicy
