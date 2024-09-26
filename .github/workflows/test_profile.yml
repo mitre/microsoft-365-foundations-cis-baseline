@@ -54,7 +54,7 @@ jobs:
         shell: pwsh
         run: |
           pwd
-          $bytes = [byte[]]${{secrets.SAF_M365_CERTIFICATE}} | ConvertFrom-Json
+          $bytes = [byte[]]@(${{secrets.SAF_M365_CERTIFICATE}}) | ConvertFrom-Json
           [IO.File]::WriteAllBytes("cert.pfx", $bytes)
 
       - name: Validate certificate contents
