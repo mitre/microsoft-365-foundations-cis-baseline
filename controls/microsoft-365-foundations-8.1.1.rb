@@ -42,7 +42,6 @@ control 'microsoft-365-foundations-8.1.1' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/enterprise/manage-skype-for-business-online-with-microsoft-365-powershell?view=o365-worldwide'
 
   ensure_file_sharing_enabled_cloud_script = %{
-     $appName = 'cisBenchmarkL512'
      $client_id = '#{input('client_id')}'
      $tenantid = '#{input('tenant_id')}'
      $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')

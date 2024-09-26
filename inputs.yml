@@ -1,5 +1,7 @@
-notify_outbound_spam_recipients: test@msft.com
-bcc_suspicious_outbound_additional_recipients: test@msft.com
+notify_outbound_spam_recipients: 
+  - test@msft.com
+bcc_suspicious_outbound_additional_recipients: 
+  - test@msft.com
 spf_domains:
   - google.com
 dmarc_domains:

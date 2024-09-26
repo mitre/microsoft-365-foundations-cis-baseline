@@ -44,7 +44,6 @@ control 'microsoft-365-foundations-7.2.6' do
   tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2', 'CA-9', 'SC-7', 'AT-2']
 
   ensure_sharingdomainrestriction_set_to_allowlist_script = %{
-    $appName = 'cisBenchmarkL512'
     $client_id = '#{input('client_id')}'
     $tenantid = '#{input('tenant_id')}'
     $clientSecret = '#{input('client_secret')}'
@@ -67,7 +66,6 @@ control 'microsoft-365-foundations-7.2.6' do
   trusted_domains = input('domains_trusted_by_organization')
   domain_pattern = trusted_domains.map { |domain| "'#{domain}'" }.join(', ')
   ensure_trusted_domains_allowed_script = %{
-    $appName = 'cisBenchmarkL512'
     $client_id = '#{input('client_id')}'
     $tenantid = '#{input('tenant_id')}'
     $clientSecret = '#{input('client_secret')}'

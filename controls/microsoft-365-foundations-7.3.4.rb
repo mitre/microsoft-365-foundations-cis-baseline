@@ -44,7 +44,6 @@ control 'microsoft-365-foundations-7.3.4' do
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-sposite?view=sharepoint-ps'
 
   ensure_spo_guest_users_cannot_share_items_dont_own_script = %{
-    $appName = 'cisBenchmarkL512'
     $client_id = '#{input('client_id')}'
     $tenantid = '#{input('tenant_id')}'
     $clientSecret = '#{input('client_secret')}'

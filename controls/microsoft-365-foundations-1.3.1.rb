@@ -37,15 +37,15 @@ control 'microsoft-365-foundations-1.3.1' do
   ref 'https://learn.microsoft.com/en-US/microsoft-365/admin/misc/password-policy-recommendations?view=o365-worldwide'
 
   password_expiration_days_script = %{
-     $appName = 'cisBenchmarkL512'
      $client_id = '#{input('client_id')}'
      $tenantid = '#{input('tenant_id')}'
-     $clientSecret = '#{input('client_secret')}' #This should not be stored inside of any script; supplied to transmit detail
+     $clientSecret = '#{input('client_secret')}'
+     $organization = '#{input('organization')}'
      import-module microsoft.graph
      $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
      $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
      Connect-MgGraph -TenantId "$tenantid" -ClientSecretCredential $ClientSecretCredential -NoWelcome
-     $passwordValidityPeriod = (Get-MgDomain -DomainId 'mitredev.onmicrosoft.com').PasswordValidityPeriodInDays
+     $passwordValidityPeriod = (Get-MgDomain -DomainId $organization).PasswordValidityPeriodInDays
      Write-Output $passwordValidityPeriod
   }
 

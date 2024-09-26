@@ -38,7 +38,6 @@ control 'microsoft-365-foundations-7.3.1' do
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#global-reader'
 
   ensure_office_m365spo_infected_files_disallowed_download_script = %{
-    $appName = 'cisBenchmarkL512'
     $client_id = '#{input('client_id')}'
     $tenantid = '#{input('tenant_id')}'
     $clientSecret = '#{input('client_secret')}'

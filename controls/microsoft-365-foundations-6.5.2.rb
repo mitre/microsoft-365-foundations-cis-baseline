@@ -40,9 +40,9 @@ control 'microsoft-365-foundations-6.5.2' do
     Get-OrganizationConfig | Select-Object -Property MailTips* | ConvertTo-Json
  }
   powershell_output = powershell(ensure_mailtip_enabled_for_end_users_script).stdout.strip
-  mailtips_settings = JSON.parse(powershell_output)
+  mailtips_settings = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure that the MailTip setting' do
-    subject { powershell_output }
+    subject { mailtips_settings }
     it 'MailTipsAllTipsEnabled should be set to True' do
       expect(mailtips_settings['MailTipsAllTipsEnabled']).to eq(true)
     end

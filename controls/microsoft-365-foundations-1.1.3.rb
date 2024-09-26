@@ -48,9 +48,7 @@ control 'microsoft-365-foundations-1.1.3' do
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#role-template-ids'
 
   get_admin_user_count_script = %{
-    $appName = 'cisBenchmarkL512'
     $client_id = '#{input('client_id')}'
-    $appObjectID = '136a849a-74bc-47ed-9bec-dde306688a6a'
     $tenantid = '#{input('tenant_id')}'
     $clientSecret = '#{input('client_secret')}'
     import-module microsoft.graph

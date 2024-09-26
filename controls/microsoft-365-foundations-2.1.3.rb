@@ -52,23 +52,25 @@ control 'microsoft-365-foundations-2.1.3' do
     $certificate_path = '#{input('certificate_path')}'
     $organization = '#{input('organization')}'
     import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force) -AppID $client_id -Organization $organization -ShowBanner:$false
     Get-MalwareFilterPolicy | Select-Object Identity, EnableInternalSenderAdminNotifications, InternalSenderAdminAddress | ConvertTo-Json
  }
-  powershell_output = JSON.parse(powershell(ensure_notifications_for_internal_users_sending_malware_script).stdout.strip)
-  case powershell_output
+
+  powershell_output = powershell(ensure_notifications_for_internal_users_sending_malware_script).stdout.strip
+  powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
+  case powershell_data
   when Hash
-    describe "Ensure the following policy (#{powershell_output['Identity']})" do
+    describe "Ensure the following policy (#{powershell_data['Identity']})" do
       it 'should have EnableInternalSenderAdminNotifications set to true' do
-        expect(powershell_output['EnableInternalSenderAdminNotifications']).to eq(true)
+        expect(powershell_data['EnableInternalSenderAdminNotifications']).to eq(true)
       end
 
       it 'should have a non-empty InternalSenderAdminAddress' do
-        expect(powershell_output['InternalSenderAdminAddress']).not_to be_empty
+        expect(powershell_data['InternalSenderAdminAddress']).not_to be_empty
       end
     end
   when Array
-    powershell_output.each do |policy|
+    powershell_data.each do |policy|
       describe %(Ensure the following policy (#{policy['Identity']})) do
         it 'should have EnableInternalSenderAdminNotifications set to true' do
           expect(policy['EnableInternalSenderAdminNotifications']).to eq(true)

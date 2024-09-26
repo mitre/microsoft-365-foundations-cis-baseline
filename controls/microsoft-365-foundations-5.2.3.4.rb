@@ -51,10 +51,9 @@ control 'microsoft-365-foundations-5.2.3.4' do
   ref 'https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-methods-activity'
 
   ensure_member_users_mfa_capable_script = %{
-    $appName = 'cisBenchmarkL512'
     $client_id = '#{input('client_id')}'
     $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}' #This should not be stored inside of any script; supplied to transmit detail
+    $clientSecret = '#{input('client_secret')}'
     import-module microsoft.graph
     $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
     $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)

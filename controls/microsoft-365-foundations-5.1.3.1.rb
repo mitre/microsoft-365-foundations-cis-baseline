@@ -54,10 +54,9 @@ control 'microsoft-365-foundations-5.1.3.1' do
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/external-identities/use-dynamic-groups'
 
   ensure_dynamic_group_for_guest_users_script = %{
-    $appName = 'cisBenchmarkL512'
     $client_id = '#{input('client_id')}'
     $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}' #This should not be stored inside of any script; supplied to transmit detail
+    $clientSecret = '#{input('client_secret')}'
     import-module microsoft.graph
     $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
     $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)

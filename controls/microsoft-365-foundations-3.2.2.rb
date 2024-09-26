@@ -66,19 +66,20 @@ control 'microsoft-365-foundations-3.2.2' do
     $DlpPolicy | Where-Object {$_.Workload -match "Teams"} | Select-Object Name, Mode, TeamsLocation, TeamsLocationException | ConvertTo-Json
  }
 
-  powershell_output = JSON.parse(powershell(ensure_dlp_policies_enabled_teams_script).stdout.strip)
-  case powershell_output
+  powershell_output = powershell(ensure_dlp_policies_enabled_teams_script).stdout.strip
+  powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
+  case powershell_data
   when Hash
-    describe "Ensure the following DLP policy (#{powershell_output['Name']})" do
+    describe "Ensure the following DLP policy (#{powershell_data['Name']})" do
       it 'should have its Mode state set to Enable' do
-        expect(powershell_output['Mode']).to eq('Enable')
+        expect(powershell_data['Mode']).to eq('Enable')
       end
       it %(should have its TeamsLocation state include 'All') do
-        expect(powershell_output['TeamsLocation'][0]['DisplayName']).to include('All')
+        expect(powershell_data['TeamsLocation'][0]['DisplayName']).to include('All')
       end
       it 'should have its TeamsLocationException state to be empty or include only permitted exceptions' do
         permitted_exceptions = input('permitted_exceptions_teams_locations')
-        actual_exceptions = powershell_output['TeamsLocationException']
+        actual_exceptions = powershell_data['TeamsLocationException']
         expect(actual_exceptions.empty? ||
         (actual_exceptions - permitted_exceptions).empty? ||
         actual_exceptions.sort == permitted_exceptions.sort).to eq(true)
@@ -88,14 +89,14 @@ control 'microsoft-365-foundations-3.2.2' do
     powershell_output.each do |policy|
       describe %(Ensure the following DLP policy (#{policy['Identity']})) do
         it 'should have its Mode state set to Enable' do
-          expect(powershell_output['Mode']).to eq('Enable')
+          expect(policy['Mode']).to eq('Enable')
         end
         it %(should have its TeamsLocation state include 'All') do
-          expect(powershell_output['TeamsLocation'][0]['DisplayName']).to include('All')
+          expect(policy['TeamsLocation'][0]['DisplayName']).to include('All')
         end
         it 'should have its TeamsLocationException state to be empty or include only permitted exceptions' do
           permitted_exceptions = input('permitted_exceptions_teams_locations')
-          actual_exceptions = powershell_output['TeamsLocationException']
+          actual_exceptions = policy['TeamsLocationException']
           expect(actual_exceptions.empty? ||
           (actual_exceptions - permitted_exceptions).empty? ||
           actual_exceptions.sort == permitted_exceptions.sort).to eq(true)

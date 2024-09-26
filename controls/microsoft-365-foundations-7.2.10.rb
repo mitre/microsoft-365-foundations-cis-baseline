@@ -44,7 +44,6 @@ control 'microsoft-365-foundations-7.2.10' do
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/external-identities/one-time-passcode'
 
   ensure_reauth_with_verification_code_restricted = %{
-    $appName = 'cisBenchmarkL512'
     $client_id = '#{input('client_id')}'
     $tenantid = '#{input('tenant_id')}'
     $clientSecret = '#{input('client_secret')}'
@@ -57,9 +56,10 @@ control 'microsoft-365-foundations-7.2.10' do
 	  Get-PnPTenant | Select-Object EmailAttestationRequired, EmailAttestationReAuthDays | ConvertTo-Json
   }
 
-  powershell_output = JSON.parse(powershell(ensure_reauth_with_verification_code_restricted).stdout.strip)
+  powershell_output = powershell(ensure_reauth_with_verification_code_restricted).stdout.strip
+  powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure the following setting' do
-    subject { powershell_output }
+    subject { powershell_data }
     it 'EmailAttestationRequired in SharePoint is set to True' do
       expect(subject['EmailAttestationRequired']).to eq(true)
     end

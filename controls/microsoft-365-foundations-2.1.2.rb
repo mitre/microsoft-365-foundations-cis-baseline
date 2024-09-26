@@ -36,7 +36,7 @@ control 'microsoft-365-foundations-2.1.2' do
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['9.6'] }, { '7' => ['7.9'] }, { '7' => ['8.1'] }]
   tag default_value: 'Always on'
-  tag nist: ['SI-3', 'SI-8', 'AU-1', 'AU-2', '']
+  tag nist: ['SI-3', 'SI-8', 'AU-1', 'AU-2']
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/get-malwarefilterpolicy?view=exchange-ps'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-malware-policies-configure?view=o365-worldwide'

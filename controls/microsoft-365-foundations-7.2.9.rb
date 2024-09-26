@@ -47,7 +47,6 @@ control 'microsoft-365-foundations-7.2.9' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/community/sharepoint-security-a-team-effort'
 
   ensure_guest_access_to_od_will_expire_automatically_script = %{
-    $appName = 'cisBenchmarkL512'
     $client_id = '#{input('client_id')}'
     $tenantid = '#{input('tenant_id')}'
     $clientSecret = '#{input('client_secret')}'
@@ -60,9 +59,10 @@ control 'microsoft-365-foundations-7.2.9' do
 	  Get-PnPTenant | Select-Object ExternalUserExpirationRequired, ExternalUserExpireInDays | ConvertTo-Json
   }
 
-  powershell_output = JSON.parse(powershell(ensure_guest_access_to_od_will_expire_automatically_script).stdout.strip)
+  powershell_output = powershell(ensure_guest_access_to_od_will_expire_automatically_script).stdout.strip
+  powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure the following setting' do
-    subject { powershell_output }
+    subject { powershell_data }
     it 'ExternalUserExpirationRequired in SharePoint/OneDrive is set to True' do
       expect(subject['ExternalUserExpirationRequired']).to eq(true)
     end

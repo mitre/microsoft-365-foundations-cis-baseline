@@ -53,7 +53,6 @@ control 'microsoft-365-foundations-7.2.3' do
     'Disabled'
   ]
   ensure_external_content_sharing_restricted_script = %{
-    $appName = 'cisBenchmarkL512'
     $client_id = '#{input('client_id')}'
     $tenantid = '#{input('tenant_id')}'
     $clientSecret = '#{input('client_secret')}'

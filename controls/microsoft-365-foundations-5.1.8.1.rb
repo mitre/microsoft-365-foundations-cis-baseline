@@ -56,10 +56,9 @@ control 'microsoft-365-foundations-5.1.8.1' do
   ref 'https://www.microsoft.com/en-us/download/details.aspx?id=47594'
 
   ensure_password_hash_enabled_script = %{
-    $appName = 'cisBenchmarkL512'
     $client_id = '#{input('client_id')}'
     $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}' #This should not be stored inside of any script; supplied to transmit detail
+    $clientSecret = '#{input('client_secret')}'
     import-module microsoft.graph
     $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
     $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)

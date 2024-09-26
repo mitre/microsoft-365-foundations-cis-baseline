@@ -58,31 +58,32 @@ control 'microsoft-365-foundations-2.1.5' do
     Get-AtpPolicyForO365 | Select-Object Name, EnableATPForSPOTeamsODB, EnableSafeDocs, AllowSafeDocsOpen | ConvertTo-Json
   }
 
-  powershell_output = JSON.parse(powershell(ensure_safe_attachments_for_msproducts_enabled_script).stdout.strip)
-  case powershell_output
+  powershell_output = powershell(ensure_safe_attachments_for_msproducts_enabled_script).stdout.strip
+  powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
+  case powershell_data
   when Hash
-    describe "Ensure the following Safe Attachment Policy (#{powershell_output['Name']})" do
+    describe "Ensure the following Safe Attachment Policy (#{powershell_data['Name']})" do
       it 'should have EnableATPForSPOTeamsODB set to True' do
-        expect(powershell_output['EnableATPForSPOTeamsODB']).to eq(true)
+        expect(powershell_data['EnableATPForSPOTeamsODB']).to eq(true)
       end
       it 'should have EnableSafeDocs set to True' do
-        expect(powershell_output['EnableSafeDocs']).to eq(true)
+        expect(powershell_data['EnableSafeDocs']).to eq(true)
       end
       it 'should have AllowSafeDocsOpen set to False' do
-        expect(powershell_output['AllowSafeDocsOpen']).to eq(false)
+        expect(powershell_data['AllowSafeDocsOpen']).to eq(false)
       end
     end
   when Array
-    powershell_output.each do |policy|
+    powershell_data.each do |policy|
       describe %(Ensure the Safe Attachment Policy #{policy['Name']}) do
         it 'should have EnableATPForSPOTeamsODB set to True' do
-          expect(powershell_output['EnableATPForSPOTeamsODB']).to eq(true)
+          expect(policy['EnableATPForSPOTeamsODB']).to eq(true)
         end
         it 'should have EnableSafeDocs set to True' do
-          expect(powershell_output['EnableSafeDocs']).to eq(true)
+          expect(policy['EnableSafeDocs']).to eq(true)
         end
         it 'should have AllowSafeDocsOpen set to False' do
-          expect(powershell_output['AllowSafeDocsOpen']).to eq(false)
+          expect(policy['AllowSafeDocsOpen']).to eq(false)
         end
       end
     end

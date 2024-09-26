@@ -112,7 +112,7 @@ control 'microsoft-365-foundations-8.6.1' do
 
   reporting_email_addresses = input('reporting_email_addresses_for_malicious_messages')
   powershell_output = powershell(microsoft_defender_script).stdout.strip
-  submission_policy_data = JSON.parse(powershell_output)
+  submission_policy_data = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure that the following states:' do
     subject { powershell_output }
     it 'ReportJunkToCustomizedAddress should be True' do
@@ -128,15 +128,15 @@ control 'microsoft-365-foundations-8.6.1' do
     end
 
     it "ReportJunkAddresses should be #{reporting_email_addresses}" do
-      expect(submission_policy_data['ReportJunkAddresses']).to match_array(reporting_email_addresses)
+      expect(submission_policy_data['ReportJunkAddresses'].sort).to match_array(reporting_email_addresses.sort)
     end
 
     it "ReportNotJunkAddresses should be #{reporting_email_addresses}" do
-      expect(submission_policy_data['ReportNotJunkAddresses']).to match_array(reporting_email_addresses)
+      expect(submission_policy_data['ReportNotJunkAddresses'].sort).to match_array(reporting_email_addresses.sort)
     end
 
     it "ReportPhishAddresses should be #{reporting_email_addresses}" do
-      expect(submission_policy_data['ReportPhishAddresses']).to match_array(reporting_email_addresses)
+      expect(submission_policy_data['ReportPhishAddresses'].sort).to match_array(reporting_email_addresses.sort)
     end
 
     it 'ReportChatMessageEnabled should be False' do

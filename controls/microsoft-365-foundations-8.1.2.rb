@@ -38,10 +38,9 @@ control 'microsoft-365-foundations-8.1.2' do
   ref 'https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsclientconfiguration?view=skype-ps'
 
   ensure_users_cant_send_emails_script = %{
-     $appName = 'cisBenchmarkL512'
      $client_id = '#{input('client_id')}'
      $tenantid = '#{input('tenant_id')}'
-     $clientSecret = '#{input('client_secret')}' #This should not be stored inside of any script; supplied to transmit detail #This should not be stored inside of any script; supplied to transmit detail
+     $clientSecret = '#{input('client_secret')}'
      $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
      $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
      $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)

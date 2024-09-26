@@ -77,7 +77,7 @@ control 'microsoft-365-foundations-2.4.4' do
   end
 
   powershell_output_exclusions = powershell(check_exclusions_script)
-  describe 'Ensure that the list of of exclusions' do
+  describe 'Ensure that the list of exclusions' do
     subject { powershell_output_exclusions.stdout.strip }
     it 'is empty. In case of failure, a manual review is required to check the justification of each present exclusion.' do
       expect(subject).to be_empty

@@ -39,7 +39,6 @@ control 'microsoft-365-foundations-7.2.5' do
   ref 'https://learn.microsoft.com/en-us/sharepoint/external-sharing-overview'
 
   ensure_spo_guest_users_cannot_share_items_dont_own_script = %{
-    $appName = 'cisBenchmarkL512'
     $client_id = '#{input('client_id')}'
     $tenantid = '#{input('tenant_id')}'
     $clientSecret = '#{input('client_secret')}'

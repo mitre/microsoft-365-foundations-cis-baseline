@@ -58,43 +58,44 @@ control 'microsoft-365-foundations-2.1.7' do
     Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
     Get-AntiPhishPolicy | Select-Object Name, Enabled, PhishThresholdLevel, EnableMailboxIntelligenceProtection, EnableMailboxIntelligence, EnableSpoofIntelligence | ConvertTo-Json
   }
-  powershell_output = JSON.parse(powershell(ensure_anti_phishing_policy_created_script).stdout.strip)
-  case powershell_output
+  powershell_output = powershell(ensure_anti_phishing_policy_created_script).stdout.strip
+  powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
+  case powershell_data
   when Hash
-    describe "Ensure the following Exchange Anti-Fishing Policy (#{powershell_output['Name']})" do
+    describe "Ensure the following Exchange Anti-Fishing Policy (#{powershell_data['Name']})" do
       it 'should have Enabled state set to True' do
-        expect(powershell_output['Enabled']).to eq(true)
+        expect(powershell_data['Enabled']).to eq(true)
       end
       it 'should have PhishThresholdLevel at least 2' do
-        expect(powershell_output['PhishThresholdLevel']).to be >= 2
+        expect(powershell_data['PhishThresholdLevel']).to be >= 2
       end
       it 'should have EnableMailboxIntelligenceProtection state set to True' do
-        expect(powershell_output['EnableMailboxIntelligenceProtection']).to eq(true)
+        expect(powershell_data['EnableMailboxIntelligenceProtection']).to eq(true)
       end
       it 'should have EnableMailboxIntelligence state set to True' do
-        expect(powershell_output['EnableMailboxIntelligence']).to eq(true)
+        expect(powershell_data['EnableMailboxIntelligence']).to eq(true)
       end
       it 'should have EnableSpoofIntelligence state set to True' do
-        expect(powershell_output['EnableSpoofIntelligence']).to eq(true)
+        expect(powershell_data['EnableSpoofIntelligence']).to eq(true)
       end
     end
   when Array
     powershell_output.each do |policy|
       describe %(Ensure the following Exchange Anti-Fishing Policy #{policy['Name']}) do
         it 'should have Enabled state set to True' do
-          expect(powershell_output['Enabled']).to eq(true)
+          expect(policy['Enabled']).to eq(true)
         end
         it 'should have PhishThresholdLevel at least 2' do
-          expect(powershell_output['PhishThresholdLevel']).to be >= 2
+          expect(policy['PhishThresholdLevel']).to be >= 2
         end
         it 'should have EnableMailboxIntelligenceProtection state set to True' do
-          expect(powershell_output['EnableMailboxIntelligenceProtection']).to eq(true)
+          expect(policy['EnableMailboxIntelligenceProtection']).to eq(true)
         end
         it 'should have EnableMailboxIntelligence state set to True' do
-          expect(powershell_output['EnableMailboxIntelligence']).to eq(true)
+          expect(policy['EnableMailboxIntelligence']).to eq(true)
         end
         it 'should have EnableSpoofIntelligence state set to True' do
-          expect(powershell_output['EnableSpoofIntelligence']).to eq(true)
+          expect(policy['EnableSpoofIntelligence']).to eq(true)
         end
       end
     end
