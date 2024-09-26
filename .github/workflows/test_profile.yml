@@ -52,7 +52,7 @@ jobs:
 
       - name: Collect certificate file
         env:
-        AUTH: ${{ secrets.SAF_M365_CERTIFICATE }}
+          AUTH: ${{ secrets.SAF_M365_CERTIFICATE }}
         run: |
           echo "$AUTH" | base64 --decode > cert.pfx
 
