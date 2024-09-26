@@ -51,17 +51,17 @@ jobs:
         run: bundle exec inspec vendor . --overwrite
 
       - name: Collect certificate file
-        shell: pwsh
+        env:
+        AUTH: ${{ secrets.SAF_M365_CERTIFICATE }}
         run: |
-          pwd
-          [IO.File]::WriteAllBytes("cert.pfx", ([string]${{secrets.SAF_M365_CERTIFICATE}} | ConvertFrom-Json | %{[byte]$_))
+          echo "$AUTH" | base64 --decode > cert.pfx
 
       - name: Validate certificate contents
         shell: bash
         run: |
           pwd
-          ls -la ~/cert.pfx
-          openssl pkcs12 -info -in ~/cert.pfx -passin pass: -passout pass:
+          ls -la /cert.pfx
+          openssl pkcs12 -info -in /cert.pfx -passin pass: -passout pass:
 
       - name: Run Inspec test
         continue-on-error: true
