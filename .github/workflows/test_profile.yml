@@ -53,7 +53,7 @@ jobs:
       - name: Collect certificate file
         shell: pwsh
         run: |
-          "[IO.File]::WriteAllBytes(cert.pfx,(${{secrets.SAF_365_CERTIFICATE}} | ConvertFrom-Json | %{[byte]$_}))"
+          "[IO.File]::WriteAllBytes(cert.pfx,(${{secrets.SAF_M365_CERTIFICATE}} | ConvertFrom-Json | %{[byte]$_}))"
 
       - name: Run Inspec test
         continue-on-error: true
