@@ -63,7 +63,8 @@ jobs:
           --input client_id=${{secrets.SAF_365_CLIENT_ID}} tenant_id=${{secrets.SAF_365_TENANT_ID}} client_secret=${{secrets.SAF_365_CLIENT_SECRET}} certificate_path=cert.pfx certificate_password=${{secrets.SAF_365_CERTIFICATE_PASSWORD}} organization=${{secrets.SAF_365_ORGANIZATION}} \
           --input-file=inputs.yml \
           --enhanced-outcomes \
-          --reporter json:${{ env.PLATFORM }}-results.json
+          --reporter json:${{ env.PLATFORM }}-results.json \
+          -l debug
 
       - name: View results summary
         continue-on-error: true
