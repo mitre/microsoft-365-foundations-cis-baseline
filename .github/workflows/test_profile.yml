@@ -58,8 +58,8 @@ jobs:
       - name: Validate certificate contents
         shell: bash
         run: |
-          ls -la cert.pfx
-          openssl pkcs12 -info -in cert.pfx -passin pass: -passout pass:
+          ls -la ~/cert.pfx
+          openssl pkcs12 -info -in ~/cert.pfx -passin pass: -passout pass:
 
       - name: Run Inspec test
         continue-on-error: true
