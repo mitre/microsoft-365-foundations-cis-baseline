@@ -61,8 +61,6 @@ control 'microsoft-365-foundations-7.2.9' do
   }
 
   powershell_output = powershell(ensure_guest_access_to_od_will_expire_automatically_script).stdout.strip
-  print('7.2.9')
-  print(powershell(ensure_guest_access_to_od_will_expire_automatically_script).stderr.strip)
   powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure the following setting' do
     subject { powershell_data }

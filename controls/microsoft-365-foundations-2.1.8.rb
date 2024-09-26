@@ -45,10 +45,10 @@ control 'microsoft-365-foundations-2.1.8' do
     describe "Ensure the following domain (#{domain})" do
       subject { powershell(resolve_domain_script).stdout.strip }
       it 'should exist' do
-        expect(subject).should_not be_empty
+        expect(subject).not_to be_empty
       end
       it 'should contain the following string: v=spf1 include:spf.protection.outlook.com' do
-        expect(subject).should include 'v=spf1 include:spf.protection.outlook.com'
+        expect(subject).to include 'v=spf1 include:spf.protection.outlook.com'
       end
     end
   end

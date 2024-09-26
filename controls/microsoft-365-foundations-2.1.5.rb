@@ -59,13 +59,7 @@ control 'microsoft-365-foundations-2.1.5' do
     Get-AtpPolicyForO365 | Select-Object Name, EnableATPForSPOTeamsODB, EnableSafeDocs, AllowSafeDocsOpen | ConvertTo-Json
   }
 
-  print('2.1.5')
   powershell_output = powershell(ensure_safe_attachments_for_msproducts_enabled_script)
-  print('STDOUT')
-  print(powershell_output.stdout)
-  print('STDERR')
-  print(powershell_output.stderr)
-  # test to see workflow issue; remove later
   powershell_data = JSON.parse(powershell_output.stdout.strip) unless powershell_output.stdout.strip.empty?
   case powershell_data
   when Hash

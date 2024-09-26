@@ -62,7 +62,7 @@ control 'microsoft-365-foundations-2.1.10' do
     describe "Ensure the following DMARC domain (#{domain})" do
       subject { powershell(check_dmarc_domain_script).stdout.strip }
       it %{should contain all parts following string: v=DMARC1; (p=quarantine OR p=reject), pct=100, rua=mailto:#{input('reporting_mail_address')} and ruf=mailto:#{input('reporting_mail_address')}} do
-        expect(subject).should match %{v=DMARC1;.*p=(quarantine|reject);.*pct=100;.*rua=mailto:.*ruf=mailto:#{input('reporting_mail_address')}}
+        expect(subject).to match %{v=DMARC1;.*p=(quarantine|reject);.*pct=100;.*rua=mailto:.*ruf=mailto:#{input('reporting_mail_address')}}
       end
     end
   end
@@ -81,7 +81,7 @@ control 'microsoft-365-foundations-2.1.10' do
     describe "Ensure the following MOERA domain (#{domain})" do
       subject { powershell(check_moera_domain_script).stdout.strip }
       it %{should contain all parts following string: v=DMARC1; (p=quarantine OR p=reject), pct=100, rua=mailto:#{input('reporting_mail_address')} and ruf=mailto:#{input('reporting_mail_address')}} do
-        expect(subject).should match %{v=DMARC1;.*p=(quarantine|reject);.*pct=100;.*rua=mailto:.*ruf=mailto:#{input('reporting_mail_address')}}
+        expect(subject).to match %{v=DMARC1;.*p=(quarantine|reject);.*pct=100;.*rua=mailto:.*ruf=mailto:#{input('reporting_mail_address')}}
       end
     end
   end

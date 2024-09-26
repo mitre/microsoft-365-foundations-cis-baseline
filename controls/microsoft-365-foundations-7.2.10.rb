@@ -58,8 +58,6 @@ control 'microsoft-365-foundations-7.2.10' do
   }
 
   powershell_output = powershell(ensure_reauth_with_verification_code_restricted).stdout.strip
-  print('7.2.10')
-  print(powershell(ensure_reauth_with_verification_code_restricted).stderr.strip)
   powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure the following setting' do
     subject { powershell_data }

@@ -64,8 +64,6 @@ control 'microsoft-365-foundations-2.1.6' do
     Get-HostedOutboundSpamFilterPolicy | Select-Object Name, Bcc*, Notify* | ConvertTo-Json
   }
   powershell_output = powershell(ensure_exchange_online_spam_policies_set_to_notify_admins_script).stdout.strip
-  print('2.1.6')
-  print(powershell(ensure_exchange_online_spam_policies_set_to_notify_admins_script).stderr.strip)
   powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
   case powershell_data
   when Hash

@@ -68,8 +68,6 @@ control 'microsoft-365-foundations-3.2.2' do
  }
 
   powershell_output = powershell(ensure_dlp_policies_enabled_teams_script).stdout.strip
-  print('3.2.2')
-  print(powershell(ensure_dlp_policies_enabled_teams_script).stderr.strip)
   powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
   case powershell_data
   when Hash

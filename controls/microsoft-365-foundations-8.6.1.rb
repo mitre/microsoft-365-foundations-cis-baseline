@@ -112,8 +112,6 @@ control 'microsoft-365-foundations-8.6.1' do
 
   reporting_email_addresses = input('reporting_email_addresses_for_malicious_messages')
   powershell_output = powershell(microsoft_defender_script).stdout.strip
-  print('8.6.1')
-  print(powershell(microsoft_defender_script).stderr.strip)
   submission_policy_data = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure that the following states:' do
     subject { powershell_output }
