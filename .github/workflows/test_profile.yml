@@ -55,6 +55,12 @@ jobs:
         run: |
           "[IO.File]::WriteAllBytes(cert.pfx,(${{secrets.SAF_M365_CERTIFICATE}} | ConvertFrom-Json | %{[byte]$_}))"
 
+      - name: Validate certificate contents
+        shell: bash
+        run: |
+          ls -la cert.pfx
+          openssl pkcs12 -info -in cert.pfx -passin pass: -passout pass:
+
       - name: Run Inspec test
         continue-on-error: true
         run: |
