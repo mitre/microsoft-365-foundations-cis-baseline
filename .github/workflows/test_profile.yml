@@ -53,11 +53,13 @@ jobs:
       - name: Collect certificate file
         shell: pwsh
         run: |
-          "[IO.File]::WriteAllBytes(cert.pfx,(${{secrets.SAF_M365_CERTIFICATE}} | ConvertFrom-Json | %{[byte]$_}))"
+          pwd
+          [IO.File]::WriteAllBytes(cert.pfx,(${{secrets.SAF_M365_CERTIFICATE}} | ConvertFrom-Json | %{[byte]$_}))
 
       - name: Validate certificate contents
         shell: bash
         run: |
+          pwd
           ls -la ~/cert.pfx
           openssl pkcs12 -info -in ~/cert.pfx -passin pass: -passout pass:
 
