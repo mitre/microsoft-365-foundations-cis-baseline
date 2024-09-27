@@ -57,6 +57,7 @@ control 'microsoft-365-foundations-1.2.2' do
       $certificate_path = '#{input('certificate_path')}'
       $organization = '#{input('organization')}'
       $clientSecret = '#{input('client_secret')}'
+      Install-Module -Name Microsoft.Graph -Force -AllowClobber
       import-module microsoft.graph
       Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
       import-module exchangeonlinemanagement
