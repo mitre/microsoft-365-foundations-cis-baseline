@@ -93,6 +93,7 @@ control 'microsoft-365-foundations-2.1.1' do
         $certificate_password = '#{input('certificate_password')}'
         $certificate_path = '#{input('certificate_path')}'
         $organization = '#{input('organization')}'
+        Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
         import-module exchangeonlinemanagement
         Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
         $policy_names = Get-SafeLinksPolicy | Select-Object -ExpandProperty Name

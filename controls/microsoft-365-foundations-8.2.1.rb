@@ -101,8 +101,6 @@ control 'microsoft-365-foundations-8.2.1' do
         }
     }
   }
-  print('8.2.1')
-  print(powershell(ensure_external_access_restricted_teams_admin_center_script).stderr)
   powershell_output = powershell(ensure_external_access_restricted_teams_admin_center_script).stdout.strip
   describe 'Ensure the AllowTeamsConsumer, AllowPublicUsers, AllowFederatedUsers, and AllowedDomains' do
     subject { powershell_output }
