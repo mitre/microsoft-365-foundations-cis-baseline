@@ -24,7 +24,6 @@ inputs:
 #7.2.1, 7.2.2, 7.2.3, 7.2.4, 7.2.5, 7.2.6, 7.2.7, 7.2.9, 7.2.10, 7.3.1, 7.3.2, 7.3.4,
 #8.1.1, 8.1.2, 8.2.1, 8.5.1, 8.5.2, 8.5.3, 8.5.4, 8.5.5, 8.5.6, 8.5.7, 8.5.8, 8.6.1
 - name: client_id
-  sensitive: true
   description: 'Client ID for Microsoft 365'
   type: String
   required: true
@@ -46,7 +45,6 @@ inputs:
 #7.2.1, 7.2.2, 7.2.3, 7.2.4, 7.2.5, 7.2.6, 7.2.7, 7.2.9, 7.2.10, 7.3.1, 7.3.2, 7.3.4,
 #8.1.2
 - name: client_secret
-  sensitive: true
   description: 'Client Secret for Microsoft 365'
   type: String
   required: true
