@@ -85,6 +85,7 @@ control 'microsoft-365-foundations-5.2.2.3' do
     $certificate_password = '#{input('certificate_password')}'
     $certificate_path = '#{input('certificate_path')}'
     $organization = '#{input('organization')}'
+    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
     import-module exchangeonlinemanagement
     Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
     $defaultPolicy = Get-OrganizationConfig | Select-Object -ExpandProperty DefaultAuthenticationPolicy

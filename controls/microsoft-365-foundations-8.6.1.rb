@@ -83,6 +83,7 @@ control 'microsoft-365-foundations-8.6.1' do
     import-module exchangeonlinemanagement
     Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
     $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
+    Install-Module -Name MicrosoftTeams -Force -AllowClobber
     import-module MicrosoftTeams
     Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
     (Get-CsTeamsMessagingPolicy -Identity Global).AllowSecurityEndUserReporting

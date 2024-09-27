@@ -42,6 +42,7 @@ control 'microsoft-365-foundations-6.2.2' do
     $certificate_password = '#{input('certificate_password')}'
     $certificate_path = '#{input('certificate_path')}'
     $organization = '#{input('organization')}'
+    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
     import-module exchangeonlinemanagement
     Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
     Get-TransportRule | Where-Object { ($_.SetScl -eq -1 -and $_.SenderDomainIs -ne $null) } | Select-Object -ExpandProperty Name

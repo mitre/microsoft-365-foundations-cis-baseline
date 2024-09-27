@@ -67,6 +67,7 @@ control 'microsoft-365-foundations-7.2.4' do
     $certificate_password = '#{input('certificate_password')}'
     $certificate_path = '#{input('certificate_path')}'
     $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
+    Install-Module -Name PnP.PowerShell -Force -AllowClobber
     import-module pnp.powershell
     $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
     Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid

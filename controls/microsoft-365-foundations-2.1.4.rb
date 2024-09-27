@@ -49,6 +49,7 @@ control 'microsoft-365-foundations-2.1.4' do
     $certificate_password = '#{input('certificate_password')}'
     $certificate_path = '#{input('certificate_path')}'
     $organization = '#{input('organization')}'
+    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
     import-module exchangeonlinemanagement
     Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
     Get-SafeAttachmentPolicy | where-object {$_.Enable -eq "True"}
