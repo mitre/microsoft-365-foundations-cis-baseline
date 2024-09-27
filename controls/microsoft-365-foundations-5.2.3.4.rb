@@ -59,7 +59,6 @@ control 'microsoft-365-foundations-5.2.3.4' do
     $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
     $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
     Connect-MgGraph -TenantId $tenantid -ClientSecretCredential $ClientSecretCredential -NoWelcome
-    Connect-MgGraph -Scopes "UserAuthenticationMethod.Read.All,AuditLog.Read.All" -NoWelcome
     $count = Get-MgReportAuthenticationMethodUserRegistrationDetail ` -Filter "IsMfaCapable eq false and UserType eq 'Member'" | Measure-Object
     Write-Output $count.Count
   }
