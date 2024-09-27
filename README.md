@@ -1,11 +1,11 @@
 ## Getting Started  
-It is intended and recommended that InSpec and this profile be run from a __"runner"__ host (such as a DevOps orchestration server, an administrative management system, or a developer's workstation/laptop) against the target remotely using the SSH transport.
+It is intended and recommended that InSpec and this profile be run from a __"runner"__ host (such as a DevOps orchestration server, an administrative management system, or a developer's workstation/laptop) against the target.
 
 __For the best security of the runner, always install on the runner the _latest version_ of InSpec and supporting Ruby language components.__
 
 Latest versions and installation options are available at the [InSpec](http://inspec.io/) site.
 
-The M365 CIS includes security requirements for the an Microsoft 365 environment.
+The M365 CIS Benchmark includes security requirements for an Microsoft 365 environment.
 
 ## Getting Started
 
@@ -14,6 +14,7 @@ The M365 CIS includes security requirements for the an Microsoft 365 environment
 #### Microsoft 365
 - M365 account API credentials and certificate
 - M365 providing appropriate permissions to perform audit scan
+  
 
 #### Required software on the InSpec Runner
 - git
@@ -31,12 +32,16 @@ Ensure access and install the following powershell modules. The controls also ha
 #### Install InSpec
 Go to https://www.inspec.io/downloads/ and consult the documentation for your Operating System to download and install InSpec.
 
-#### Ensure InSpec version is at least 4.23.10 
+#### Check InSpec version is at least version 6
 ```sh
 inspec --version
 ```
 ### Profile Input Values
-The default values for profile inputs are given in `inspec.yml`. These values can be overridden by creating an `inputs.yml` file -- see [the InSpec documentation for inputs](https://docs.chef.io/inspec/inputs/).
+The default values for profile inputs are given in `inspec.yml`. Not all values in `inspec.yml` have been given a default value -- for example, the sensitive connection and authentication variables have not been (and cannot be) given a default. 
+
+These values need to be overridden with values appropriate for your environment. You must create an `inputs.yml` file -- see [the InSpec documentation for inputs](https://docs.chef.io/inspec/inputs/).
+
+** DO NOT COMMIT YOUR INPUTS.YML FILE! ** That file will include sensitive login info for your own M365 instance.
 
 ```yml
     #Controls using this input:
@@ -256,28 +261,28 @@ The default values for profile inputs are given in `inspec.yml`. These values ca
 ### How to execute this instance  
 (See: https://www.inspec.io/docs/reference/cli/)
 
-**Execute the Microsoft 365 profile on .**
+**How to execute the Microsoft 365 profile**
 
 #### Execute a single Control in the Profile 
 **Note**: Replace the profile's directory name - e.g. - `<Profile>` with `.` if currently in the profile's root directory.
 
 ```sh
-inspec exec <Profile> --controls=<control_id> --show-progress
+inspec exec <Profile> --controls=<control_id> --enhanced-outcomes --input-file=inputs.yml
 ```
 
 #### Execute a Single Control and save results as JSON 
 ```sh
-inspec exec <Profile> --controls=<control_id> --show-progress --reporter json:results.json
+inspec exec <Profile> --controls=<control_id> --enhanced-outcomes --input-file=inputs.yml --reporter json:results.json
 ```
 
 #### Execute All Controls in the Profile 
 ```sh
-inspec exec <Profile> --show-progress
+inspec exec <Profile> --enhanced-outcomes --input-file=inputs.yml
 ```
 
 #### Execute all the Controls in the Profile and save results as JSON 
 ```sh
-inspec exec <Profile> --show-progress --reporter json:results.json
+inspec exec <Profile> --enhanced-outcomes --input-file=inputs.yml --reporter json:results.json
 ```
 
 ## Check Overview
