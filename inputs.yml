@@ -1,3 +1,9 @@
+client_id: ${{secrets.SAF_M365_CLIENT_ID}}
+tenant_id: ${{secrets.SAF_M365_TENANT_ID}}
+client_secret: ${{secrets.SAF_M365_CLIENT_SECRET}}
+certificate_path: cert.pfx
+certificate_password: ${{secrets.SAF_M365_CERTIFICATE_PASSWORD}}
+organization: ${{secrets.SAF_M365_ORGANIZATION}}
 notify_outbound_spam_recipients: 
   - test@msft.com
 bcc_suspicious_outbound_additional_recipients: 
