@@ -40,6 +40,7 @@ control 'microsoft-365-foundations-1.3.1' do
      $tenantid = '#{input('tenant_id')}'
      $clientSecret = '#{input('client_secret')}'
      $organization = '#{input('organization')}'
+     Install-Module -Name Microsoft.Graph -Force -AllowClobber
      import-module microsoft.graph
      $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
      $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)

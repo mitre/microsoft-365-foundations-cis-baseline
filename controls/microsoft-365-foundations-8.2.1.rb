@@ -69,6 +69,7 @@ control 'microsoft-365-foundations-8.2.1' do
     $client_id = '#{input('client_id')}'
     $tenantid = '#{input('tenant_id')}'
     $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
+    Install-Module -Name MicrosoftTeams -Force -AllowClobber
     import-module MicrosoftTeams
     Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
     $authorizedDomains = @(#{domain_pattern})
@@ -100,7 +101,8 @@ control 'microsoft-365-foundations-8.2.1' do
         }
     }
   }
-
+  print('8.2.1')
+  print(powershell(ensure_external_access_restricted_teams_admin_center_script).stderr)
   powershell_output = powershell(ensure_external_access_restricted_teams_admin_center_script).stdout.strip
   describe 'Ensure the AllowTeamsConsumer, AllowPublicUsers, AllowFederatedUsers, and AllowedDomains' do
     subject { powershell_output }
