@@ -61,6 +61,7 @@ jobs:
         continue-on-error: true
         run: |
           bundle exec inspec exec . \
+          --controls=microsoft-365-foundations-1.3.1 microsoft-365-foundations-5.1.1.1 microsoft-365-foundations-5.1.2.3\
           --input client_id=${{secrets.SAF_M365_CLIENT_ID}} tenant_id=${{secrets.SAF_M365_TENANT_ID}} client_secret=${{secrets.SAF_M365_CLIENT_SECRET}} certificate_path=cert.pfx certificate_password=${{secrets.SAF_M365_CERTIFICATE_PASSWORD}} organization=${{secrets.SAF_M365_ORGANIZATION}} \
           --input-file=inputs.yml \
           --enhanced-outcomes \

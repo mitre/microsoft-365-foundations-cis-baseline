@@ -41,7 +41,7 @@ control 'microsoft-365-foundations-1.2.1' do
     import-module microsoft.graph
     $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
     $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
-    Connect-MgGraph -TenantId "$tenantid" -ClientSecretCredential $ClientSecretCredential -NoWelcome
+    Connect-MgGraph -TenantId $tenantid -ClientSecretCredential $ClientSecretCredential -NoWelcome
     # Determine Id of role using the immutable RoleTemplateId value.
     Write-Host (Get-MgGroup | where {$_.Visibility -eq "Public"} | select DisplayName,Visibility).Count
   }

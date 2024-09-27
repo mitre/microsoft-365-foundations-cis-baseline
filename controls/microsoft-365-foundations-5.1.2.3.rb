@@ -48,7 +48,7 @@ control 'microsoft-365-foundations-5.1.2.3' do
     import-module microsoft.graph
     $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
     $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
-    Connect-MgGraph -TenantId "$tenantid" -ClientSecretCredential $ClientSecretCredential -NoWelcome
+    Connect-MgGraph -TenantId $tenantid -ClientSecretCredential $ClientSecretCredential -NoWelcome
     Connect-MgGraph -Scopes "Policy.Read.All" -NoWelcome
     $allowedToCreateTenants = (Get-MgPolicyAuthorizationPolicy).DefaultUserRolePermissions | Select-Object -ExpandProperty AllowedToCreateTenants
     Write-Output $allowedToCreateTenants.toString()

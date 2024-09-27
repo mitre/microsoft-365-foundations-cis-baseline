@@ -59,7 +59,7 @@ control 'microsoft-365-foundations-5.1.1.1' do
     import-module microsoft.graph
     $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
     $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
-    Connect-MgGraph -TenantId "$tenantid" -ClientSecretCredential $ClientSecretCredential -NoWelcome
+    Connect-MgGraph -TenantId $tenantid -ClientSecretCredential $ClientSecretCredential -NoWelcome
     Connect-MgGraph -Scopes "Policy.Read.All" -NoWelcome
     Write-Output (Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy).IsEnabled
     }
