@@ -48,8 +48,11 @@ control 'microsoft-365-foundations-1.3.1' do
      $passwordValidityPeriod = (Get-MgDomain -DomainId $organization).PasswordValidityPeriodInDays
      Write-Output $passwordValidityPeriod
   }
-  print('1.3.1')
-  print(powershell(password_expiration_days_script).stderr)
+  puts('1.3.1')
+  puts(powershell(password_expiration_days_script).stderr)
+  puts(password_expiration_days_script)
+  require 'pry'
+  binding.pry
 
   powershell_output = powershell(password_expiration_days_script)
   describe 'The password validity period' do
