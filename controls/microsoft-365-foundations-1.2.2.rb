@@ -58,11 +58,12 @@ control 'microsoft-365-foundations-1.2.2' do
       $organization = '#{input('organization')}'
       $clientSecret = '#{input('client_secret')}'
       import-module microsoft.graph
+      Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
       import-module exchangeonlinemanagement
       $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
       $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
       Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-      Connect-MgGraph -TenantId "$tenantid" -ClientSecretCredential $ClientSecretCredential -NoWelcome
+      Connect-MgGraph -TenantId $tenantid -ClientSecretCredential $ClientSecretCredential -NoWelcome
       Connect-MgGraph -Scopes "Policy.Read.All" -NoWelcome
       $MBX = Get-EXOMailbox -RecipientTypeDetails SharedMailbox
       $disabled_account_count = $MBX | ForEach-Object { Get-MgUser -UserId $_.ExternalDirectoryObjectId ` -Property DisplayName, UserPrincipalName, AccountEnabled } | Where-Object { $_.AccountEnabled -eq $true } | Measure-Object | Select-Object -ExpandProperty Count

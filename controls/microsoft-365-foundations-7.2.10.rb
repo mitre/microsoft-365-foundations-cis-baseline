@@ -63,7 +63,7 @@ control 'microsoft-365-foundations-7.2.10' do
       expect(subject['EmailAttestationRequired']).to eq(true)
     end
     it 'EmailAttestationReAuthDays in SharePoint is less than or equal to 15' do
-      expect(subject['EmailAttestationReAuthDays']).to be <= 15
+      expect(subject['EmailAttestationReAuthDays']).to be <= input('email_attestation_re_auth_days_spo_threshold')
     end
   end
 end

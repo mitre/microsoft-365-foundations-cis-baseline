@@ -1,12 +1,3 @@
-## SAF TEMPLATE FILE
-
-(Below is an example of the README that should be in place for a SAF-developed InSpec profile -- requirements, running instructions, etc.)
-
-InSpec profile to validate the secure configuration of a Kubernetes node against [DISA's](https://iase.disa.mil/stigs/Pages/index.aspx) Kubernetes Secure Technical Implementation Guide (STIG) Version 1 Release 1.
-
-## PowerShell Module Installation
-<https://learn.microsoft.com/en-us/powershell/microsoftgraph/installation?view=graph-powershell-1.0#installation>
-
 ## Getting Started  
 It is intended and recommended that InSpec and this profile be run from a __"runner"__ host (such as a DevOps orchestration server, an administrative management system, or a developer's workstation/laptop) against the target remotely using the SSH transport.
 
@@ -14,21 +5,27 @@ __For the best security of the runner, always install on the runner the _latest 
 
 Latest versions and installation options are available at the [InSpec](http://inspec.io/) site.
 
-The Kubernetes STIG includes security requirements for both the Kubernetes cluster itself and the nodes that comprise it. This profile includes the checks for the node portion. It is intended  to be used in conjunction with the <b>[Kubernetes Cluster](https://github.com/mitre/k8s-cluster-stig-baseline)</b> profile that performs automated compliance checks of the Kubernetes cluster.
+The M365 CIS includes security requirements for the an Microsoft 365 environment.
 
 ## Getting Started
 
 ### Requirements
 
-#### Kubernetes Cluster
-- Kubernetes Platform deployment
-- Access to the Kubernetes Node over ssh
-- Account providing appropriate permissions to perform audit scan
-
+#### Microsoft 365
+- M365 account API credentials and certificate
+- M365 providing appropriate permissions to perform audit scan
 
 #### Required software on the InSpec Runner
 - git
+- [Powershell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.4)
 - [InSpec](https://www.chef.io/products/chef-inspec/)
+
+## PowerShell Module Installation
+Ensure access and install the following powershell modules. The controls also have the module installation code when running the Powershell queries for redundancy purposes:
+- [Microsoft.Graph](https://learn.microsoft.com/en-us/powershell/microsoftgraph/installation?view=graph-powershell-1.0#installation)
+- [ExchangeOnlineManagement](https://learn.microsoft.com/en-us/powershell/exchange/connect-to-exchange-online-powershell?view=exchange-ps)
+- [PnP.PowerShell](https://learn.microsoft.com/en-us/powershell/sharepoint/sharepoint-pnp/sharepoint-pnp-cmdlets)
+- [MicrosoftTeams](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-install)
 
 ### Setup Environment on the InSpec Runner
 #### Install InSpec
@@ -42,79 +39,257 @@ inspec --version
 The default values for profile inputs are given in `inspec.yml`. These values can be overridden by creating an `inputs.yml` file -- see [the InSpec documentation for inputs](https://docs.chef.io/inspec/inputs/).
 
 ```yml
-  - name: manifests_path
-    description: 'Path to Kubernetes manifest files on the target node'
-    type: string
-    value: '/etc/kubernetes/manifests'
-    required: true
+    #Controls using this input:
+    #1.1.3, 1.2.1, 1.2.2, 1.3.1, 1.3.3, 1.3.6, 
+    #2.1.1, 2.1.2, 2.1.3, 2.1.4, 2.1.5, 2.1.6, 2.1.7, 2.1.8, 2.1.9, 2.1.10, 2.1.14, 2.4.4, 
+    #3.1.1, 3.2.2, 
+    #5.1.1.1, 5.1.2.2, 5.1.2.3, 5.1.3.1, 5.1.5.2, 5.1.8.1, 5.2.2.3, 5.2.3.4, 
+    #6.1.1, 6.1.2, 6.1.3, 6.1.4, 6.2.1, 6.2.2, 6.2.3, 6.3.1, 6.5.1, 6.5.2, 6.5.3, 
+    #7.2.1, 7.2.2, 7.2.3, 7.2.4, 7.2.5, 7.2.6, 7.2.7, 7.2.9, 7.2.10, 7.3.1, 7.3.2, 7.3.4,
+    #8.1.1, 8.1.2, 8.2.1, 8.5.1, 8.5.2, 8.5.3, 8.5.4, 8.5.5, 8.5.6, 8.5.7, 8.5.8, 8.6.1
+    - name: client_id
+      sensitive: true
+      description: 'Client ID for Microsoft 365'
+      type: String
+      required: true
 
-  - name: pki_path
-    description: 'Path to Kubernetes PKI files on the target node'
-    type: string
-    value: '/etc/kubernetes/pki/'
-    required: true
+    #Controls using this input:
+    #1.1.3, 1.2.1, 1.2.2, 1.3.1,
+    #5.1.1.1, 5.1.2.2, 5.1.2.3, 5.1.3.1, 5.1.5.2, 5.1.8.1, 5.2.3.4, 
+    #7.2.1, 7.2.2, 7.2.3, 7.2.4, 7.2.5, 7.2.6, 7.2.7, 7.2.9, 7.2.10, 7.3.1, 7.3.2, 7.3.4,
+    #8.1.1, 8.1.2, 8.2.1, 8.5.1, 8.5.2, 8.5.3, 8.5.4, 8.5.5, 8.5.6, 8.5.7, 8.5.8, 8.6.1
+    - name: tenant_id
+      sensitive: true
+      description: 'Tenant ID for Microsoft 365'
+      type: String
+      required: true
 
-  - name: kubeadm_path
-    description: 'Path to kubeadm file on the target node'
-    type: string
-    value: '/usr/local/bin/kubeadm'
-    required: true
+    #Controls using this input:
+    #1.1.3, 1.2.1, 1.2.2, 1.3.1,
+    #5.1.1.1, 5.1.2.2, 5.1.2.3, 5.1.3.1, 5.1.5.2, 5.1.8.1, 5.2.3.4, 
+    #7.2.1, 7.2.2, 7.2.3, 7.2.4, 7.2.5, 7.2.6, 7.2.7, 7.2.9, 7.2.10, 7.3.1, 7.3.2, 7.3.4,
+    #8.1.2
+    - name: client_secret
+      sensitive: true
+      description: 'Client Secret for Microsoft 365'
+      type: String
+      required: true
 
-  - name: kubectl_path
-    description: 'Path to kubectl on the target node'
-    type: string
-    value: '/usr/local/bin/kubectl'
-    required: true
+    #Controls using this input:
+    #1.2.2, 1.3.3, 1.3.6,
+    #2.1.1, 2.1.2, 2.1.3, 2.1.4, 2.1.5, 2.1.6, 2.1.7, 2.1.8, 2.1.9, 2.1.10, 2.1.14, 2.4.4, 
+    #3.1.1, 3.2.2, 
+    #5.2.2.3,
+    #6.1.1, 6.1.2, 6.1.3, 6.1.4, 6.2.1, 6.2.2, 6.2.3, 6.3.1, 6.5.1, 6.5.2, 6.5.3, 
+    #7.2.1, 7.2.2, 7.2.3, 7.2.4, 7.2.5, 7.2.6, 7.2.7, 7.2.9, 7.2.10, 7.3.1, 7.3.2, 7.3.4,
+    #8.1.1, 8.1.2, 8.2.1, 8.5.1, 8.5.2, 8.5.3, 8.5.4, 8.5.5, 8.5.6, 8.5.7, 8.5.8, 8.6.1
+    - name: certificate_path
+      sensitive: true
+      description: 'Certificate path for M365'
+      type: String
+      required: true
+      
+    #Controls using this input:
+    #1.2.2, 1.3.3, 1.3.6,
+    #2.1.1, 2.1.2, 2.1.3, 2.1.4, 2.1.5, 2.1.6, 2.1.7, 2.1.8, 2.1.9, 2.1.10, 2.1.14, 2.4.4, 
+    #3.1.1, 3.2.2, 
+    #5.2.2.3,
+    #6.1.1, 6.1.2, 6.1.3, 6.1.4, 6.2.1, 6.2.2, 6.2.3, 6.3.1, 6.5.1, 6.5.2, 6.5.3, 
+    #7.2.1, 7.2.2, 7.2.3, 7.2.4, 7.2.5, 7.2.6, 7.2.7, 7.2.9, 7.2.10, 7.3.1, 7.3.2, 7.3.4,
+    #8.1.1, 8.1.2, 8.2.1, 8.5.1, 8.5.2, 8.5.3, 8.5.4, 8.5.5, 8.5.6, 8.5.7, 8.5.8, 8.6.1
+    - name: certificate_password
+      sensitive: true
+      description: 'Password for certificate for M365'
+      type: String
+      required: true
 
-  - name: kubernetes_conf_files
-    description: 'Path to Kubernetes conf files on the target node'
-    type: array
-    value:
-        - /etc/kubernetes/admin.conf
-        - /etc/kubernetes/scheduler.conf
-        - /etc/kubernetes/controller-manager.conf
-    required: true
+    #Controls using this input:
+    #1.2.2, 1.3.1, 1.3.3, 1.3.6,
+    #2.1.1, 2.1.2, 2.1.3, 2.1.4, 2.1.5, 2.1.6, 2.1.7, 2.1.8, 2.1.9, 2.1.10, 2.1.14, 2.4.4, 
+    #3.1.1, 3.2.2, 
+    #5.2.2.3,
+    #6.1.1, 6.1.2, 6.1.3, 6.1.4, 6.2.1, 6.2.2, 6.2.3, 6.3.1, 6.5.1, 6.5.2, 6.5.3, 
+    #8.6.1
+    - name: organization
+      sensitive: true
+      description: 'M365 Organization'
+      type: String
+      required: true
+
+    #Controls using this input:
+    #2.1.6
+    - name: notify_outbound_spam_recipients
+      sensitive: true
+      description: 'Email address to notify administrator for Exchange Online Spam Policies'
+      type: Array
+      required: true
+
+    #Controls using this input:
+    #2.1.6
+    - name: bcc_suspicious_outbound_additional_recipients
+      sensitive: true
+      description: 'BCC email address to notify additional recipients for Exchange Online Spam Policies'
+      type: Array
+      required: true
+
+    #Controls using this input:
+    #2.1.8
+    - name: spf_domains
+      sensitive: true
+      description: 'Array of domains needed to check for SPF record'
+      type: Array
+      required: true
+
+    #Controls using this input:
+    #2.1.10
+    - name: dmarc_domains
+      sensitive: true
+      description: 'Array of DMARC records to check'
+      type: Array
+      required: true
+
+    #Controls using this input:
+    #2.1.10
+    - name: reporting_mail_address
+      sensitive: true
+      description: 'Reporting mail address needed for DMARC check'
+      type: String
+      required: true
+
+    #Controls using this input:
+    #2.1.10
+    - name: moera_domains
+      sensitive: true
+      description: 'Array of MOERA records to check'
+      type: Array
+      required: true
+
+    #Controls using this input:
+    #3.2.2
+    - name: permitted_exceptions_teams_locations
+      sensitive: true
+      description: 'Permitted exceptions for teams locations'
+      type: Array
+      required: true
+
+    #Controls using this input:
+    #6.2.1
+    - name: internal_domains_transport_rule
+      sensitive: true
+      description: 'Domains internal to the organization to be checked'
+      type: Array
+      required: true
+
+    #Controls using this input:
+    #6.2.3
+    - name: email_addresses_bypass_external_tagging
+      sensitive: true
+      description: 'Email address list that are allowed to bypass external tagging'
+      type: Array
+      required: true
+
+    #Controls using this input:
+    #6.5.2
+    - name: mailtipslargeaudiencethreshold_value
+      sensitive: true
+      description: 'MailTipsLargeAudienceThreshold value to check for in MailTips setting'
+      required: true
+
+    #Controls using this input:
+    #6.5.2
+    - name: authorized_domains_teams_admin_center
+      sensitive: true
+      description: 'List of authorized domains for AllowedDomains option in Teams Admin Center'
+      type: Array
+      required: true
+
+    #Controls using this input:
+    #8.6.1
+    - name: reporting_email_addresses_for_malicious_messages
+      sensitive: true
+      description: 'Email addresses to check to report malicious messages in Teams and Defender'
+      type: Array
+      required: true
+
+    #Controls using this input:
+    #7.2.1, 7.2.2, 7.2.3, 7.2.4, 7.2.5, 7.2.6, 7.2.7, 7.2.9, 7.2.10, 7.3.1, 7.3.2, 7.3.4,
+    - name: sharepoint_admin_url
+      sensitive: true
+      description: 'SharePoint Admin URL to connect to'
+      type: String
+      required: true
+
+    #Controls using this input:
+    #7.2.6
+    - name: domains_trusted_by_organization
+      sensitive: true
+      description: 'Domains that are trusted by organization in SharePoint'
+      type: Array
+      required: true
+
+    #Controls using this input:
+    #7.2.9
+    - name: external_user_expiry_in_days_spo_threshold
+      sensitive: true
+      description: 'Threshold in days to check for external user expiry in SharePoint'
+      value: 30
+      required: true
+
+    #Controls using this input:
+    #7.2.10
+    - name: email_attestation_re_auth_days_spo_threshold
+      sensitive: true
+      description: 'Threshold in days to check for email attestation auth in SharePoint'
+      value: 15
+      required: true
+
+    #Controls using this input:
+    #7.3.2
+    - name: trusted_domains_guids
+      sensitive: true
+      description: 'Domain GUIDs trusted from the on premises environment'
+      type: Array
+      required: true
 
 ```
 
 ### How to execute this instance  
 (See: https://www.inspec.io/docs/reference/cli/)
 
-**Execute the Kubernetes Node profile on each node in the cluster. The profile will adapt its checks based on the Kubernetes components located on the node.**
+**Execute the Microsoft 365 profile on .**
 
 #### Execute a single Control in the Profile 
 **Note**: Replace the profile's directory name - e.g. - `<Profile>` with `.` if currently in the profile's root directory.
 
 ```sh
-inspec exec <Profile> -t ssh://TARGET_USERNAME@TARGET_IP:TARGET_PORT --sudo -i <your_PEM_KEY> --controls=<control_id> --show-progress
+inspec exec <Profile> --controls=<control_id> --show-progress
 ```
 
 #### Execute a Single Control and save results as JSON 
 ```sh
-inspec exec <Profile> -t ssh://TARGET_USERNAME@TARGET_IP:TARGET_PORT --sudo -i <your_PEM_KEY> --controls=<control_id> --show-progress --reporter json:results.json
+inspec exec <Profile> --controls=<control_id> --show-progress --reporter json:results.json
 ```
 
 #### Execute All Controls in the Profile 
 ```sh
-inspec exec <Profile>  -t ssh://TARGET_USERNAME@TARGET_IP:TARGET_PORT --sudo -i <your_PEM_KEY> --show-progress
+inspec exec <Profile> --show-progress
 ```
 
 #### Execute all the Controls in the Profile and save results as JSON 
 ```sh
-inspec exec <Profile> -t ssh://TARGET_USERNAME@TARGET_IP:TARGET_PORT --sudo -i <your_PEM_KEY> --show-progress  --reporter json:results.json
+inspec exec <Profile> --show-progress --reporter json:results.json
 ```
 
 ## Check Overview
 
-**Kubernetes Components**
+**M365 Services**
 
-This profile evaluates the STIG compliance of the following Kubernetes Components by evaluating their process configuration:
+This profile evaluates the M365 CIS Benchmark compliance of the following M365 administrative centers by evaluating their setting configurations:
 
-- kube-apiserver
-- kube-controller-manager
-- kube-scheduler
-- kubelet
-- kube-proxy
-- etcd
-
-If these components are not in use in the target cluster or named differently, the profile has to be adapted for the target K8S distribution using an [InSpec Profile Overlay](https://blog.chef.io/understanding-inspec-profile-inheritance).
+- Microsoft 365 Admin Center
+- Microsoft 365 Defender
+- Microsoft Purview
+- Microsoft Entra Admin Center
+- Microsoft Exchange Admin Center
+- Microsoft SharePoint Admin Center
+- Microsoft Fabric

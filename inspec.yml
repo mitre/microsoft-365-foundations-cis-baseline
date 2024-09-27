@@ -204,6 +204,22 @@ inputs:
   required: true
 
 #Controls using this input:
+#7.2.9
+- name: external_user_expiry_in_days_spo_threshold
+  sensitive: true
+  description: 'Threshold in days to check for external user expiry in SharePoint'
+  value: 30
+  required: true
+
+#Controls using this input:
+#7.2.10
+- name: email_attestation_re_auth_days_spo_threshold
+  sensitive: true
+  description: 'Threshold in days to check for email attestation auth in SharePoint'
+  value: 15
+  required: true
+
+#Controls using this input:
 #7.3.2
 - name: trusted_domains_guids
   sensitive: true

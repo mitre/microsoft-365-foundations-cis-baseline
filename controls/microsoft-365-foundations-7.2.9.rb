@@ -66,7 +66,7 @@ control 'microsoft-365-foundations-7.2.9' do
       expect(subject['ExternalUserExpirationRequired']).to eq(true)
     end
     it 'ExternalUserExpireInDays in SharePoint/OneDrive is less than or equal to 30' do
-      expect(subject['ExternalUserExpireInDays']).to be <= 30
+      expect(subject['ExternalUserExpireInDays']).to be <= input('external_user_expiry_in_days_spo_threshold')
     end
   end
 end
