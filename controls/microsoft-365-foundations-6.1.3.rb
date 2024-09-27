@@ -79,19 +79,6 @@ control 'microsoft-365-foundations-6.1.3' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['8.2'] }, { '7' => ['6.2'] }]
-  tag default_value: 'AuditEnabled: True for all mailboxes except below:
-                        • Resource Mailboxes
-                        • Public Folder Mailboxes
-                        • DiscoverySearch Mailbox
-                    AuditAdmin: ApplyRecord, Create, HardDelete, MailItemsAccessed,
-                    MoveToDeletedItems, Send, SendAs, SendOnBehalf, SoftDelete, Update,
-                    UpdateCalendarDelegation, UpdateFolderPermissions, UpdateInboxRules
-                    AuditDelegate: ApplyRecord, Create, HardDelete, MailItemsAccessed,
-                    MoveToDeletedItems, SendAs, SendOnBehalf, SoftDelete, Update,
-                    UpdateFolderPermissions, UpdateInboxRules
-                    AuditOwner: ApplyRecord, HardDelete, MailItemsAccessed, MoveToDeletedItems,
-                    Send, SoftDelete, Update, UpdateCalendarDelegation, UpdateFolderPermissions,
-                    UpdateInboxRules'
   tag nist: ['AU-2', 'AU-7', 'AU-12', 'AC-1', 'AC-2', 'AC-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-mailboxes?view=o365-worldwide'

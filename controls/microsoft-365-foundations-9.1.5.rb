@@ -25,7 +25,6 @@ control 'microsoft-365-foundations-9.1.5' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.8'] }]
-  tag default_value: 'Enabled'
   tag nist: ['CM-6', 'CM-7']
 
   ref 'https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-r-python-visuals'

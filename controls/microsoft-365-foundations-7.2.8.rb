@@ -30,7 +30,6 @@ control 'microsoft-365-foundations-7.2.8' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['6.8'] }]
-  tag default_value: 'Unchecked/Undefined'
   tag nist: ['AC-2', 'AC-5', 'AC-6', 'AC-6(1)', 'AC-6(7)', 'AU-9(4)']
 
   ref 'https://learn.microsoft.com/en-us/sharepoint/manage-security-groups'

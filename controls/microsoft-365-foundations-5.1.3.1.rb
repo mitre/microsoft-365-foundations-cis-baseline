@@ -46,7 +46,6 @@ control 'microsoft-365-foundations-5.1.3.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.3'] }]
-  tag default_value: 'Undefined'
   tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-create-rule'

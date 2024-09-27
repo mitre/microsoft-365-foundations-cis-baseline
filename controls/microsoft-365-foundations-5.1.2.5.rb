@@ -24,7 +24,6 @@ control 'microsoft-365-foundations-5.1.2.5' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '7' => ['16.3'] }]
-  tag default_value: 'Users may select stay signed in'
   tag nist: ['SI-2']
 
   ref 'https://learn.microsoft.com/en-us/entra/identity/authentication/concepts-azure-multi-factor-authentication-prompts-session-lifetime?source=recommendations'

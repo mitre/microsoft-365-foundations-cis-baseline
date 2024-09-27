@@ -41,7 +41,6 @@ control 'microsoft-365-foundations-5.2.2.2' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['6.3'] }, { '7' => ['16.3'] }]
-  tag default_value: 'Disabled'
   tag nist: ['IA-2(1)', 'IA-2(2)', 'SI-2']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-policy-all-users-mfa'

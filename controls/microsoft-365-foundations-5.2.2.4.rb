@@ -56,7 +56,6 @@ control 'microsoft-365-foundations-5.2.2.4' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.3'] }, { '7' => ['16.3'] }]
-  tag default_value: 'The default configuration for user sign-in frequency is a rolling window of 90 days.'
   tag nist: ['AC-2(5)', 'AC-11', 'AC-11(1)', 'AC-12', 'SI-2']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/howto-conditional-access-session-lifetime'

@@ -28,7 +28,6 @@ control 'microsoft-365-foundations-1.2.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.3'] }, { '7' => ['13.1'] }]
-  tag default_value: 'Public when created from the Administration portal; private otherwise.'
   tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2', 'AU-6(1)', 'AU-7', 'IR-4(1)', 'SI-4(2)', 'SI-4(5)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/groups-self-service-management'

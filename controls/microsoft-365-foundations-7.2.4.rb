@@ -56,7 +56,6 @@ control 'microsoft-365-foundations-7.2.4' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.3'] }]
-  tag default_value: 'Anyone (ExternalUserAndGuestSharing)'
   tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2']
 
   ref 'https://learn.microsoft.com/en-us/sharepoint/dev/embedded/concepts/app-concepts/sharing-and-perm#container-partition'

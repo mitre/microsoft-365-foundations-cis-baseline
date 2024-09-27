@@ -47,8 +47,6 @@ control 'microsoft-365-foundations-5.1.8.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['6.7'] }, { '7' => ['16.4'] }]
-  tag default_value: "• Microsoft Entra Connect sync disabled by default
-                      • Password Hash Sync is Microsoft's recommended setting for new deployments"
   tag nist: ['AC-2(1)', 'AC-3', 'CM-8']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/hybrid/whatis-phs'

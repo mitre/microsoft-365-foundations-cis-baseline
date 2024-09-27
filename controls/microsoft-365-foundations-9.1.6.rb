@@ -36,7 +36,6 @@ control 'microsoft-365-foundations-9.1.6' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.2'] }, { '8' => ['3.7'] }]
-  tag default_value: 'Disabled'
   tag nist: ['CM-12', 'PM-5(1)', 'RA-2']
 
   ref 'https://learn.microsoft.com/en-us/power-bi/enterprise/service-security-enable-data-sensitivity-labels'

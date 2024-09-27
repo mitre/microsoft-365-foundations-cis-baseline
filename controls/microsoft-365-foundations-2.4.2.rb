@@ -41,7 +41,6 @@ control 'microsoft-365-foundations-2.4.2' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['9.7'] }, { '8' => ['10.7'] }]
-  tag default_value: 'By default, presets are not applied to any users or groups.'
   tag nist: ['SI-3', 'SI-8', 'SI-4']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/preset-security-policies?view=o365-worldwide'

@@ -45,7 +45,6 @@ control 'microsoft-365-foundations-5.3.2' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['5.1'] }, { '8' => ['5.3'] }]
-  tag default_value: 'By default access reviews are not configured.'
   tag nist: ['AC-2', 'AC-2(3)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/governance/create-access-review'

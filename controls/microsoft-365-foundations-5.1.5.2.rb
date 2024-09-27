@@ -32,7 +32,6 @@ control 'microsoft-365-foundations-5.1.5.2' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.3'] }, { '7' => ['14.6'] }]
-  tag default_value: 'UI - Allow user consent for apps'
   tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2', 'AT-2']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/manage-apps/configure-user-consent?tabs=azure-portal&pivots=portal'

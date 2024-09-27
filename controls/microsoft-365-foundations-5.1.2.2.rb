@@ -35,7 +35,6 @@ control 'microsoft-365-foundations-5.1.2.2' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['2.5'] }, { '7' => ['18.4'] }]
-  tag default_value: 'Yes (Users can register applications.)'
   tag nist: ['CM-7(5)', 'CM-10']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-how-applications-are-added'

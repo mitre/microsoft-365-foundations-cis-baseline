@@ -32,7 +32,6 @@ control 'microsoft-365-foundations-1.3.3' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.8'] }, { '7' => ['14.6'] }]
-  tag default_value: 'Enabled (True)'
   tag nist: ['CM-6', 'CM-7', 'AT-2']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/manage/share-calendars-with-external-users?view=o365-worldwide'

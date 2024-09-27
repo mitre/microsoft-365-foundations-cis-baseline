@@ -28,7 +28,6 @@ control 'microsoft-365-foundations-5.1.2.4' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['untracked'] }]
-  tag default_value: 'No - Non-administrators can access the Microsoft Entra admin center.'
   tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/users-default-permissions#restrict-member-users-default-permissions'

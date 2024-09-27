@@ -42,7 +42,6 @@ control 'microsoft-365-foundations-9.1.7' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.3'] }]
-  tag default_value: 'Enabled for Entire Organization'
   tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2']
 
   ref 'https://learn.microsoft.com/en-us/power-bi/collaborate-share/service-share-dashboards?wt.mc_id=powerbi_inproduct_sharedialog#link-settings'

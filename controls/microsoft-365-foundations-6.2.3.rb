@@ -27,7 +27,6 @@ control 'microsoft-365-foundations-6.2.3' do
 
   impact 0.5
   tag severity: 'medium'
-  tag default_value: 'Disabled (False)'
   tag cis_controls: [{ '8' => ['untracked'] }, { '7' => ['untracked'] }]
   tag nist: ['CM-6']
 

@@ -28,7 +28,6 @@ control 'microsoft-365-foundations-9.1.9' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.8'] }]
-  tag default_value: 'Disabled for the entire organization'
   tag nist: ['CM-6', 'CM-7']
 
   ref 'https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-developer'

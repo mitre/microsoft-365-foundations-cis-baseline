@@ -74,7 +74,6 @@ control 'microsoft-365-foundations-5.2.2.3' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.8'] }, { '7' => ['9.2'] }]
-  tag default_value: 'Basic authentication is disabled by default as of January 2023.'
   tag nist: ['CM-6', 'CM-7', 'SI-8']
 
   ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/disable-basic-authentication-in-exchange-online'

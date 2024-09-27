@@ -25,7 +25,6 @@ control 'microsoft-365-foundations-1.3.7' do
     { '7' => ['13.1'] },
     { '7' => ['13.4'] }
   ]
-  tag default_value: 'Enabled - Users are able to open files stored in third-party storage services'
   tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2', 'AU-6(1)', 'AU-7', 'IR-4(1)', 'SI-4(2)', 'SI-4(5)', 'CA-9', 'SC-7']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/setup/set-up-file-storage-and-sharing?view=o365-worldwide#enable-or-disable-third-party-storage-services'

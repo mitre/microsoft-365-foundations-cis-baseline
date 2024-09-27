@@ -22,8 +22,6 @@ control 'microsoft-365-foundations-6.5.2' do
 
   impact 0.5
   tag severity: 'medium'
-  tag default_value: 'MailTipsAllTipsEnabled: True MailTipsExternalRecipientsTipsEnabled: False
-                      MailTipsGroupMetricsEnabled: True MailTipsLargeAudienceThreshold: 25'
   tag cis_controls: [{ '8' => ['untracked'] }]
   tag nist: ['CM-6']
 

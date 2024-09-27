@@ -33,7 +33,6 @@ control 'microsoft-365-foundations-8.5.6' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['untracked'] }, { '7' => ['untracked'] }]
-  tag default_value: 'Everyone (EveryoneUserOverride)'
   tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-US/microsoftteams/meeting-who-present-request-control'

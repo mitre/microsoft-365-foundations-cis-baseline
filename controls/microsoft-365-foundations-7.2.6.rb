@@ -38,9 +38,6 @@ control 'microsoft-365-foundations-7.2.6' do
     { '7' => ['13.4'] },
     { '7' => ['14.6'] }
   ]
-  tag default_value: 'Limit external sharing by domain is unchecked
-                      SharingDomainRestrictionMode: None
-                      SharingDomainRestrictionMode: <Undefined>'
   tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2', 'CA-9', 'SC-7', 'AT-2']
 
   ensure_sharingdomainrestriction_set_to_allowlist_script = %{

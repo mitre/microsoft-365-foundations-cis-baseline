@@ -30,7 +30,6 @@ control 'microsoft-365-foundations-7.3.1' do
     { '7' => ['7.10'] },
     { '7' => ['8.1'] }
   ]
-  tag default_value: 'False'
   tag nist: ['SI-3', 'AU-1', 'AU-2']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/safe-attachments-for-spo-odfb-teams-configure?view=o365-worldwide'

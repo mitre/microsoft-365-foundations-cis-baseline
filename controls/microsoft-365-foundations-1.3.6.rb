@@ -38,8 +38,6 @@ control 'microsoft-365-foundations-1.3.6' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['untracked'] }]
-  tag default_value: "Require approval for all data access requests - Unchecked
-                    CustomerLockboxEnabled - False"
   tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/azure/security/fundamentals/customer-lockbox-overview'

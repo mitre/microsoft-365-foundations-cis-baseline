@@ -32,11 +32,6 @@ control 'microsoft-365-foundations-8.1.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.3'] }, { '7' => ['14.7'] }]
-  tag default_value: 'AllowDropBox : True
-                      AllowBox : True
-                      AllowGoogleDrive : True
-                      AllowShareFile : True
-                      AllowEgnyte : True'
   tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2', 'AT-2']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/enterprise/manage-skype-for-business-online-with-microsoft-365-powershell?view=o365-worldwide'

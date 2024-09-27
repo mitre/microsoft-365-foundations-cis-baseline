@@ -32,7 +32,6 @@ control 'microsoft-365-foundations-6.5.1' do
     { '7' => ['16.3'] },
     { '7' => ['16.5'] }
   ]
-  tag default_value: 'True'
   tag nist: ['AC-17(2)', 'IA-5', 'IA-5(1)', 'SC-8', 'SC-8(1)', 'SI-2', 'SR-11']
 
   ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/enable-or-disable-modern-authentication-in-exchange-online'

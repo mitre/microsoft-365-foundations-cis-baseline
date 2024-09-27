@@ -22,7 +22,6 @@ control 'microsoft-365-foundations-5.1.2.6' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.8'] }, { '7' => ['13.3'] }]
-  tag default_value: 'LinkedIn integration is enabled by default.'
   tag nist: ['CM-6', 'CM-7', 'SI-4', 'SI-4(4)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/enterprise-users/linkedin-integration'

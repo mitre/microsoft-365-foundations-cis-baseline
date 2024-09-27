@@ -40,9 +40,6 @@ control 'microsoft-365-foundations-7.3.2' do
 
   impact 0.5
   tag severity: 'medium'
-  tag default_value: 'By default there are no restrictions applied to the syncing of OneDrive.
-                      TenantRestrictionEnabled : False
-                      AllowedDomainList : {}'
   tag cis_controls: [{ '8' => ['untracked'] }]
   tag nist: ['CM-6']
 

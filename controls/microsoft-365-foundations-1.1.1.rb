@@ -31,7 +31,6 @@ control 'microsoft-365-foundations-1.1.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['5.4'] }, { '7' => ['4.1'] }]
-  tag default_value: 'N/A'
   tag nist: ['AC-6(2)', 'CM-1', 'CM-2', 'CM-6', 'CM-7', 'CM-7(1)', 'CM-9', 'SA-3', 'SA-8', 'SA-10']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/add-users/add-users?view=o365-worldwide'

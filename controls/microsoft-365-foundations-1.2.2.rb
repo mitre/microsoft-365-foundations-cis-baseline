@@ -44,7 +44,6 @@ control 'microsoft-365-foundations-1.2.2' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['untracked'] }, { '7' => ['untracked'] }]
-  tag default_value: 'AccountEnabled: True'
   tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/email/about-shared-mailboxes?view=o365-worldwide'

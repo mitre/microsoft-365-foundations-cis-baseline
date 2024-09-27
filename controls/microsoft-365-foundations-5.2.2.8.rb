@@ -71,7 +71,6 @@ control 'microsoft-365-foundations-5.2.2.8' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['untracked'] }]
-  tag default_value: 'No - Non-administrators can access the Microsoft admin portals.'
   tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-cloud-apps#microsoft-admin-portals'

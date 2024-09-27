@@ -29,7 +29,6 @@ control 'microsoft-365-foundations-1.1.4' do
     { '7' => ['6.2'] },
     { '7' => ['16.6'] }
   ]
-  tag default_value: 'By default, Allow users to remember multi-factor authentication on devices they trust is disabled.'
   tag nist: ['AC-2', 'AC-2(3)', 'AC-1', 'AC-2', 'AC-2(1)']
 
   describe 'manual' do

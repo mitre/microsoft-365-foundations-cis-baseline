@@ -48,7 +48,6 @@ control 'microsoft-365-foundations-3.2.2' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.1'] }, { '7' => ['13'] }, { '7' => ['14.7'] }]
-  tag default_value: 'Enabled (On)'
   tag nist: ['AU-11', 'CM-12', 'SI-12', 'AT-2']
 
   ref 'https://learn.microsoft.com/en-us/powershell/exchange/connect-to-scc-powershell?view=exchange-ps'

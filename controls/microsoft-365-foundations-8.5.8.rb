@@ -33,7 +33,6 @@ control 'microsoft-365-foundations-8.5.8' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['16.10'] }]
-  tag default_value: 'On(True)'
   tag nist: ['PL-8', 'SA-8']
 
   ref 'https://learn.microsoft.com/en-US/microsoftteams/settings-policies-reference?WT.mc_id=TeamsAdminCenterCSH#meeting-engagement'

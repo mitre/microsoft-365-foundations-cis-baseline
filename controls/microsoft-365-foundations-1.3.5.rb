@@ -23,7 +23,6 @@ control 'microsoft-365-foundations-1.3.5' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['10.1'] }, { '8' => ['14.2'] }]
-  tag default_value: 'Internal Phishing Protection is enabled.'
   tag nist: ['SI-3', 'AT-2(3)']
 
   ref 'https://learn.microsoft.com/en-US/microsoft-forms/administrator-settings-microsoft-forms'

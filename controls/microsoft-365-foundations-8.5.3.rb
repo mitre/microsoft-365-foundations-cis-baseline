@@ -34,7 +34,6 @@ control 'microsoft-365-foundations-8.5.3' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['6.8'] }]
-  tag default_value: 'People in my org and guests (EveryoneInCompany)'
   tag nist: ['AC-2', 'AC-5', 'AC-6', 'AC-6(1)', 'AC-6(7)', 'AU-9(4)']
 
   ref 'https://learn.microsoft.com/en-US/microsoftteams/who-can-bypass-meeting-lobby?WT.mc_id=TeamsAdminCenterCSH'

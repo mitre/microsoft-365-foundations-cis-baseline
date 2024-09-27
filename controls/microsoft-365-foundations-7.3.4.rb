@@ -36,7 +36,6 @@ control 'microsoft-365-foundations-7.3.4' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['2.7'] }]
-  tag default_value: 'DenyAddAndCustomizePages $true or Enabled'
   tag nist: ['CM-7', 'CM-7(1)', 'SI-7', 'SI-7(1)']
 
   ref 'https://learn.microsoft.com/en-us/sharepoint/allow-or-prevent-custom-script'

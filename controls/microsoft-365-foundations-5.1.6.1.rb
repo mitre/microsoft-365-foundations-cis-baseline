@@ -24,7 +24,6 @@ control 'microsoft-365-foundations-5.1.6.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['6.1'] }, { '7' => ['13.1'] }]
-  tag default_value: 'Allow invitations to be sent to any domain (most inclusive)'
   tag nist: ['IA-4', 'IA-5', 'AC-1', 'AC-2', 'AC-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/external-identities/allow-deny-list'

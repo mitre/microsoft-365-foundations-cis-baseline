@@ -33,8 +33,6 @@ control 'microsoft-365-foundations-9.1.4' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['16.10'] }]
-  tag default_value: 'Enabled for the entire organization
-                      Only allow existing codes'
   tag nist: ['PL-8', 'SA-8']
 
   ref 'https://learn.microsoft.com/en-us/power-bi/collaborate-share/service-publish-to-web'

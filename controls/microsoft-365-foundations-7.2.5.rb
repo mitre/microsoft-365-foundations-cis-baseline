@@ -32,7 +32,6 @@ control 'microsoft-365-foundations-7.2.5' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.3'] }, { '7' => ['14.6'] }]
-  tag default_value: 'Checked (False)'
   tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2', 'AT-2']
 
   ref 'https://learn.microsoft.com/en-us/sharepoint/turn-external-sharing-on-or-off'

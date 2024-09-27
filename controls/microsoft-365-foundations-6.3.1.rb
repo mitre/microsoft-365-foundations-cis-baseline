@@ -53,8 +53,6 @@ control 'microsoft-365-foundations-6.3.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['9.4'] }, { '7' => ['5.1'] }]
-  tag default_value: 'UI - My Custom Apps, My Marketplace Apps, and My ReadWriteMailboxApps are checked
-                    PowerShell - My Custom Apps My Marketplace Apps and My ReadWriteMailboxApps are assigned'
   tag nist: ['CM-10', 'CM-11', 'SC-18', 'AC-2']
 
   ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/add-ins-for-outlook/specify-who-can-install-and-manage-add-ins?source=recommendations'

@@ -34,7 +34,6 @@ control 'microsoft-365-foundations-9.1.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['3.3'] }, { '8' => ['6.8'] }]
-  tag default_value: 'Enabled for Entire Organization'
   tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2', 'AC-2', 'AC-6(1)', 'AC-6(7)', 'AU-9(4)']
 
   ref 'https://learn.microsoft.com/en-us/power-bi/admin/service-admin-portal-export-sharing'

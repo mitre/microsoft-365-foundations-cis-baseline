@@ -46,7 +46,6 @@ control 'microsoft-365-foundations-5.1.1.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['untracked'] }]
-  tag default_value: 'Enabled.'
   tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/concept-fundamentals-security-defaults'

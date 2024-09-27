@@ -42,8 +42,6 @@ control 'microsoft-365-foundations-2.1.3' do
     { '7' => ['7.1'] },
     { '7' => ['8.1'] }
   ]
-  tag default_value: "EnableInternalSenderAdminNotifications : False
-                      InternalSenderAdminAddress : $null"
   tag nist: ['IR-1', 'IR-8', 'RA-5', 'AU-1', 'AU-2']
 
   ensure_notifications_for_internal_users_sending_malware_script = %{

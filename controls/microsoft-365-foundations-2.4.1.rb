@@ -59,7 +59,6 @@ control 'microsoft-365-foundations-2.4.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['9.7'] }]
-  tag default_value: 'By default, priority accounts are undefined.'
   tag nist: ['SI-3', 'SI-8']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/setup/priority-accounts'

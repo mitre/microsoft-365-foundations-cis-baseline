@@ -37,7 +37,6 @@ control 'microsoft-365-foundations-6.1.4' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['8.5'] }]
-  tag default_value: 'AuditBypassEnabled False'
   tag nist: ['AU-3', 'AU-3(1)', 'AU-7', 'AU-12']
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/get-mailboxauditbypassassociation?view=exchange-ps'

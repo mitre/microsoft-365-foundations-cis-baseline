@@ -48,10 +48,6 @@ control 'microsoft-365-foundations-2.1.6' do
     { '7' => ['7.9'] },
     { '7' => ['7.10'] }
   ]
-  tag default_value: "BccSuspiciousOutboundAdditionalRecipients : {}
-                      BccSuspiciousOutboundMail : False
-                      NotifyOutboundSpamRecipients : {}
-                      NotifyOutboundSpam : False"
   tag nist: ['IR-1', 'IR-8']
 
   ensure_exchange_online_spam_policies_set_to_notify_admins_script = %{

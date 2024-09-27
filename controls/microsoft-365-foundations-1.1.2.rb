@@ -56,7 +56,6 @@ control 'microsoft-365-foundations-1.1.2' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['5.1'] }]
-  tag default_value: 'Not defined.'
   tag nist: ['AC-2']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/security-planning#stage-1-critical-items-to-do-right-now'

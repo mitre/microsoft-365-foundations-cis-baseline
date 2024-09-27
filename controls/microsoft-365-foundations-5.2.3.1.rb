@@ -50,7 +50,6 @@ control 'microsoft-365-foundations-5.2.3.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['6.4'] }]
-  tag default_value: 'Microsoft-managed'
   tag nist: ['AC-19', 'IA-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-authentication-default-enablement'

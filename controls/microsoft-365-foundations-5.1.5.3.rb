@@ -31,11 +31,6 @@ control 'microsoft-365-foundations-5.1.5.3' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['2.5'] }, { '7' => ['18.3'] }]
-  tag default_value: ' Users can request admin consent to apps they are unable to consent to:No
-                        • Selected users to review admin consent requests: None
-                        • Selected users will receive email notifications for requests: Yes
-                        • Selected users will receive request expiration reminders: Yes
-                        • Consent request expires after (days): 30'
   tag nist: ['CM-7(5)', 'CM-10']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/manage-apps/configure-admin-consent-workflow'

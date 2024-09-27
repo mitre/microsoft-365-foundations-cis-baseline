@@ -55,10 +55,6 @@ control 'microsoft-365-foundations-8.2.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['untracked'] }]
-  tag default_value: '• AllowTeamsConsumer : True
-                    • AllowPublicUsers : True
-                    • AllowFederatedUsers : True
-                    • AllowedDomains : AllowAllKnownDomains'
   tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/skypeforbusiness/set-up-skype-for-business-online/set-up-skype-for-business-online'

@@ -31,7 +31,6 @@ control 'microsoft-365-foundations-8.1.2' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['untracked'] }, { '7' => ['untracked'] }]
-  tag default_value: 'On (True)'
   tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/reducing-attack-surface-in-microsoft-teams?view=o365-worldwide#restricting-channel-email-messages-to-approved-domains'

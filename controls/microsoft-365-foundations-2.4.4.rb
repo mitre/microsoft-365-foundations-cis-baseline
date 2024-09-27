@@ -35,7 +35,6 @@ control 'microsoft-365-foundations-2.4.4' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['10.1'] }]
-  tag default_value: 'On (Default)'
   tag nist: ['SI-3']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/zero-hour-auto-purge?view=o365-worldwide#zero-hour-auto-purge-zap-in-microsoft-teams'

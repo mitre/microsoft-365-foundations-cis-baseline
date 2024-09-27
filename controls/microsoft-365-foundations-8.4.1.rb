@@ -30,9 +30,6 @@ control 'microsoft-365-foundations-8.4.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['2.5'] }, { '7' => ['2.7'] }]
-  tag default_value: 'Microsoft apps: On
-                      Third-party apps: On
-                      Custom apps: On'
   tag nist: ['CM-7(5)', 'CM-10', 'CM-7', 'CM-7(1)', 'SI-7', 'SI-7(1)']
 
   ref 'https://learn.microsoft.com/en-us/microsoftteams/app-centric-management'

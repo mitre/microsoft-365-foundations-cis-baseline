@@ -29,7 +29,6 @@ control 'microsoft-365-foundations-1.3.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['5.2'] }, { '7' => ['4.4'] }]
-  tag default_value: 'If the property is not set, a default value of 90 days will be used'
   tag nist: ['IA-5(1)', 'CA-9', 'SC-7', 'SC-7(5)']
 
   ref 'https://pages.nist.gov/800-63-3/sp800-63b.html'
@@ -48,6 +47,8 @@ control 'microsoft-365-foundations-1.3.1' do
      $passwordValidityPeriod = (Get-MgDomain -DomainId $organization).PasswordValidityPeriodInDays
      Write-Output $passwordValidityPeriod
   }
+  print('1.3.1')
+  print(powershell(password_expiration_days_script).stderr)
 
   powershell_output = powershell(password_expiration_days_script)
   describe 'The password validity period' do

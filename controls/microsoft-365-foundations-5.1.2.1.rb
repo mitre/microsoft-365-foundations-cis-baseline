@@ -28,7 +28,6 @@ control 'microsoft-365-foundations-5.1.2.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['6.3'] }]
-  tag default_value: 'Disabled'
   tag nist: ['IA-2(1)', 'IA-2(2)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/howto-mfa-userstates#convert-users-from-per-user-mfa-to-conditional-access'

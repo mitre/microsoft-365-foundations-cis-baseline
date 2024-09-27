@@ -53,7 +53,6 @@ control 'microsoft-365-foundations-1.3.2' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['4.3'] }]
-  tag default_value: 'Not configured. (Idle sessions will not timeout.)'
   tag nist: ['AC-2(5)', 'AC-11', 'AC-11(1)', 'AC-12']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/manage/idle-session-timeout-web-apps?view=o365-worldwide'

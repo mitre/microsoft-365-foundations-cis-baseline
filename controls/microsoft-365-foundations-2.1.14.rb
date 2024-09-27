@@ -129,10 +129,6 @@ control 'microsoft-365-foundations-2.1.14' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['9.6'] }, { '7' => ['7.9'] }, { '7' => ['8.1'] }]
-  tag default_value: "The following extensions are blocked by default:
-                    ace, ani, apk, app, appx, arj, bat, cab, cmd, com, deb, dex, dll, docm, elf, exe, hta, img,
-                    iso, jar, jnlp, kext, lha, lib, library, lnk, lzh, macho, msc, msi, msix, msp, mst, pif, ppa,
-                    ppam, reg, rev, scf, scr, sct, sys, uif, vb, vbe, vbs, vxd, wsc, wsf, wsh, xll, xz, z"
   tag nist: ['SI-3', 'SI-8', 'AU-1', 'AU-2']
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/get-malwarefilterpolicy?view=exchange-ps'

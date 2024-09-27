@@ -69,8 +69,6 @@ control 'microsoft-365-foundations-8.6.1' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['untracked'] }, { '7' => ['untracked'] }]
-  tag default_value: 'On (True)
-                    Report message destination: Microsoft Only'
   tag nist: ['CM-6']
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/submissions-teams?view=o365-worldwide'

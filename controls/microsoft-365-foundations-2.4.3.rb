@@ -47,7 +47,6 @@ control 'microsoft-365-foundations-2.4.3' do
     { '7' => ['6.2'] },
     { '7' => ['16'] }
   ]
-  tag default_value: 'Disabled'
   tag nist: ['SI-3', 'SI-16', 'AC-1', 'AC-2', 'AC-2(1)']
 
   ref 'https://learn.microsoft.com/en-us/defender-cloud-apps/connect-office-365'

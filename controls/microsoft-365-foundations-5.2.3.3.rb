@@ -26,8 +26,6 @@ control 'microsoft-365-foundations-5.2.3.3' do
   impact 0.5
   tag severity: 'medium'
   tag cis_controls: [{ '8' => ['5.2'] }, { '7' => ['4.4'] }]
-  tag default_value: 'Enable - Yes
-                      Mode - Audit'
   tag nist: ['IA-5(1)', 'CA-9', 'SC-7', 'SC-7(5)']
 
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/authentication/howto-password-ban-bad-on-premises-operations'

@@ -30,7 +30,6 @@ control 'microsoft-365-foundations-6.5.3' do
     { '7' => ['13.1'] },
     { '7' => ['13.4'] }
   ]
-  tag default_value: 'Additional Storage Providers - True'
   tag nist: ['AC-3', 'AC-5', 'AC-6', 'MP-2', 'AU-6(1)', 'AU-7', 'IR-4(1)', 'SI-4(2)', 'SI-4(5)', 'CA-9', 'SC-7']
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-owamailboxpolicy?view=exchange-ps'
