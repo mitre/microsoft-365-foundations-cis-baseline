@@ -51,9 +51,6 @@ control 'microsoft-365-foundations-1.3.1' do
   puts('1.3.1')
   puts(powershell(password_expiration_days_script).stderr)
   puts(password_expiration_days_script)
-  require 'pry'
-  binding.pry
-
   powershell_output = powershell(password_expiration_days_script)
   describe 'The password validity period' do
     subject { powershell_output.stdout.to_i }
