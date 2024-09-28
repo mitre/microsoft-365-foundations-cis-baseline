@@ -63,7 +63,6 @@ control 'microsoft-365-foundations-5.2.3.4' do
     $count = Get-MgReportAuthenticationMethodUserRegistrationDetail ` -Filter "IsMfaCapable eq false and UserType eq 'Member'" | Measure-Object
     Write-Output $count.Count
   }
-  puts(powershell(ensure_member_users_mfa_capable_script).stderr)
   powershell_output = powershell(ensure_member_users_mfa_capable_script)
   describe 'Ensure count for IsMfaCapable equals false' do
     subject { powershell_output.stdout }
