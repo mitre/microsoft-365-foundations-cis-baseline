@@ -14,8 +14,17 @@ The M365 CIS Benchmark includes security requirements for an Microsoft 365 envir
 #### Microsoft 365
 - M365 account API credentials and certificate
 - M365 providing appropriate permissions to perform audit scan
-  
+  - This can be done by creating an application registration within your account, which will provide you with the appropriate credentials to login such as Client ID and Tenant ID. You will need to create a Client Secret/Certificate as well. The following link provides more detail on how to setup an application registration: [Application_Registration_Steps](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate)
 
+# Ensure the Following Permissions on your Application Registration Account
+  - Microsoft Graph
+    - SecurityEvents.Read.All
+    - User.Read
+  - Office 365 Exchange Online
+    - Exchange.ManageAsApp
+  - SharePoint
+    - Sites.FullControl.All
+  
 #### Required software on the InSpec Runner
 - git
 - [Powershell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.4)
@@ -267,24 +276,25 @@ These values need to be overridden with values appropriate for your environment.
 **Note**: Replace the profile's directory name - e.g. - `<Profile>` with `.` if currently in the profile's root directory.
 
 ```sh
-inspec exec <Profile> --controls=<control_id> --enhanced-outcomes --input-file=inputs.yml
+inspec exec <Profile> --controls=<control_id> --input client_id=<insert your client_id here> tenant_id=<insert your tenant_id here> client_secret=<insert your client_secret here> certificate_path=cert.pfx certificate_password=<insert certificate password here> organization=<insert your M365 organization URL here> --enhanced-outcomes --input-file=inputs.yml
 ```
 
 #### Execute a Single Control and save results as JSON 
 ```sh
-inspec exec <Profile> --controls=<control_id> --enhanced-outcomes --input-file=inputs.yml --reporter json:results.json
+inspec exec <Profile> --input client_id=<insert your client_id here> tenant_id=<insert your tenant_id here> client_secret=<insert your client_secret here> certificate_path=<insert your certificate path here> certificate_password=<insert certificate password here> organization=<insert your M365 organization URL here> --controls=<control_id> --enhanced-outcomes --input-file=inputs.yml --reporter json:results.json
 ```
 
 #### Execute All Controls in the Profile 
 ```sh
-inspec exec <Profile> --enhanced-outcomes --input-file=inputs.yml
+inspec exec <Profile> --input client_id=<insert your client_id here> tenant_id=<insert your tenant_id here> client_secret=<insert your client_secret here> certificate_path=<insert your certificate path here> certificate_password=<insert certificate password here> organization=<insert your M365 organization URL here> --enhanced-outcomes --input-file=inputs.yml
 ```
 
 #### Execute all the Controls in the Profile and save results as JSON 
 ```sh
-inspec exec <Profile> --enhanced-outcomes --input-file=inputs.yml --reporter json:results.json
+inspec exec <Profile> --input client_id=<insert your client_id here> tenant_id=<insert your tenant_id here> client_secret=<insert your client_secret here> certificate_path=<insert your certificate path here>  certificate_password=<insert certificate password here> organization=<insert your M365 organization URL here> --enhanced-outcomes --input-file=inputs.yml --reporter json:results.json
 ```
 
+It is important to note that in the commands above there are both an input file as well as inputs. The inputs that are in the input file are non-sensitive, while the inputs that are being passed along in the command line are sensitive. The reasoning behind keeping these separate is to ensure folks do not accidentally commit their input files with sensitive data. 
 ## Check Overview
 
 **M365 Services**
@@ -298,3 +308,128 @@ This profile evaluates the M365 CIS Benchmark compliance of the following M365 a
 - Microsoft Exchange Admin Center
 - Microsoft SharePoint Admin Center
 - Microsoft Fabric
+
+# Control and Automation Status
+The table below marks which controls are automated and which ones are manual.
+
+| Control   | Automation Status |
+|-----------|-------------------|
+| 1.1.1     | Manual            |
+| 1.1.2     | Manual            |
+| 1.1.3     | Automated         |
+| 1.1.4     | Manual            |
+| 1.2.1     | Automated         |
+| 1.2.2     | Automated         |
+| 1.3.1     | Automated         |
+| 1.3.2     | Manual            |
+| 1.3.3     | Automated         |
+| 1.3.4     | Manual            |
+| 1.3.5     | Manual            |
+| 1.3.6     | Automated         |
+| 1.3.7     | Manual            |
+| 1.3.8     | Manual            |
+| 2.1.1     | Automated         |
+| 2.1.2     | Automated         |
+| 2.1.3     | Automated         |
+| 2.1.4     | Automated         |
+| 2.1.5     | Automated         |
+| 2.1.6     | Automated         |
+| 2.1.7     | Automated         |
+| 2.1.8     | Automated         |
+| 2.1.9     | Automated         |
+| 2.1.10    | Automated         |
+| 2.1.11    | Manual            |
+| 2.1.12    | Manual            |
+| 2.1.13    | Manual            |
+| 2.1.14    | Automated         |
+| 2.3.1     | Manual            |
+| 2.3.2     | Manual            |
+| 2.4.1     | Manual            |
+| 2.4.2     | Manual            |
+| 2.4.3     | Manual            |
+| 2.4.4     | Automated         |
+| 3.1.1     | Automated         |
+| 3.1.2     | Manual            |
+| 3.2.1     | Manual            |
+| 3.2.2     | Automated         |
+| 3.3.1     | Manual            |
+| 5.1.1.1   | Manual            |
+| 5.1.2.1   | Manual            |
+| 5.1.2.2   | Automated         |
+| 5.1.2.3   | Automated         |
+| 5.1.2.4   | Manual            |
+| 5.1.2.5   | Manual            |
+| 5.1.2.6   | Manual            |
+| 5.1.3.1   | Automated         |
+| 5.1.5.1   | Manual            |
+| 5.1.5.2   | Automated         |
+| 5.1.5.3   | Manual            |
+| 5.1.6.1   | Manual            |
+| 5.2.2.1   | Manual            |
+| 5.2.2.2   | Manual            |
+| 5.2.2.3   | Automated         |
+| 5.2.2.4   | Manual            |
+| 5.2.2.5   | Manual            |
+| 5.2.2.6   | Manual            |
+| 5.2.2.7   | Manual            |
+| 5.2.2.8   | Manual            |
+| 5.2.3.1   | Manual            |
+| 5.2.3.2   | Manual            |
+| 5.2.3.3   | Manual            |
+| 5.2.3.4   | Manual            |
+| 5.2.4.1   | Manual            |
+| 5.2.4.2   | Manual            |
+| 5.2.6.1   | Manual            |
+| 5.3.1     | Manual            |
+| 5.3.2     | Manual            |
+| 5.3.3     | Manual            |
+| 6.1.1     | Automated         |
+| 6.1.2     | Automated         |
+| 6.1.3     | Automated         |
+| 6.1.4     | Automated         |
+| 6.2.1     | Automated         |
+| 6.2.2     | Automated         |
+| 6.2.3     | Automated         |
+| 6.3.1     | Automated         |
+| 6.4.1     | Manual            |
+| 6.5.1     | Automated         |
+| 6.5.2     | Automated         |
+| 6.5.3     | Automated         |
+| 7.2.1     | Automated         |
+| 7.2.2     | Automated         |
+| 7.2.3     | Automated         |
+| 7.2.4     | Automated         |
+| 7.2.5     | Automated         |
+| 7.2.6     | Automated         |
+| 7.2.7     | Automated         |
+| 7.2.8     | Manual            |
+| 7.2.9     | Automated         |
+| 7.2.10    | Automated         |
+| 7.3.1     | Automated         |
+| 7.3.2     | Automated         |
+| 7.3.3     | Manual            |
+| 7.3.4     | Automated         |
+| 8.1.1     | Automated         |
+| 8.1.2     | Automated         |
+| 8.2.1     | Automated         |
+| 8.4.1     | Manual            |
+| 8.5.1     | Automated         |
+| 8.5.2     | Automated         |
+| 8.5.3     | Automated         |
+| 8.5.4     | Automated         |
+| 8.5.5     | Automated         |
+| 8.5.6     | Automated         |
+| 8.5.7     | Automated         |
+| 8.5.8     | Automated         |
+| 8.6.1     | Automated         |
+| 9.1.1     | Manual            |
+| 9.1.2     | Manual            |
+| 9.1.3     | Manual            |
+| 9.1.4     | Manual            |
+| 9.1.5     | Manual            |
+| 9.1.6     | Manual            |
+| 9.1.7     | Manual            |
+| 9.1.8     | Manual            |
+| 9.1.9     | Manual            |
+
+For any controls marked as 'Manual', please refer to the following following at [SAF-CLI] (https://saf-cli.mitre.org/) on how to apply manual attestations. The following [link](https://vmware.github.io/dod-compliance-and-automation/docs/automation-tools/safcli/) that references the SAF-CLI is also useful.
