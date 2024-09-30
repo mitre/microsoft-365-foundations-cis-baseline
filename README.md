@@ -310,7 +310,8 @@ This profile evaluates the M365 CIS Benchmark compliance of the following M365 a
 - Microsoft Fabric
 
 # Control and Automation Status
-The table below marks which controls are automated and which ones are manual.
+
+Not all controls in the CIS Benchmark are capable of automated assessment. The table below marks which controls are automated and which ones are manual.
 
 | Control   | Automation Status |
 |-----------|-------------------|
@@ -432,4 +433,4 @@ The table below marks which controls are automated and which ones are manual.
 | 9.1.8     | Manual            |
 | 9.1.9     | Manual            |
 
-For any controls marked as 'Manual', please refer to the following following at [SAF-CLI] (https://saf-cli.mitre.org/) on how to apply manual attestations. The following [link](https://vmware.github.io/dod-compliance-and-automation/docs/automation-tools/safcli/) that references the SAF-CLI is also useful.
+For any controls marked as 'Manual', please refer to the following following at [SAF-CLI](https://saf-cli.mitre.org/) on how to apply manual attestations to the output of an automated assessment. The following [link](https://vmware.github.io/dod-compliance-and-automation/docs/automation-tools/safcli/) that references the SAF-CLI is also useful.
