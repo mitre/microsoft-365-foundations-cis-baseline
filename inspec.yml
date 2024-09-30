@@ -1,0 +1,228 @@
+name: "cis-m365-foundations-baseline"
+title: "CIS Microsoft 365 Foundations Benchmark"
+maintainer: "MITRE SAF Team"
+copyright: "MITRE, 2024"
+copyright_email: "saf@groups.mitre.org"
+license: "Apache-2.0"
+summary: "InSpec Validation Profile for the CIS Microsoft 365 Foundations Benchmark"
+version: 3.1.0
+inspec_version: ">= 6"
+
+inputs:
+- name: disable_slow_controls
+  description: "Don't Run Long Running Controls (dev/testing only)"
+  type: Boolean
+  value: false
+  required: false
+
+#Controls using this input:
+#1.1.3, 1.2.1, 1.2.2, 1.3.1, 1.3.3, 1.3.6, 
+#2.1.1, 2.1.2, 2.1.3, 2.1.4, 2.1.5, 2.1.6, 2.1.7, 2.1.8, 2.1.9, 2.1.10, 2.1.14, 2.4.4, 
+#3.1.1, 3.2.2, 
+#5.1.1.1, 5.1.2.2, 5.1.2.3, 5.1.3.1, 5.1.5.2, 5.1.8.1, 5.2.2.3, 5.2.3.4, 
+#6.1.1, 6.1.2, 6.1.3, 6.1.4, 6.2.1, 6.2.2, 6.2.3, 6.3.1, 6.5.1, 6.5.2, 6.5.3, 
+#7.2.1, 7.2.2, 7.2.3, 7.2.4, 7.2.5, 7.2.6, 7.2.7, 7.2.9, 7.2.10, 7.3.1, 7.3.2, 7.3.4,
+#8.1.1, 8.1.2, 8.2.1, 8.5.1, 8.5.2, 8.5.3, 8.5.4, 8.5.5, 8.5.6, 8.5.7, 8.5.8, 8.6.1
+- name: client_id
+  sensitive: true
+  description: 'Client ID for Microsoft 365'
+  type: String
+  required: true
+
+#Controls using this input:
+#1.1.3, 1.2.1, 1.2.2, 1.3.1,
+#5.1.1.1, 5.1.2.2, 5.1.2.3, 5.1.3.1, 5.1.5.2, 5.1.8.1, 5.2.3.4, 
+#7.2.1, 7.2.2, 7.2.3, 7.2.4, 7.2.5, 7.2.6, 7.2.7, 7.2.9, 7.2.10, 7.3.1, 7.3.2, 7.3.4,
+#8.1.1, 8.1.2, 8.2.1, 8.5.1, 8.5.2, 8.5.3, 8.5.4, 8.5.5, 8.5.6, 8.5.7, 8.5.8, 8.6.1
+- name: tenant_id
+  sensitive: true
+  description: 'Tenant ID for Microsoft 365'
+  type: String
+  required: true
+
+#Controls using this input:
+#1.1.3, 1.2.1, 1.2.2, 1.3.1,
+#5.1.1.1, 5.1.2.2, 5.1.2.3, 5.1.3.1, 5.1.5.2, 5.1.8.1, 5.2.3.4, 
+#7.2.1, 7.2.2, 7.2.3, 7.2.4, 7.2.5, 7.2.6, 7.2.7, 7.2.9, 7.2.10, 7.3.1, 7.3.2, 7.3.4,
+#8.1.2
+- name: client_secret
+  sensitive: true
+  description: 'Client Secret for Microsoft 365'
+  type: String
+  required: true
+
+#Controls using this input:
+#1.2.2, 1.3.3, 1.3.6,
+#2.1.1, 2.1.2, 2.1.3, 2.1.4, 2.1.5, 2.1.6, 2.1.7, 2.1.8, 2.1.9, 2.1.10, 2.1.14, 2.4.4, 
+#3.1.1, 3.2.2, 
+#5.2.2.3,
+#6.1.1, 6.1.2, 6.1.3, 6.1.4, 6.2.1, 6.2.2, 6.2.3, 6.3.1, 6.5.1, 6.5.2, 6.5.3, 
+#7.2.1, 7.2.2, 7.2.3, 7.2.4, 7.2.5, 7.2.6, 7.2.7, 7.2.9, 7.2.10, 7.3.1, 7.3.2, 7.3.4,
+#8.1.1, 8.1.2, 8.2.1, 8.5.1, 8.5.2, 8.5.3, 8.5.4, 8.5.5, 8.5.6, 8.5.7, 8.5.8, 8.6.1
+- name: certificate_path
+  sensitive: true
+  description: 'Certificate path for M365'
+  type: String
+  required: true
+  
+#Controls using this input:
+#1.2.2, 1.3.3, 1.3.6,
+#2.1.1, 2.1.2, 2.1.3, 2.1.4, 2.1.5, 2.1.6, 2.1.7, 2.1.8, 2.1.9, 2.1.10, 2.1.14, 2.4.4, 
+#3.1.1, 3.2.2, 
+#5.2.2.3,
+#6.1.1, 6.1.2, 6.1.3, 6.1.4, 6.2.1, 6.2.2, 6.2.3, 6.3.1, 6.5.1, 6.5.2, 6.5.3, 
+#7.2.1, 7.2.2, 7.2.3, 7.2.4, 7.2.5, 7.2.6, 7.2.7, 7.2.9, 7.2.10, 7.3.1, 7.3.2, 7.3.4,
+#8.1.1, 8.1.2, 8.2.1, 8.5.1, 8.5.2, 8.5.3, 8.5.4, 8.5.5, 8.5.6, 8.5.7, 8.5.8, 8.6.1
+- name: certificate_password
+  sensitive: true
+  description: 'Password for certificate for M365'
+  type: String
+  required: true
+
+#Controls using this input:
+#1.2.2, 1.3.1, 1.3.3, 1.3.6,
+#2.1.1, 2.1.2, 2.1.3, 2.1.4, 2.1.5, 2.1.6, 2.1.7, 2.1.8, 2.1.9, 2.1.10, 2.1.14, 2.4.4, 
+#3.1.1, 3.2.2, 
+#5.2.2.3,
+#6.1.1, 6.1.2, 6.1.3, 6.1.4, 6.2.1, 6.2.2, 6.2.3, 6.3.1, 6.5.1, 6.5.2, 6.5.3, 
+#8.6.1
+- name: organization
+  sensitive: true
+  description: 'M365 Organization'
+  type: String
+  required: true
+
+#Controls using this input:
+#2.1.6
+- name: notify_outbound_spam_recipients
+  sensitive: true
+  description: 'Email address to notify administrator for Exchange Online Spam Policies'
+  type: Array
+  required: true
+
+#Controls using this input:
+#2.1.6
+- name: bcc_suspicious_outbound_additional_recipients
+  sensitive: true
+  description: 'BCC email address to notify additional recipients for Exchange Online Spam Policies'
+  type: Array
+  required: true
+
+#Controls using this input:
+#2.1.8
+- name: spf_domains
+  sensitive: true
+  description: 'Array of domains needed to check for SPF record'
+  type: Array
+  required: true
+
+#Controls using this input:
+#2.1.10
+- name: dmarc_domains
+  sensitive: true
+  description: 'Array of DMARC records to check'
+  type: Array
+  required: true
+
+#Controls using this input:
+#2.1.10
+- name: reporting_mail_address
+  sensitive: true
+  description: 'Reporting mail address needed for DMARC check'
+  type: String
+  required: true
+
+#Controls using this input:
+#2.1.10
+- name: moera_domains
+  sensitive: true
+  description: 'Array of MOERA records to check'
+  type: Array
+  required: true
+
+#Controls using this input:
+#3.2.2
+- name: permitted_exceptions_teams_locations
+  sensitive: true
+  description: 'Permitted exceptions for teams locations'
+  type: Array
+  required: true
+
+#Controls using this input:
+#6.2.1
+- name: internal_domains_transport_rule
+  sensitive: true
+  description: 'Domains internal to the organization to be checked'
+  type: Array
+  required: true
+
+#Controls using this input:
+#6.2.3
+- name: email_addresses_bypass_external_tagging
+  sensitive: true
+  description: 'Email address list that are allowed to bypass external tagging'
+  type: Array
+  required: true
+
+#Controls using this input:
+#6.5.2
+- name: mailtipslargeaudiencethreshold_value
+  sensitive: true
+  description: 'MailTipsLargeAudienceThreshold value to check for in MailTips setting'
+  required: true
+
+#Controls using this input:
+#6.5.2
+- name: authorized_domains_teams_admin_center
+  sensitive: true
+  description: 'List of authorized domains for AllowedDomains option in Teams Admin Center'
+  type: Array
+  required: true
+
+#Controls using this input:
+#8.6.1
+- name: reporting_email_addresses_for_malicious_messages
+  sensitive: true
+  description: 'Email addresses to check to report malicious messages in Teams and Defender'
+  type: Array
+  required: true
+
+#Controls using this input:
+#7.2.1, 7.2.2, 7.2.3, 7.2.4, 7.2.5, 7.2.6, 7.2.7, 7.2.9, 7.2.10, 7.3.1, 7.3.2, 7.3.4,
+- name: sharepoint_admin_url
+  sensitive: true
+  description: 'SharePoint Admin URL to connect to'
+  type: String
+  required: true
+
+#Controls using this input:
+#7.2.6
+- name: domains_trusted_by_organization
+  sensitive: true
+  description: 'Domains that are trusted by organization in SharePoint'
+  type: Array
+  required: true
+
+#Controls using this input:
+#7.2.9
+- name: external_user_expiry_in_days_spo_threshold
+  sensitive: true
+  description: 'Threshold in days to check for external user expiry in SharePoint'
+  value: 30
+  required: true
+
+#Controls using this input:
+#7.2.10
+- name: email_attestation_re_auth_days_spo_threshold
+  sensitive: true
+  description: 'Threshold in days to check for email attestation auth in SharePoint'
+  value: 15
+  required: true
+
+#Controls using this input:
+#7.3.2
+- name: trusted_domains_guids
+  sensitive: true
+  description: 'Domain GUIDs trusted from the on premises environment'
+  type: Array
+  required: true

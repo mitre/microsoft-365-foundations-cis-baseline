@@ -1,0 +1,35 @@
+notify_outbound_spam_recipients: 
+  - test@msft.com
+bcc_suspicious_outbound_additional_recipients: 
+  - test@msft.com
+spf_domains:
+  - google.com
+dmarc_domains:
+  - google.com
+moera_domains:
+  - google.com
+permitted_exceptions_teams_locations:
+  - a
+  - b
+  - c
+internal_domains_transport_rule:
+  - a
+  - b
+  - c
+email_addresses_bypass_external_tagging:
+  - a
+  - b
+  - c
+mailtipslargeaudiencethreshold_value: 25
+authorized_domains_teams_admin_center:
+  - a
+  - b
+  - c
+reporting_email_addresses_for_malicious_messages:
+  - a
+sharepoint_admin_url: https://mitredev-admin.sharepoint.com
+domains_trusted_by_organization:
+  - hssedidev.onmicrosoft.us
+reporting_mail_address: test@gmail.com
+trusted_domains_guids:
+  - a

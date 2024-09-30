@@ -1,0 +1,5 @@
+compliance:
+  min: 15
+error:
+  total:
+    max: 10
