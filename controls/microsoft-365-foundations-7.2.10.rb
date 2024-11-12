@@ -55,15 +55,22 @@ control 'microsoft-365-foundations-7.2.10' do
 	  Get-PnPTenant | Select-Object EmailAttestationRequired, EmailAttestationReAuthDays | ConvertTo-Json
   }
 
-  powershell_output = powershell(ensure_reauth_with_verification_code_restricted).stdout.strip
+  powershell_output = powershell(ensure_reauth_with_verification_code_restricted)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
+  powershell_output = powershell_output.stdout.strip
   powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure the following setting' do
     subject { powershell_data }
+    its(['EmailAttestationRequired']) { should cmp true }
+    its(['EmailAttestationReAuthDays']) { should be <= input('email_attestation_re_auth_days_spo_threshold') }
+    ''"
     it 'EmailAttestationRequired in SharePoint is set to True' do
       expect(subject['EmailAttestationRequired']).to eq(true)
     end
     it 'EmailAttestationReAuthDays in SharePoint is less than or equal to 15' do
       expect(subject['EmailAttestationReAuthDays']).to be <= input('email_attestation_re_auth_days_spo_threshold')
     end
+    "''
   end
 end

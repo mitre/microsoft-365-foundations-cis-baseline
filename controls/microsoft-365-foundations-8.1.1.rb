@@ -59,6 +59,8 @@ control 'microsoft-365-foundations-8.1.1' do
     }
 
   powershell_output = powershell(ensure_file_sharing_enabled_cloud_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure that all the authorized cloud storage services ' do
     subject { powershell_output.stdout.strip }
     it 'are set to true' do

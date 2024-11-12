@@ -47,6 +47,8 @@ control 'microsoft-365-foundations-1.2.1' do
   }
 
   powershell_output = powershell(all_groups_private_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Public groups count' do
     subject { powershell_output.stdout.to_i }
     it 'should be 0' do

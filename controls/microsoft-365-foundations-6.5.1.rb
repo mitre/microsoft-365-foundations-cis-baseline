@@ -48,6 +48,8 @@ control 'microsoft-365-foundations-6.5.1' do
  }
 
   powershell_output = powershell(ensure_modern_authentication_for_exchange_enabled_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure the OAuth2ClientProfileEnabled state from Get-OrganizationConfig' do
     subject { powershell_output.stdout.strip }
     it 'is set to True' do

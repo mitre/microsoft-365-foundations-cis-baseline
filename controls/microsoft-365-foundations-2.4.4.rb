@@ -69,6 +69,8 @@ control 'microsoft-365-foundations-2.4.4' do
 }
 
   powershell_output_zap = powershell(ensure_zap_enabled_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output_zap.exit_status}" if powershell_output_zap.exit_status != 0
+
   describe 'Ensure the ZapEnabled option for Default Sharing Policy' do
     subject { powershell_output_zap.stdout.strip }
     it 'is set to True' do
@@ -77,6 +79,8 @@ control 'microsoft-365-foundations-2.4.4' do
   end
 
   powershell_output_exclusions = powershell(check_exclusions_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output_exclusions.exit_status}" if powershell_output_exclusions.exit_status != 0
+
   describe 'Ensure that the list of exclusions' do
     subject { powershell_output_exclusions.stdout.strip }
     it 'is empty. In case of failure, a manual review is required to check the justification of each present exclusion.' do

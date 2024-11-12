@@ -59,9 +59,11 @@ control 'microsoft-365-foundations-7.3.2' do
     Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
 	  (Get-PnPTenantSyncClientRestriction).TenantRestrictionEnabled
   }
-  powershell_output_tenant = powershell(tenantrestrictionenabled_script).stdout.strip
+  powershell_output_tenant = powershell(tenantrestrictionenabled_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output_tenant.exit_status}" if powershell_output_tenant.exit_status != 0
+
   describe 'Ensure the TenantRestrictionEnabled option for SharePoint/OneDrive Sync' do
-    subject { powershell_output_tenant }
+    subject { powershell_output_tenant.stdout.strip }
     it 'is set to True' do
       expect(subject).to eq('True')
     end
@@ -88,10 +90,12 @@ control 'microsoft-365-foundations-7.3.2' do
         Write-Output "Some domains are not in the list of trusted domains: $($untrustedDomains -join ', ')"
     }
   }
-  powershell_output_domains = powershell(ensure_trusted_domains_guids).stdout.strip
+  powershell_output_domains = powershell(ensure_trusted_domains_guids)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output_domains.exit_status}" if powershell_output_domains.exit_status != 0
+
   describe 'Ensure the number of domains GUIDs not trusted from AllowedDomainList option on SharePoint' do
-    subject { powershell_output_domains }
-    failure_message = "Failure: #{powershell_output_domains}"
+    subject { powershell_output_domains.stdout.strip }
+    failure_message = "Failure: #{powershell_output_domains.stdout.strip}"
     it 'is 0' do
       expect(subject).to be_empty, failure_message
     end

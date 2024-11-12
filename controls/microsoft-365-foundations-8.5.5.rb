@@ -48,6 +48,8 @@ control 'microsoft-365-foundations-8.5.5' do
   }
 
   powershell_output = powershell(ensure_meeting_chat_not_allow_anon_users)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure that the MeetingChatEnabledType state' do
     subject { powershell_output.stdout.strip }
     it 'is set to EnabledExceptAnonymous' do

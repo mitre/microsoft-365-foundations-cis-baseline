@@ -51,6 +51,8 @@ control 'microsoft-365-foundations-8.5.1' do
     Write-Output (Get-CsTeamsMeetingPolicy -Identity Global).AllowAnonymousUsersToJoinMeeting
   }
   powershell_output = powershell(ensure_anonymous_users_cant_join_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure that AllowAnonymousUsersToJoinMeeting state' do
     subject { powershell_output.stdout.strip }
     it 'is set to False' do

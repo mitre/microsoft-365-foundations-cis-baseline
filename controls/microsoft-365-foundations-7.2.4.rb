@@ -73,9 +73,11 @@ control 'microsoft-365-foundations-7.2.4' do
     Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
 	  (Get-PnPTenant).OneDriveSharingCapability
   }
-  powershell_output = powershell(ensure_od_content_sharing_restricted_script).stdout.strip
+  powershell_output = powershell(ensure_od_content_sharing_restricted_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure the OneDriveSharingCapability option for SharePoint' do
-    subject { powershell_output }
+    subject { powershell_output.stdout.strip }
     it 'is set to Disabled' do
       expect(subject).to eq('Disabled')
     end

@@ -53,9 +53,11 @@ control 'microsoft-365-foundations-7.2.6' do
     Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
 	  (Get-PnPTenant).SharingDomainRestrictionMode
   }
-  powershell_output_allowlist = powershell(ensure_sharingdomainrestriction_set_to_allowlist_script).stdout.strip
+  powershell_output_allowlist = powershell(ensure_sharingdomainrestriction_set_to_allowlist_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output_allowlist.exit_status}" if powershell_output_allowlist.exit_status != 0
+
   describe 'Ensure the SharingDomainRestrictionMode option for SharePoint' do
-    subject { powershell_output_allowlist }
+    subject { powershell_output_allowlist.stdout.strip }
     it 'is set to AllowList' do
       expect(subject).to eq('AllowList')
     end
@@ -82,10 +84,12 @@ control 'microsoft-365-foundations-7.2.6' do
         Write-Output "Some domains are not in the list of trusted domains: $($untrustedDomains -join ', ')"
     }
   }
-  powershell_output_domains = powershell(ensure_trusted_domains_allowed_script).stdout.strip
+  powershell_output_domains = powershell(ensure_trusted_domains_allowed_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output_domains.exit_status}" if powershell_output_domains.exit_status != 0
+
   describe 'Ensure the number of domains not trusted by the organization outputted by SharingAllowedDomainList option on SharePoint' do
-    subject { powershell_output_domains }
-    failure_message = "Failure: #{powershell_output_domains}"
+    subject { powershell_output_domains.stdout.strip }
+    failure_message = "Failure: #{powershell_output_domains.stdout.strip}"
     it 'is 0' do
       expect(subject).to be_empty, failure_message
     end

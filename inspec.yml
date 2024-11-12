@@ -133,14 +133,6 @@ inputs:
   required: true
 
 #Controls using this input:
-#2.1.10
-- name: moera_domains
-  sensitive: true
-  description: 'Array of MOERA records to check'
-  type: Array
-  required: true
-
-#Controls using this input:
 #3.2.2
 - name: permitted_exceptions_teams_locations
   sensitive: true

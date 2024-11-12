@@ -48,6 +48,8 @@ control 'microsoft-365-foundations-8.5.4' do
   }
 
   powershell_output = powershell(ensure_people_dialing_in_cant_bypass_lobby_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure that the AllowPSTNUsersToBypassLobby state' do
     subject { powershell_output.stdout.strip }
     it 'is set to False' do

@@ -67,6 +67,8 @@ control 'microsoft-365-foundations-5.1.8.1' do
   }
 
   powershell_output = powershell(ensure_password_hash_enabled_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure OnPremisesSyncEnabled count' do
     subject { powershell_output.stdout.strip }
     it 'should not be empty' do

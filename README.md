@@ -20,6 +20,9 @@ The M365 CIS Benchmark includes security requirements for an Microsoft 365 envir
   - Microsoft Graph
     - SecurityEvents.Read.All
     - User.Read
+    - UserAuthenticationMethod.Read.All
+    - AuditLog.Read.All,
+    - Policy.Read.All
   - Office 365 Exchange Online
     - Exchange.ManageAsApp
   - SharePoint
@@ -354,7 +357,7 @@ Not all controls in the CIS Benchmark are capable of automated assessment. The t
 | 3.2.1     | Manual            |
 | 3.2.2     | Automated         |
 | 3.3.1     | Manual            |
-| 5.1.1.1   | Manual            |
+| 5.1.1.1   | Automated         |
 | 5.1.2.1   | Manual            |
 | 5.1.2.2   | Automated         |
 | 5.1.2.3   | Automated         |
@@ -377,7 +380,7 @@ Not all controls in the CIS Benchmark are capable of automated assessment. The t
 | 5.2.3.1   | Manual            |
 | 5.2.3.2   | Manual            |
 | 5.2.3.3   | Manual            |
-| 5.2.3.4   | Manual            |
+| 5.2.3.4   | Automated         |
 | 5.2.4.1   | Manual            |
 | 5.2.4.2   | Manual            |
 | 5.2.6.1   | Manual            |

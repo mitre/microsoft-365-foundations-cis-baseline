@@ -38,21 +38,16 @@ control 'microsoft-365-foundations-6.5.2' do
     Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
     Get-OrganizationConfig | Select-Object -Property MailTips* | ConvertTo-Json
  }
-  powershell_output = powershell(ensure_mailtip_enabled_for_end_users_script).stdout.strip
+  powershell_output = powershell(ensure_mailtip_enabled_for_end_users_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
+  powershell_output = powershell_output.stdout.strip
   mailtips_settings = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure that the MailTip setting' do
     subject { mailtips_settings }
-    it 'MailTipsAllTipsEnabled should be set to True' do
-      expect(mailtips_settings['MailTipsAllTipsEnabled']).to eq(true)
-    end
-    it 'MailTipsExternalRecipientsTipsEnabled should be set to True' do
-      expect(mailtips_settings['MailTipsExternalRecipientsTipsEnabled']).to eq(true)
-    end
-    it 'MailTipsGroupMetricsEnabled should be set to True' do
-      expect(mailtips_settings['MailTipsGroupMetricsEnabled']).to eq(true)
-    end
-    it 'MailTipsLargeAudienceThreshold should be set to an acceptable value' do
-      expect(mailtips_settings['MailTipsLargeAudienceThreshold']).to eq(input('mailtipslargeaudiencethreshold_value'))
-    end
+    its(['MailTipsAllTipsEnabled']) { should cmp true }
+    its(['MailTipsExternalRecipientsTipsEnabled']) { should cmp true }
+    its(['MailTipsGroupMetricsEnabled']) { should cmp true }
+    its(['MailTipsLargeAudienceThreshold']) { should eq((input('mailtipslargeaudiencethreshold_value'))) }
   end
 end

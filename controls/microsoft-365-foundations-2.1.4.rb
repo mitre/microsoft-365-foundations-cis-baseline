@@ -56,6 +56,8 @@ control 'microsoft-365-foundations-2.1.4' do
  }
 
   powershell_output = powershell(ensure_safe_attachments_policy_enabled_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure that there is at least one Safe Attachment policy with an Enabled state that' do
     subject { powershell_output.stdout.strip }
     it 'is set to True' do

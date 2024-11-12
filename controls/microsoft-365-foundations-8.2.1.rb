@@ -101,11 +101,13 @@ control 'microsoft-365-foundations-8.2.1' do
         }
     }
   }
-  powershell_output = powershell(ensure_external_access_restricted_teams_admin_center_script).stdout.strip
+  powershell_output = powershell(ensure_external_access_restricted_teams_admin_center_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure the AllowTeamsConsumer, AllowPublicUsers, AllowFederatedUsers, and AllowedDomains' do
-    subject { powershell_output }
+    subject { powershell_output.stdout.strip }
     it 'are set to appropriate values and authorized domains present' do
-      failure_message = "The following failed:\n#{powershell_output}"
+      failure_message = "The following failed:\n#{powershell_output.stdout.strip}"
       expect(subject).to be_empty, failure_message
     end
   end

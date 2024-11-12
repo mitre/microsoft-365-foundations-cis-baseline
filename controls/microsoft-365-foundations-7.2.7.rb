@@ -51,9 +51,11 @@ control 'microsoft-365-foundations-7.2.7' do
     Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
 	  (Get-PnPTenant).DefaultSharingLinkType
   }
-  powershell_output = powershell(ensure_link_sharing_restricted_spo_od_script).stdout.strip
+  powershell_output = powershell(ensure_link_sharing_restricted_spo_od_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure the DefaultSharingLinkType option for SharePoint' do
-    subject { powershell_output }
+    subject { powershell_output.stdout.strip }
     it 'is set to Direct' do
       expect(subject).to eq('Direct')
     end

@@ -6,8 +6,6 @@ spf_domains:
   - google.com
 dmarc_domains:
   - google.com
-moera_domains:
-  - google.com
 permitted_exceptions_teams_locations:
   - a
   - b

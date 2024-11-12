@@ -62,6 +62,8 @@ control 'microsoft-365-foundations-1.1.3' do
     }
 
   powershell_output = powershell(get_admin_user_count_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure global tenant administrator count' do
     subject { powershell_output.stdout.strip }
     it 'should be between two to four' do

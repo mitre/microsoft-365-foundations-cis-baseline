@@ -135,11 +135,13 @@ control 'microsoft-365-foundations-6.1.3' do
           Write-Host
         }
     }
-  powershell_output = powershell(e5_user_mailbox_auditing_script).stdout.strip
+  powershell_output = powershell(e5_user_mailbox_auditing_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure that mailbox auditing for E5 users' do
-    subject { powershell_output }
+    subject { powershell_output.stdout.strip }
     it 'returns no actions needed from auditing' do
-      failure_message = "The following mailboxes failed with the following issues: #{powershell_output.split("\n").join(',')}"
+      failure_message = "The following mailboxes failed with the following issues: #{powershell_output.stdout.strip.split("\n").join(',')}"
       expect(subject).to be_empty, failure_message
     end
   end

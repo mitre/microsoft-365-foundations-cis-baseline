@@ -93,7 +93,10 @@ control 'microsoft-365-foundations-5.2.2.3' do
     $trueSettings = $authSettings.PSObject.Properties | Where-Object { $_.Value -eq $true } | Select-Object Name, Value
     $jsonOutput = $trueSettings | ConvertTo-Json
   }
-  powershell_authentication_types_output = powershell(check_basic_authentication_types_script).stdout.strip
+  powershell_authentication_types_output = powershell(check_basic_authentication_types_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_authentication_types_output.exit_status}" if powershell_authentication_types_output.exit_status != 0
+
+  powershell_authentication_types_output = powershell_authentication_types_output.stdout.strip
 
   authentication_policy_data = JSON.parse(powershell_authentication_types_output) unless powershell_authentication_types_output.empty?
   describe 'Ensure there is no Conditional Access policy that' do
@@ -115,8 +118,10 @@ control 'microsoft-365-foundations-5.2.2.3' do
     $jsonOutput = $users | ConvertTo-Json
     $jsonOutput
     }
-  powershell_block_basic_output = powershell(check_authentication_block_basic_auth_policy_script).stdout.strip
+  powershell_block_basic_output = powershell(check_authentication_block_basic_auth_policy_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_block_basic_output.exit_status}" if powershell_block_basic_output.exit_status != 0
 
+  powershell_block_basic_output = powershell_block_basic_output.stdout.strip
   block_basic_policy_data = JSON.parse(powershell_block_basic_output) unless powershell_block_basic_output.empty?
   describe 'Ensure there is no Exchange Online User' do
     subject { block_basic_policy_data }

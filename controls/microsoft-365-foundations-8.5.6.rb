@@ -51,6 +51,8 @@ control 'microsoft-365-foundations-8.5.6' do
   }
 
   powershell_output = powershell(ensure_organizers_only_can_present_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure that the DesignatedPresenterRoleMode state' do
     subject { powershell_output.stdout.strip }
     it 'is set to OrganizerOnlyUserOverride' do

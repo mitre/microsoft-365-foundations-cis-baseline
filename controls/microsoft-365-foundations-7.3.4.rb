@@ -55,7 +55,10 @@ control 'microsoft-365-foundations-7.3.4' do
     Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
 	  Get-PnPTenantSite | Where-Object { $_.DenyAddAndCustomizePages -eq "Disabled" -and $_.Url -notlike "*-my.sharepoint.com/" } | Select-Object -ExpandProperty Url
   }
-  powershell_output = powershell(ensure_spo_guest_users_cannot_share_items_dont_own_script).stdout.strip
+  powershell_output = powershell(ensure_spo_guest_users_cannot_share_items_dont_own_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
+  powershell_output = powershell_output.stdout.strip
   disabled_urls = powershell_output.split("\n") unless powershell_output.empty?
   describe 'Ensure the number of sites with DenyAddAndCustomizePages setting as Disabled' do
     subject { powershell_output }

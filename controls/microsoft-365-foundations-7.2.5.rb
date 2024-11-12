@@ -50,9 +50,11 @@ control 'microsoft-365-foundations-7.2.5' do
     Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
 	  (Get-PnPTenant).PreventExternalUsersFromResharing
   }
-  powershell_output = powershell(ensure_spo_guest_users_cannot_share_items_dont_own_script).stdout.strip
+  powershell_output = powershell(ensure_spo_guest_users_cannot_share_items_dont_own_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure the PreventExternalUsersFromResharing option for SharePoint' do
-    subject { powershell_output }
+    subject { powershell_output.stdout.strip }
     it 'is set to True' do
       expect(subject).to eq('True')
     end

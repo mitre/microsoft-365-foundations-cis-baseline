@@ -82,7 +82,11 @@ control 'microsoft-365-foundations-6.2.1' do
     $_.RedirectMessageTo -notmatch '#{input('internal_domains_transport_rule').join('|')}'
   } | Select-Object -ExpandProperty Name
  }
-  powershell_output_address = powershell(ensure_no_external_address_script).stdout.strip
+  powershell_output_address = powershell(ensure_no_external_address_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output_address.exit_status}" if powershell_output_address.exit_status != 0
+
+  powershell_output_address = powershell_output_address.stdout.strip
+
   external_rules = powershell_output_address.split("\n") unless powershell_output_address.empty?
   describe 'Ensure only internal domains' do
     subject { powershell_output_address }
@@ -103,7 +107,10 @@ control 'microsoft-365-foundations-6.2.1' do
     Get-HostedOutboundSpamFilterPolicy | Where-Object { $_.AutoForwardingMode -ne "Off" } | Select-Object Name, AutoForwardingMode | ConvertTo-Json
  }
 
-  powershell_output = powershell(ensure_all_mail_forwarding_blocked_script).stdout.strip
+  powershell_output = powershell(ensure_all_mail_forwarding_blocked_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
+  powershell_output = powershell_output.stdout.strip
   mailboxes_without_off = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure the number of mailboxes with the AutoForwardingMode state not set to Off' do
     subject { powershell_output }

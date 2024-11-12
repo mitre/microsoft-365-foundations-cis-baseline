@@ -50,9 +50,11 @@ control 'microsoft-365-foundations-7.3.1' do
 	  (Get-PnPTenant).DisallowInfectedFileDownload
   }
 
-  powershell_output = powershell(ensure_office_m365spo_infected_files_disallowed_download_script).stdout.strip
+  powershell_output = powershell(ensure_office_m365spo_infected_files_disallowed_download_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure the DisallowInfectedFileDownload option for Office 365 SharePoint' do
-    subject { powershell_output }
+    subject { powershell_output.stdout.strip }
     it 'is set to True' do
       expect(subject).to eq('True')
     end

@@ -50,6 +50,8 @@ control 'microsoft-365-foundations-3.1.1' do
  }
 
   powershell_output = powershell(ensure_m365_audit_log_enabled_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure the UnifiedAuditLogIngestionEnabled option for audit logs' do
     subject { powershell_output.stdout.strip }
     it 'is set to True' do

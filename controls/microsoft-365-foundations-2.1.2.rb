@@ -52,6 +52,8 @@ control 'microsoft-365-foundations-2.1.2' do
  }
 
   powershell_output = powershell(ensure_common_attachment_types_filter_enabled_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure the EnableFileFilter option from Get-MalwareFilterPolicy' do
     subject { powershell_output.stdout.strip }
     it 'is set to True' do

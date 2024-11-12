@@ -48,6 +48,8 @@ control 'microsoft-365-foundations-1.3.3' do
    }
 
   powershell_output = powershell(ensure_external_calendar_sharing_blocked_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure the Enabled option for Default Sharing Policy' do
     subject { powershell_output.stdout.strip }
     it 'is set to False' do

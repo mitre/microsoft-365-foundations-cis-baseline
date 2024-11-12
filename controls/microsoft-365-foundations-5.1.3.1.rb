@@ -65,9 +65,11 @@ control 'microsoft-365-foundations-5.1.3.1' do
     $groups | ft DisplayName
   }
 
-  powershell_output = powershell(ensure_dynamic_group_for_guest_users_script).stdout.strip.split("\n").drop(2).count
+  powershell_output = powershell(ensure_dynamic_group_for_guest_users_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure the number of dyanmic groups without guests' do
-    subject { powershell_output }
+    subject { powershell_output.stdout.strip.split("\n").drop(2).count }
     it 'should be 0' do
       expect(subject).to eq 0
     end

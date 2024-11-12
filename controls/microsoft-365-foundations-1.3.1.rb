@@ -49,6 +49,8 @@ control 'microsoft-365-foundations-1.3.1' do
      Write-Output $passwordValidityPeriod
   }
   powershell_output = powershell(password_expiration_days_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'The password validity period' do
     subject { powershell_output.stdout.to_i }
     it 'should be at integer max value' do

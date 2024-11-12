@@ -50,6 +50,8 @@ control 'microsoft-365-foundations-8.5.3' do
   }
 
   powershell_output = powershell(ensure_people_in_org_bypass_lobby_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure that the AutoAdmittedUsers state' do
     subject { powershell_output.stdout.strip }
     it 'is set to EveryoneInCompanyExcludingGuests' do

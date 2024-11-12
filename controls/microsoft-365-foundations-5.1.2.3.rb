@@ -54,6 +54,8 @@ control 'microsoft-365-foundations-5.1.2.3' do
 }
 
   powershell_output = powershell(ensure_nonadmins_cant_make_tenants_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure AllowedToCreateTenants' do
     subject { powershell_output.stdout.strip }
     it 'should not be able to create tenants for non-admins' do

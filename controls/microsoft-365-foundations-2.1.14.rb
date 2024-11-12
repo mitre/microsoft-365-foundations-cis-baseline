@@ -165,7 +165,10 @@ control 'microsoft-365-foundations-2.1.14' do
     $ExtensionPolicies | ConvertTo-Json
     }
 
-  get_polices_output = powershell(get_policies_script).stdout.strip
+  get_polices_output = powershell(get_policies_script)
+  raise Inspec::Error, "Powershell output returned exit status #{get_polices_output.exit_status}" if get_polices_output.exit_status != 0
+
+  get_polices_output = get_polices_output.stdout.strip
   policy_list = JSON.parse(get_polices_output) unless get_polices_output.empty?
   describe 'Ensure there is at least one policy that' do
     subject { policy_list }

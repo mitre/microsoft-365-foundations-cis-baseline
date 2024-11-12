@@ -53,6 +53,8 @@ control 'microsoft-365-foundations-5.1.2.2' do
   }
 
   powershell_output = powershell(ensure_third_party_apps_not_allowed_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
   describe 'Ensure DefaultUserRolePermissions.AllowedToCreateApps' do
     subject { powershell_output.stdout.strip }
     it 'is set to false' do

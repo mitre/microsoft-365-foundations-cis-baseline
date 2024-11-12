@@ -80,7 +80,10 @@ control 'microsoft-365-foundations-6.3.1' do
         }
     }
     }
-  powershell_output = powershell(ensure_installing_outlook_addins_not_allowed_script).stdout.strip
+  powershell_output = powershell(ensure_installing_outlook_addins_not_allowed_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
+  powershell_output = powershell_output.stdout.strip
   error_identities = powershell_output.split("\n") unless powershell_output.empty?
   describe 'Ensure the number of policies that contain My Custom Apps, My Marketplace Apps, or My ReadWriteMailboxApps' do
     subject { powershell_output }

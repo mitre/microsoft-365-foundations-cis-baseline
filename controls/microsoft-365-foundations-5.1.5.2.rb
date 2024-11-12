@@ -49,6 +49,7 @@ control 'microsoft-365-foundations-5.1.5.2' do
 }
 
   powershell_output = powershell(ensure_user_cant_access_company_data_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
 
   describe.one do
     describe powershell_output do

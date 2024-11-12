@@ -58,15 +58,14 @@ control 'microsoft-365-foundations-7.2.9' do
 	  Get-PnPTenant | Select-Object ExternalUserExpirationRequired, ExternalUserExpireInDays | ConvertTo-Json
   }
 
-  powershell_output = powershell(ensure_guest_access_to_od_will_expire_automatically_script).stdout.strip
+  powershell_output = powershell(ensure_guest_access_to_od_will_expire_automatically_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
+  powershell_output = powershell_output.stdout.strip
   powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure the following setting' do
     subject { powershell_data }
-    it 'ExternalUserExpirationRequired in SharePoint/OneDrive is set to True' do
-      expect(subject['ExternalUserExpirationRequired']).to eq(true)
-    end
-    it 'ExternalUserExpireInDays in SharePoint/OneDrive is less than or equal to 30' do
-      expect(subject['ExternalUserExpireInDays']).to be <= input('external_user_expiry_in_days_spo_threshold')
-    end
+    its(['ExternalUserExpirationRequired']) { should cmp true }
+    its(['ExternalUserExpireInDays']) { should be <= input('external_user_expiry_in_days_spo_threshold') }
   end
 end

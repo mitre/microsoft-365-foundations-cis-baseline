@@ -52,32 +52,31 @@ control 'microsoft-365-foundations-2.1.3' do
     Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
     import-module exchangeonlinemanagement
     Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force) -AppID $client_id -Organization $organization -ShowBanner:$false
-    Get-MalwareFilterPolicy | Select-Object Identity, EnableInternalSenderAdminNotifications, InternalSenderAdminAddress | ConvertTo-Json
+    $policies = Get-MalwareFilterPolicy | Select-Object Identity, EnableInternalSenderAdminNotifications, InternalSenderAdminAddress
+
+    foreach ($policy in $policies) {
+        $failedConditions = @()
+
+        if ($policy.EnableInternalSenderAdminNotifications -eq $false) {
+            $failedConditions += "EnableInternalSenderAdminNotifications"
+        }
+        if ([string]::IsNullOrEmpty($policy.InternalSenderAdminAddress)) {
+            $failedConditions += "InternalSenderAdminAddress"
+        }
+
+        if ($failedConditions.Count -gt 0) {
+            Write-Output "Policy Name: $($policy.Identity), Failed Conditions = [$($failedConditions -join ', ')]"
+        }
+    }
  }
+  powershell_output = powershell(ensure_notifications_for_internal_users_sending_malware_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
 
-  powershell_output = powershell(ensure_notifications_for_internal_users_sending_malware_script).stdout.strip
-  powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
-  case powershell_data
-  when Hash
-    describe "Ensure the following policy (#{powershell_data['Identity']})" do
-      it 'should have EnableInternalSenderAdminNotifications set to true' do
-        expect(powershell_data['EnableInternalSenderAdminNotifications']).to eq(true)
-      end
-
-      it 'should have a non-empty InternalSenderAdminAddress' do
-        expect(powershell_data['InternalSenderAdminAddress']).not_to be_empty
-      end
-    end
-  when Array
-    powershell_data.each do |policy|
-      describe %(Ensure the following policy (#{policy['Identity']})) do
-        it 'should have EnableInternalSenderAdminNotifications set to true' do
-          expect(policy['EnableInternalSenderAdminNotifications']).to eq(true)
-        end
-        it 'should have a non-empty InternalSenderAdminAddress' do
-          expect(policy['InternalSenderAdminAddress']).not_to be_empty
-        end
-      end
+  describe 'Ensure the number of policies that have the settings EnableInternalSenderAdminNotifications as True and InternalSenderAdminAddress should not be empty' do
+    subject { powershell_output.stdout.strip }
+    it 'is 0' do
+      failure_message = "The following policies have failed along with conditions they have failed on: #{powershell_output.stdout.strip.split("\n").join(',')}"
+      expect(subject).to be_empty, failure_message
     end
   end
 end

@@ -47,7 +47,6 @@ control 'microsoft-365-foundations-2.1.5' do
     { '7' => ['8.1'] }
   ]
   tag nist: ['SI-3', 'SI-8', 'AU-1', 'AU-2']
-
   ensure_safe_attachments_for_msproducts_enabled_script = %{
     $client_id = '#{input('client_id')}'
     $certificate_password = '#{input('certificate_password')}'
@@ -56,37 +55,35 @@ control 'microsoft-365-foundations-2.1.5' do
     Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
     import-module exchangeonlinemanagement
     Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force) -AppID $client_id -Organization $organization -ShowBanner:$false
-    Get-AtpPolicyForO365 | Select-Object Name, EnableATPForSPOTeamsODB, EnableSafeDocs, AllowSafeDocsOpen | ConvertTo-Json
+    $policies = Get-AtpPolicyForO365 | Select-Object Name, EnableATPForSPOTeamsODB, EnableSafeDocs, AllowSafeDocsOpen
+
+    foreach ($policy in $policies) {
+        $failedConditions = @()
+
+        if ($policy.EnableATPForSPOTeamsODB -eq $false) {
+            $failedConditions += "EnableATPForSPOTeamsODB"
+        }
+        if ($policy.EnableSafeDocs -eq $false) {
+            $failedConditions += "EnableSafeDocs"
+        }
+        if ($policy.AllowSafeDocsOpen -eq $true) {
+            $failedConditions += "AllowSafeDocsOpen"
+        }
+
+        if ($failedConditions.Count -gt 0) {
+            Write-Output "Policy Name: $($policy.Name), Failed Conditions = [$($failedConditions -join ', ')]"
+        }
+    }
   }
 
   powershell_output = powershell(ensure_safe_attachments_for_msproducts_enabled_script)
-  powershell_data = JSON.parse(powershell_output.stdout.strip) unless powershell_output.stdout.strip.empty?
-  case powershell_data
-  when Hash
-    describe "Ensure the following Safe Attachment Policy (#{powershell_data['Name']})" do
-      it 'should have EnableATPForSPOTeamsODB set to True' do
-        expect(powershell_data['EnableATPForSPOTeamsODB']).to eq(true)
-      end
-      it 'should have EnableSafeDocs set to True' do
-        expect(powershell_data['EnableSafeDocs']).to eq(true)
-      end
-      it 'should have AllowSafeDocsOpen set to False' do
-        expect(powershell_data['AllowSafeDocsOpen']).to eq(false)
-      end
-    end
-  when Array
-    powershell_data.each do |policy|
-      describe %(Ensure the Safe Attachment Policy #{policy['Name']}) do
-        it 'should have EnableATPForSPOTeamsODB set to True' do
-          expect(policy['EnableATPForSPOTeamsODB']).to eq(true)
-        end
-        it 'should have EnableSafeDocs set to True' do
-          expect(policy['EnableSafeDocs']).to eq(true)
-        end
-        it 'should have AllowSafeDocsOpen set to False' do
-          expect(policy['AllowSafeDocsOpen']).to eq(false)
-        end
-      end
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
+  describe 'Ensure the number of Safe Attachment Policies that have the settings EnableATPForSPOTeamsODB as False, EnableSafeDocs as False, or AllowSafeDocsOpen as True' do
+    subject { powershell_output.stdout.strip }
+    it 'is 0' do
+      failure_message = "The following policies have failed along with conditions they have failed on: #{powershell_output.stdout.strip.split("\n").join(',')}"
+      expect(subject).to be_empty, failure_message
     end
   end
 end

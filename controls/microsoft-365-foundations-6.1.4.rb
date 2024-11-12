@@ -53,7 +53,10 @@ control 'microsoft-365-foundations-6.1.4' do
     $MBX | where {$_.AuditBypassEnabled -eq $true} | Select-Object Name, AuditBypassEnabled | ConvertTo-Json
  }
 
-  powershell_output = powershell(ensure_auditbybass_not_enabled_mailbox_script).stdout.strip
+  powershell_output = powershell(ensure_auditbybass_not_enabled_mailbox_script)
+  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+
+  powershell_output = powershell_output.stdout.strip
   mailboxes_with_true = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure the number of mailboxes with the AuditBypassEnabled state set to True' do
     subject { powershell_output }
