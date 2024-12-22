@@ -57,6 +57,9 @@ jobs:
           echo "$AUTH" | base64 --decode > cert.pfx 
           chmod 0400 cert.pfx
 
+      - name: Create .inspec directory
+            run: mkdir -p .inspec
+
       - name: Create config json file
         run: |
           echo '{
