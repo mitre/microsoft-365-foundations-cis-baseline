@@ -62,7 +62,8 @@ jobs:
 
       - name: Create config json file
         run: |
-          echo '{
+          echo 
+          '{
             "version": "1.1",
             "cli_options": {
               "color": "true"
