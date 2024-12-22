@@ -40,24 +40,11 @@ control 'microsoft-365-foundations-2.4.4' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/zero-hour-auto-purge?view=o365-worldwide#zero-hour-auto-purge-zap-in-microsoft-teams'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/mdo-support-teams-about?view=o365-worldwide#configure-zap-for-teams-protection-in-defender-for-office-365-plan-2'
 
-  ensure_zap_enabled_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+  ensure_zap_enabled_script = %(
     $zapEnabledValue = Get-TeamsProtectionPolicy | Select-Object -ExpandProperty ZapEnabled
     Write-Host $zapEnabledValue
- }
-  check_exclusions_script = %{
-  $client_id = '#{input('client_id')}'
-  $certificate_password = '#{input('certificate_password')}'
-  $certificate_path = '#{input('certificate_path')}'
-  $organization = '#{input('organization')}'
-  import-module exchangeonlinemanagement
-  Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+ )
+  check_exclusions_script = %(
   $zapEnabledValue = Get-TeamsProtectionPolicy | Select-Object -ExpandProperty ZapEnabled
   $rules = Get-TeamsProtectionPolicyRule
   $filteredRules = $rules | ForEach-Object {
@@ -66,10 +53,9 @@ control 'microsoft-365-foundations-2.4.4' do
       $exceptIfDataString
   }
   $filteredRules
-}
+)
 
-  powershell_output_zap = powershell(ensure_zap_enabled_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output_zap.exit_status}" if powershell_output_zap.exit_status != 0
+  powershell_output_zap = pwsh_single_session_executor(ensure_zap_enabled_script).run_script_in_graph_exchange
 
   describe 'Ensure the ZapEnabled option for Default Sharing Policy' do
     subject { powershell_output_zap.stdout.strip }
@@ -78,11 +64,10 @@ control 'microsoft-365-foundations-2.4.4' do
     end
   end
 
-  powershell_output_exclusions = powershell(check_exclusions_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output_exclusions.exit_status}" if powershell_output_exclusions.exit_status != 0
+  powershell_output_exclusions = pwsh_single_session_executor(check_exclusions_script).run_script_in_graph_exchange
 
   describe 'Ensure that the list of exclusions' do
-    subject { powershell_output_exclusions.stdout.strip }
+    subject { powershell_output_exclusions.stdout ||= '' }
     it 'is empty. In case of failure, a manual review is required to check the justification of each present exclusion.' do
       expect(subject).to be_empty
     end

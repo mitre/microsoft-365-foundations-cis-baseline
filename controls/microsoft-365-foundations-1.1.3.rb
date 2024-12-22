@@ -47,23 +47,12 @@ control 'microsoft-365-foundations-1.1.3' do
   ref 'https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.identity.directorymanagement/get-mgdirectoryrole?view=graph-powershell-1.0'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/roles/permissions-reference#role-template-ids'
 
-  get_admin_user_count_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}'
-    Install-Module -Name Microsoft.Graph -Force -AllowClobber
-    import-module microsoft.graph
-    $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
-    $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
-    Connect-MgGraph -TenantId $tenantid -ClientSecretCredential $ClientSecretCredential -NoWelcome
-    $globalAdminRole = Get-MgDirectoryRole -Filter "RoleTemplateId eq '62e90394-69f5-4237-9190-012177145e10'"
-    $globalAdmins = Get-MgDirectoryRoleMember -DirectoryRoleId $globalAdminRole.Id
-    Write-Host $globalAdmins.AdditionalProperties.Count
-    }
-
-  powershell_output = powershell(get_admin_user_count_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
-
+  get_admin_user_count_script = %(
+      $globalAdminRole = Get-MgDirectoryRole -Filter "RoleTemplateId eq '62e90394-69f5-4237-9190-012177145e10'"
+      $globalAdmins = Get-MgDirectoryRoleMember -DirectoryRoleId $globalAdminRole.Id
+      Write-Host $globalAdmins.AdditionalProperties.Count
+  )
+  powershell_output = pwsh_single_session_executor(get_admin_user_count_script).run_script_in_graph_exchange
   describe 'Ensure global tenant administrator count' do
     subject { powershell_output.stdout.strip }
     it 'should be between two to four' do

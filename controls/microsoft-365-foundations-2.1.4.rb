@@ -44,19 +44,11 @@ control 'microsoft-365-foundations-2.1.4' do
   ]
   tag nist: ['SI-3', 'SI-8', 'AU-1', 'AU-2']
 
-  ensure_safe_attachments_policy_enabled_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+  ensure_safe_attachments_policy_enabled_script = %(
     Get-SafeAttachmentPolicy | where-object {$_.Enable -eq "True"}
- }
+ )
 
-  powershell_output = powershell(ensure_safe_attachments_policy_enabled_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  powershell_output = pwsh_single_session_executor(ensure_safe_attachments_policy_enabled_script).run_script_in_graph_exchange
 
   describe 'Ensure that there is at least one Safe Attachment policy with an Enabled state that' do
     subject { powershell_output.stdout.strip }

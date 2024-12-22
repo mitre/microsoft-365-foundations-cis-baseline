@@ -37,18 +37,10 @@ control 'microsoft-365-foundations-6.1.1' do
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-organizationconfig?view=exchange-ps#-auditdisabled'
 
   ensure_auditdisabled_set_false_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
     (Get-OrganizationConfig).AuditDisabled
  }
 
-  powershell_output = powershell(ensure_auditdisabled_set_false_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  powershell_output = pwsh_single_session_executor(ensure_auditdisabled_set_false_script).run_script_in_graph_exchange
 
   describe 'Ensure the AuditDisabled state from Get-OrganizationConfig' do
     subject { powershell_output.stdout.strip }

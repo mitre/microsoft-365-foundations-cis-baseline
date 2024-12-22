@@ -40,20 +40,9 @@ control 'microsoft-365-foundations-7.2.1' do
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps'
 
   ensure_modern_authentication_spo_applications_required_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
-    Install-Module -Name PnP.PowerShell -Force -AllowClobber
-    import-module pnp.powershell
-    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
-    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
 	  (Get-PnPTenant).LegacyAuthProtocolsEnabled
   }
-  powershell_output = powershell(ensure_modern_authentication_spo_applications_required_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  powershell_output = pwsh_single_session_executor(ensure_modern_authentication_spo_applications_required_script).run_script_in_teams_pnp
 
   describe 'Ensure the LegacyAuthProtocolsEnabled option for SharePoint' do
     subject { powershell_output.stdout.strip }

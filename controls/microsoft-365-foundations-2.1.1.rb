@@ -89,13 +89,6 @@ control 'microsoft-365-foundations-2.1.1' do
   ref 'https://learn.microsoft.com/en-us/defender-office-365/preset-security-policies?view=o365-worldwide'
 
   get_policy_names_line = %{
-        $client_id = '#{input('client_id')}'
-        $certificate_password = '#{input('certificate_password')}'
-        $certificate_path = '#{input('certificate_path')}'
-        $organization = '#{input('organization')}'
-        Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-        import-module exchangeonlinemanagement
-        Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
         $policies = Get-SafeLinksPolicy
         foreach ($policy in $policies) {
           $failedConditions = @()
@@ -133,8 +126,7 @@ control 'microsoft-365-foundations-2.1.1' do
           }
       }
   }
-  policy_links_script = powershell(get_policy_names_line)
-  raise Inspec::Error, "Powershell output returned exit status #{policy_links_script.exit_status}" if policy_links_script.exit_status != 0
+  policy_links_script = pwsh_single_session_executor(get_policy_names_line).run_script_in_graph_exchange
 
   describe 'Ensure the number of safe links policies that have the settings EnableSafeLinksForEmail as False, EnableSafeLinksForTeams as False, EnableSafeLinksForOffice as False, TrackClicks as False, AllowClickThrough as True, ScanUrls as False, EnableForInternalSenders as False, DeliverMessageAfterScan as False, or DisableUrlRewrite as True' do
     subject { policy_links_script.stdout.strip }

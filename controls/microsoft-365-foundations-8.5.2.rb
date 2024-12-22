@@ -43,17 +43,10 @@ control 'microsoft-365-foundations-8.5.2' do
   ref 'https://learn.microsoft.com/en-US/microsoftteams/who-can-bypass-meeting-lobby?WT.mc_id=TeamsAdminCenterCSH#overview-of-lobby-settings-and-policies'
 
   ensure_anonymous_users_cant_start_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
-    Install-Module -Name MicrosoftTeams -Force -AllowClobber
-    import-module MicrosoftTeams
-    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
     Write-Output (Get-CsTeamsMeetingPolicy -Identity Global).AllowAnonymousUsersToStartMeeting
   }
 
-  powershell_output = powershell(ensure_anonymous_users_cant_start_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  powershell_output = pwsh_single_session_executor(ensure_anonymous_users_cant_start_script).run_script_in_teams_pnp
 
   describe 'Ensure that AllowAnonymousUsersToStartMeeting state' do
     subject { powershell_output.stdout.strip }

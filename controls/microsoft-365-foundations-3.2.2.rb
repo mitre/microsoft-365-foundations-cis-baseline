@@ -56,14 +56,7 @@ control 'microsoft-365-foundations-3.2.2' do
 
   permitted_exceptions_list = %("#{input('permitted_exceptions_teams_locations').sort.join('", "')}")
   ensure_dlp_policies_enabled_teams_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
     $permitted_exceptions_list = @(#{permitted_exceptions_list})
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-IPPSSession -AppID $client_id -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force) -Organization $organization -ShowBanner:$false
     $DlpPolicy = Get-DlpCompliancePolicy
     $filteredPolicies = $DlpPolicy | Where-Object { $_.Workload -match "Teams" }
 
@@ -85,8 +78,7 @@ control 'microsoft-365-foundations-3.2.2' do
         }
     }
  }
-  powershell_output = powershell(ensure_dlp_policies_enabled_teams_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  powershell_output = pwsh_single_session_executor(ensure_dlp_policies_enabled_teams_script).run_script_in_graph_exchange
 
   describe 'Ensure the number of Teams DLP Policies that have the settings Mode not set to Enable, TeamsLocation not set to All, or TeamsLocationException not including permitted exceptions' do
     subject { powershell_output.stdout.strip }

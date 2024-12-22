@@ -80,21 +80,13 @@ control 'microsoft-365-foundations-5.2.2.3' do
   ref 'https://learn.microsoft.com/en-us/exchange/mail-flow-best-practices/how-to-set-up-a-multifunction-device-or-application-to-send-email-using-microsoft-365-or-office-365'
   ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/deprecation-of-basic-authentication-exchange-online'
 
-  check_basic_authentication_types_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+  check_basic_authentication_types_script = %(
     $defaultPolicy = Get-OrganizationConfig | Select-Object -ExpandProperty DefaultAuthenticationPolicy
     $authSettings = Get-AuthenticationPolicy $defaultPolicy | Select-Object AllowBasicAuth*
     $trueSettings = $authSettings.PSObject.Properties | Where-Object { $_.Value -eq $true } | Select-Object Name, Value
     $jsonOutput = $trueSettings | ConvertTo-Json
-  }
-  powershell_authentication_types_output = powershell(check_basic_authentication_types_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_authentication_types_output.exit_status}" if powershell_authentication_types_output.exit_status != 0
+  )
+  powershell_authentication_types_output = pwsh_single_session_executor(check_basic_authentication_types_script).run_script_in_graph_exchange
 
   powershell_authentication_types_output = powershell_authentication_types_output.stdout.strip
 
@@ -106,20 +98,12 @@ control 'microsoft-365-foundations-5.2.2.3' do
       expect(subject).to be_nil, failure_message
     end
   end
-  check_authentication_block_basic_auth_policy_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+  check_authentication_block_basic_auth_policy_script = %(
     $users = Get-User -ResultSize Unlimited | Where-Object { $_.AuthenticationPolicy -ne "Block Basic Auth" } | Select-Object UserPrincipalName, AuthenticationPolicy
     $jsonOutput = $users | ConvertTo-Json
     $jsonOutput
-    }
-  powershell_block_basic_output = powershell(check_authentication_block_basic_auth_policy_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_block_basic_output.exit_status}" if powershell_block_basic_output.exit_status != 0
+    )
+  powershell_block_basic_output = pwsh_single_session_executor(check_authentication_block_basic_auth_policy_script).run_script_in_graph_exchange
 
   powershell_block_basic_output = powershell_block_basic_output.stdout.strip
   block_basic_policy_data = JSON.parse(powershell_block_basic_output) unless powershell_block_basic_output.empty?

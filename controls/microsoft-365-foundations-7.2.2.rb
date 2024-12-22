@@ -33,20 +33,9 @@ control 'microsoft-365-foundations-7.2.2' do
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenant?view=sharepoint-ps'
 
   ensure_spo_od_integration_with_azure_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
-    Install-Module -Name PnP.PowerShell -Force -AllowClobber
-    import-module pnp.powershell
-    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
-    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
 	  (Get-PnPTenant).EnableAzureADB2BIntegration
   }
-  powershell_output = powershell(ensure_spo_od_integration_with_azure_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  powershell_output = pwsh_single_session_executor(ensure_spo_od_integration_with_azure_script).run_script_in_teams_pnp
 
   describe 'Ensure the EnableAzureADB2BIntegration option for SharePoint' do
     subject { powershell_output.stdout.strip }

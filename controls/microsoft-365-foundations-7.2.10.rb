@@ -41,22 +41,11 @@ control 'microsoft-365-foundations-7.2.10' do
   ref 'https://learn.microsoft.com/en-US/sharepoint/turn-external-sharing-on-or-off?WT.mc_id=365AdminCSH_spo#change-the-organization-level-external-sharing-setting'
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/external-identities/one-time-passcode'
 
-  ensure_reauth_with_verification_code_restricted = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
-    Install-Module -Name PnP.PowerShell -Force -AllowClobber
-    import-module pnp.powershell
-    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
-    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
+  ensure_reauth_with_verification_code_restricted = %(
 	  Get-PnPTenant | Select-Object EmailAttestationRequired, EmailAttestationReAuthDays | ConvertTo-Json
-  }
+  )
 
-  powershell_output = powershell(ensure_reauth_with_verification_code_restricted)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  powershell_output = pwsh_single_session_executor(ensure_reauth_with_verification_code_restricted).run_script_in_teams_pnp
 
   powershell_output = powershell_output.stdout.strip
   powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
@@ -64,13 +53,5 @@ control 'microsoft-365-foundations-7.2.10' do
     subject { powershell_data }
     its(['EmailAttestationRequired']) { should cmp true }
     its(['EmailAttestationReAuthDays']) { should be <= input('email_attestation_re_auth_days_spo_threshold') }
-    ''"
-    it 'EmailAttestationRequired in SharePoint is set to True' do
-      expect(subject['EmailAttestationRequired']).to eq(true)
-    end
-    it 'EmailAttestationReAuthDays in SharePoint is less than or equal to 15' do
-      expect(subject['EmailAttestationReAuthDays']).to be <= input('email_attestation_re_auth_days_spo_threshold')
-    end
-    "''
   end
 end

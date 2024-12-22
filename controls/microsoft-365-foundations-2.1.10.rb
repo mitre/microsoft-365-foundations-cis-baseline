@@ -48,15 +48,12 @@ control 'microsoft-365-foundations-2.1.10' do
 
   dmarc_domain_list = %("#{input('dmarc_domains').sort.join('", "')}")
   check_dmarc_domain_script = %{
-      $client_id = '#{input('client_id')}'
-      $certificate_password = '#{input('certificate_password')}'
-      $certificate_path = '#{input('certificate_path')}'
-      $organization = '#{input('organization')}'
       $domains = (#{dmarc_domain_list})
-      Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-      import-module exchangeonlinemanagement
-      Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-      Import-Module DNSClient
+      try{
+        Import-Module DNSClient -ErrorAction Stop
+      }
+      catch{
+      }
       foreach ($domain in $domains) {
         try {
             $dmarcRecord = Resolve-DnsName -Name "_dmarc.$domain" -Type TXT -ErrorAction Stop
@@ -76,7 +73,7 @@ control 'microsoft-365-foundations-2.1.10' do
         }
     }
     }
-  powershell_output_dmarc = powershell(check_dmarc_domain_script)
+  powershell_output_dmarc = pwsh_single_session_executor(check_dmarc_domain_script).run_script_in_graph_exchange
   describe "Ensure the number of DMARC domains that do not contain a record or does not contain the following substring in the record v=DMARC1; (p=quarantine OR p=reject), pct=100, rua=mailto:#{input('reporting_mail_address')} and ruf=mailto:#{input('reporting_mail_address')}" do
     subject { powershell_output_dmarc.stdout.strip }
     it 'is 0' do
@@ -85,14 +82,12 @@ control 'microsoft-365-foundations-2.1.10' do
     end
   end
   check_moera_domain_script = %{
-      $client_id = '#{input('client_id')}'
-      $certificate_password = '#{input('certificate_password')}'
-      $certificate_path = '#{input('certificate_path')}'
-      $organization = '#{input('organization')}'
-      $tenantid = '#{input('tenant_id')}'
-      import-module exchangeonlinemanagement
-      Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-      Import-Module DNSClient
+      try{
+        Import-Module DNSClient -ErrorAction Stop
+      }
+      catch{
+
+      }
       $domain = "_dmarc.$tenantid.onmicrosoft.com"
       try {
           $moeraRecord = Resolve-DnsName -Name $domain -Type TXT -ErrorAction Stop
@@ -111,7 +106,7 @@ control 'microsoft-365-foundations-2.1.10' do
           Write-Output "No MOERA record found for $domain."
       }
     }
-  powershell_output_moera = powershell(check_moera_domain_script)
+  powershell_output_moera = pwsh_single_session_executor(check_moera_domain_script).run_script_in_graph_exchange
   describe "Ensure the number of MOERA domains that do not contain a record or does not contain the following substring in the record v=DMARC1; (p=quarantine OR p=reject), pct=100, rua=mailto:#{input('reporting_mail_address')} and ruf=mailto:#{input('reporting_mail_address')}" do
     subject { powershell_output_moera.stdout.strip }
     it 'is 0' do

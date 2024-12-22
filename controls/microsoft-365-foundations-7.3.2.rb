@@ -47,20 +47,9 @@ control 'microsoft-365-foundations-7.3.2' do
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-spotenantsyncclientrestriction?view=sharepoint-ps'
 
   tenantrestrictionenabled_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
-    Install-Module -Name PnP.PowerShell -Force -AllowClobber
-    import-module pnp.powershell
-    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
-    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
 	  (Get-PnPTenantSyncClientRestriction).TenantRestrictionEnabled
   }
-  powershell_output_tenant = powershell(tenantrestrictionenabled_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output_tenant.exit_status}" if powershell_output_tenant.exit_status != 0
+  powershell_output_tenant = pwsh_single_session_executor(tenantrestrictionenabled_script).run_script_in_teams_pnp
 
   describe 'Ensure the TenantRestrictionEnabled option for SharePoint/OneDrive Sync' do
     subject { powershell_output_tenant.stdout.strip }
@@ -72,16 +61,6 @@ control 'microsoft-365-foundations-7.3.2' do
   trusted_domains = input('trusted_domains_guids')
   domain_pattern = trusted_domains.map { |domain| "'#{domain}'" }.join(', ')
   ensure_trusted_domains_guids = %{
-    $appName = 'cisBenchmarkL512'
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
-    import-module pnp.powershell
-    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
-    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
     $allowedDomains = (Get-PnPTenant).AllowedDomainList
     $trustedDomains = @(#{domain_pattern})
     $domainList = $domain_data -split ' '
@@ -90,12 +69,11 @@ control 'microsoft-365-foundations-7.3.2' do
         Write-Output "Some domains are not in the list of trusted domains: $($untrustedDomains -join ', ')"
     }
   }
-  powershell_output_domains = powershell(ensure_trusted_domains_guids)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output_domains.exit_status}" if powershell_output_domains.exit_status != 0
+  powershell_output_domains = pwsh_single_session_executor(ensure_trusted_domains_guids).run_script_in_teams_pnp
 
   describe 'Ensure the number of domains GUIDs not trusted from AllowedDomainList option on SharePoint' do
-    subject { powershell_output_domains.stdout.strip }
-    failure_message = "Failure: #{powershell_output_domains.stdout.strip}"
+    subject { powershell_output_domains.stdout ||= '' }
+    failure_message = "Failure: #{powershell_output_domains.stdout}"
     it 'is 0' do
       expect(subject).to be_empty, failure_message
     end

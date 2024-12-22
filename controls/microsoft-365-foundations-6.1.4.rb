@@ -41,20 +41,12 @@ control 'microsoft-365-foundations-6.1.4' do
 
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/get-mailboxauditbypassassociation?view=exchange-ps'
 
-  ensure_auditbybass_not_enabled_mailbox_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-    $MBX = Get-MailboxAuditBypassAssociation -ResultSize unlimited
+  ensure_auditbybass_not_enabled_mailbox_script = %(
+    $MBX = Get-MailboxAuditBypassAssociation -ResultSize unlimited -WarningAction SilentlyContinue
     $MBX | where {$_.AuditBypassEnabled -eq $true} | Select-Object Name, AuditBypassEnabled | ConvertTo-Json
- }
+ )
 
-  powershell_output = powershell(ensure_auditbybass_not_enabled_mailbox_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  powershell_output = pwsh_single_session_executor(ensure_auditbybass_not_enabled_mailbox_script).run_script_in_graph_exchange
 
   powershell_output = powershell_output.stdout.strip
   mailboxes_with_true = JSON.parse(powershell_output) unless powershell_output.empty?

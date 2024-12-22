@@ -40,20 +40,11 @@ control 'microsoft-365-foundations-5.1.2.2' do
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/develop/active-directory-how-applications-are-added'
 
   ensure_third_party_apps_not_allowed_script = %{
-  $client_id = '#{input('client_id')}'
-  $tenantid = '#{input('tenant_id')}'
-  $clientSecret = '#{input('client_secret')}'
-  Install-Module -Name Microsoft.Graph -Force -AllowClobber
-  import-module microsoft.graph
-  $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
-  $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
-  Connect-MgGraph -TenantId $tenantid -ClientSecretCredential $ClientSecretCredential -NoWelcome
   $thirdPartyAllowance = (Get-MgPolicyAuthorizationPolicy).DefaultUserRolePermissions
   Write-Output $thirdPartyAllowance.AllowedToCreateApps
   }
 
-  powershell_output = powershell(ensure_third_party_apps_not_allowed_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  powershell_output = pwsh_single_session_executor(ensure_third_party_apps_not_allowed_script).run_script_in_graph_exchange
 
   describe 'Ensure DefaultUserRolePermissions.AllowedToCreateApps' do
     subject { powershell_output.stdout.strip }

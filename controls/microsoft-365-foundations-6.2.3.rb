@@ -36,13 +36,6 @@ control 'microsoft-365-foundations-6.2.3' do
   permitted_emails = input('email_addresses_bypass_external_tagging')
   email_pattern = permitted_emails.map { |email| "'#{email}'" }.join(', ')
   ensure_email_from_external_senders_identified_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
     $allowedEmails = @(#{email_pattern})
     $object = Get-ExternalInOutlook
     $object | Where-Object {
@@ -50,8 +43,7 @@ control 'microsoft-365-foundations-6.2.3' do
       ($_.AllowList | ForEach-Object { $allowedEmails -contains $_ } | Where-Object { $_ -eq $false } | Measure-Object).Count -gt 0
    } | Select-Object -ExpandProperty Identity
   }
-  powershell_output = powershell(ensure_email_from_external_senders_identified_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  powershell_output = pwsh_single_session_executor(ensure_email_from_external_senders_identified_script).run_script_in_graph_exchange
 
   powershell_output = powershell_output.stdout.strip
   error_identities = powershell_output.split("\n") unless powershell_output.empty?

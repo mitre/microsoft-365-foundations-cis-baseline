@@ -57,11 +57,33 @@ jobs:
           echo "$AUTH" | base64 --decode > cert.pfx 
           chmod 0400 cert.pfx
 
+      - name: Create config json file
+        run: |
+        echo '{
+          "version": "1.1",
+          "cli_options": {
+            "color": "true"
+          },
+          "credentials": {
+            "pwsh": {
+              "pwsh-options": {
+                "client_id": ${{secrets.SAF_M365_CLIENT_ID}},
+                "tenant_id": ${{secrets.SAF_M365_TENANT_ID}},
+                "client_secret": ${{secrets.SAF_M365_CLIENT_SECRET}},
+                "certificate_path": cert.pfx,
+                "certificate_password": ${{secrets.SAF_M365_CERTIFICATE_PASSWORD}},
+                "organization": ${{secrets.SAF_M365_ORGANIZATION}},
+                "sharepoint_admin_url": ${{secrets.SAF_M365_SHAREPOINT_ADMIN_URL}}
+              }
+            }
+          }
+        }' > .inspec/config.json
+
       - name: Run Inspec test
         continue-on-error: true
         run: |
           bundle exec inspec exec . \
-          --input client_id=${{secrets.SAF_M365_CLIENT_ID}} tenant_id=${{secrets.SAF_M365_TENANT_ID}} client_secret=${{secrets.SAF_M365_CLIENT_SECRET}} certificate_path=cert.pfx certificate_password=${{secrets.SAF_M365_CERTIFICATE_PASSWORD}} organization=${{secrets.SAF_M365_ORGANIZATION}} \
+          -t pwsh://pwsh-options \
           --input-file=inputs.yml \
           --enhanced-outcomes \
           --reporter json:${{ env.PLATFORM }}-results.json

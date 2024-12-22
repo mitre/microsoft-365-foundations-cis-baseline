@@ -50,21 +50,11 @@ control 'microsoft-365-foundations-5.2.3.4' do
   ref 'https://learn.microsoft.com/en-us/entra/identity/conditional-access/what-if-tool'
   ref 'https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-methods-activity'
 
-  ensure_member_users_mfa_capable_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}'
-    Install-Module -Name Microsoft.Graph -Force -AllowClobber
-    import-module microsoft.graph
-    $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
-    $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
-    Connect-MgGraph -TenantId $tenantid -ClientSecretCredential $ClientSecretCredential -NoWelcome
-    #Connect-MgGraph -Scopes "UserAuthenticationMethod.Read.All,AuditLog.Read.All"
+  ensure_member_users_mfa_capable_script = %(
     $count = Get-MgReportAuthenticationMethodUserRegistrationDetail ` -Filter "IsMfaCapable eq false and UserType eq 'Member'" | Measure-Object
     Write-Output $count.Count
-  }
-  powershell_output = powershell(ensure_member_users_mfa_capable_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  )
+  powershell_output = pwsh_single_session_executor(ensure_member_users_mfa_capable_script).run_script_in_graph_exchange
 
   describe 'Ensure count for IsMfaCapable equals False' do
     subject { powershell_output.stdout.to_i }

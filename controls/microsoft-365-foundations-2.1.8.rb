@@ -32,14 +32,7 @@ control 'microsoft-365-foundations-2.1.8' do
   # This does not work on Mac - need to find a different way to test. Additionally, CIS Benchmark says manual
   domain_list = %("#{input('spf_domains').sort.join('", "')}")
   resolve_domain_script = %{
-      $client_id = '#{input('client_id')}'
-      $certificate_password = '#{input('certificate_password')}'
-      $certificate_path = '#{input('certificate_path')}'
-      $organization = '#{input('organization')}'
       $domain_list = @(#{domain_list})
-      Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-      import-module exchangeonlinemanagement
-      Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
       Import-Module DNSClient
       foreach ($domain in $domain_list) {
         $txtRecords = Resolve-DnsName $domain -Type TXT | Select-Object -ExpandProperty Strings
@@ -51,8 +44,7 @@ control 'microsoft-365-foundations-2.1.8' do
         }
       }
     }
-  powershell_output = powershell(resolve_domain_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  powershell_output = pwsh_single_session_executor(resolve_domain_script).run_script_in_graph_exchange
 
   describe 'Ensure the number of Exchange domains that do not contain a SPF record or contain v=spf1 include:spf.protection.outlook.com in the SPF record' do
     subject { powershell_output.stdout.strip }

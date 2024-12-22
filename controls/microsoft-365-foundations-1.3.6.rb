@@ -42,19 +42,11 @@ control 'microsoft-365-foundations-1.3.6' do
 
   ref 'https://learn.microsoft.com/en-us/azure/security/fundamentals/customer-lockbox-overview'
 
-  ensure_customer_lockbox_is_enabled_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+  ensure_customer_lockbox_is_enabled_script = %(
     $lock_box_status = Get-OrganizationConfig | Select-Object -ExpandProperty CustomerLockBoxEnabled
     Write-Output $lock_box_status
- }
-
-  powershell_output = powershell(ensure_customer_lockbox_is_enabled_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+ )
+  powershell_output = pwsh_single_session_executor(ensure_customer_lockbox_is_enabled_script).run_script_in_graph_exchange
 
   describe 'Ensure the CustomerLockBoxEnabled option from Get-OrganizationConfig' do
     subject { powershell_output.stdout.strip }

@@ -36,18 +36,10 @@ control 'microsoft-365-foundations-6.5.3' do
   ref 'https://support.microsoft.com/en-us/topic/3rd-party-cloud-storage-services-supported-by-office-apps-fce12782-eccc-4cf5-8f4b-d1ebec513f72'
 
   ensure_additional_storage_providers_restricted_web_outlook_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
     (Get-OwaMailboxPolicy).AdditionalStorageProvidersAvailable
  }
 
-  powershell_output = powershell(ensure_additional_storage_providers_restricted_web_outlook_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  powershell_output = pwsh_single_session_executor(ensure_additional_storage_providers_restricted_web_outlook_script).run_script_in_graph_exchange
 
   describe 'Ensure the AdditionalStorageProvidersAvailable option from Get-OwaMailboxPolicy' do
     subject { powershell_output.stdout.strip }

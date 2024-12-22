@@ -74,22 +74,9 @@ control 'microsoft-365-foundations-8.6.1' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/submissions-teams?view=o365-worldwide'
 
   microsoft_teams_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
-    Install-Module -Name MicrosoftTeams -Force -AllowClobber
-    import-module MicrosoftTeams
-    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
     (Get-CsTeamsMessagingPolicy -Identity Global).AllowSecurityEndUserReporting
  }
-  powershell_output_teams = powershell(microsoft_teams_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output_teams.exit_status}" if powershell_output_teams.exit_status != 0
+  powershell_output_teams = pwsh_teams_executor(microsoft_teams_script).run_script_in_teams
 
   describe 'Ensure the AllowSecurityEndUserReporting state from Get-CsTeamsMessagingPolicy' do
     subject { powershell_output_teams.stdout.strip }
@@ -98,25 +85,12 @@ control 'microsoft-365-foundations-8.6.1' do
     end
   end
 
-  microsoft_defender_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
-    import-module MicrosoftTeams
-    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
+  microsoft_defender_script = %(
     Get-ReportSubmissionPolicy | Select-Object -Property ReportJunkToCustomizedAddress, ReportNotJunkToCustomizedAddress, ReportPhishToCustomizedAddress, ReportJunkAddresses, ReportNotJunkAddresses, ReportPhishAddresses, ReportChatMessageEnabled, ReportChatMessageToCustomizedAddressEnabled | ConvertTo-Json
-  }
+  )
 
   reporting_email_addresses = input('reporting_email_addresses_for_malicious_messages')
-  powershell_output = powershell(microsoft_defender_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
-
+  powershell_output = pwsh_exchange_executor(microsoft_defender_script).run_script_in_exchange
   powershell_output = powershell_output.stdout.strip
   submission_policy_data = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure that the following state:' do

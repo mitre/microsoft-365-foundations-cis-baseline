@@ -38,17 +38,10 @@ control 'microsoft-365-foundations-8.5.5' do
   ref 'https://learn.microsoft.com/en-us/powershell/module/skype/set-csteamsmeetingpolicy?view=skype-ps#-meetingchatenabledtype'
 
   ensure_meeting_chat_not_allow_anon_users = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
-    Install-Module -Name MicrosoftTeams -Force -AllowClobber
-    import-module MicrosoftTeams
-    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
     Write-Output (Get-CsTeamsMeetingPolicy -Identity Global).MeetingChatEnabledType
   }
 
-  powershell_output = powershell(ensure_meeting_chat_not_allow_anon_users)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  powershell_output = pwsh_single_session_executor(ensure_meeting_chat_not_allow_anon_users).run_script_in_teams_pnp
 
   describe 'Ensure that the MeetingChatEnabledType state' do
     subject { powershell_output.stdout.strip }

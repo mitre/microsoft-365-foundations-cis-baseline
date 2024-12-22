@@ -52,14 +52,8 @@ control 'microsoft-365-foundations-2.1.6' do
   notify_outbound_spam_recipients_list = %("#{input('notify_outbound_spam_recipients').sort.join('", "')}")
   bcc_suspicious_outbound_additional_recipients_list = %("#{input('bcc_suspicious_outbound_additional_recipients').sort.join('", "')}")
   ensure_exchange_online_spam_policies_set_to_notify_admins_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
     $notify_outbound_spam_recipients_list = @(#{notify_outbound_spam_recipients_list})
     $bcc_suspicious_outbound_additional_recipients_list = @(#{bcc_suspicious_outbound_additional_recipients_list})
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
     $policies = Get-HostedOutboundSpamFilterPolicy | Select-Object Name, BccSuspiciousOutboundMail, NotifyOutboundSpam, NotifyOutboundSpamRecipients, BccSuspiciousOutboundAdditionalRecipients
     foreach ($policy in $policies) {
         $failedConditions = @()
@@ -83,9 +77,7 @@ control 'microsoft-365-foundations-2.1.6' do
     }
   }
 
-  powershell_output = powershell(ensure_exchange_online_spam_policies_set_to_notify_admins_script)
-
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
+  powershell_output = pwsh_single_session_executor(ensure_exchange_online_spam_policies_set_to_notify_admins_script).run_script_in_graph_exchange
 
   describe 'Ensure the number of Exchange Online Spam Policies that have the settings BccSuspiciousOutboundMail as False, NotifyOutboundSpam as False, NotifyOutboundSpamRecipients set to an incorrect email address, or BccSuspiciousOutboundAdditionalRecipients set to an incorrect email addresses' do
     subject { powershell_output.stdout.strip }

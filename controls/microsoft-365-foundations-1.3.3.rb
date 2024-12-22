@@ -36,20 +36,11 @@ control 'microsoft-365-foundations-1.3.3' do
 
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/manage/share-calendars-with-external-users?view=o365-worldwide'
 
-  ensure_external_calendar_sharing_blocked_script = %{
-      $client_id = '#{input('client_id')}'
-      $certificate_password = '#{input('certificate_password')}'
-      $certificate_path = '#{input('certificate_path')}'
-      $organization = '#{input('organization')}'
-      import-module exchangeonlinemanagement
-      Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+  ensure_external_calendar_sharing_blocked_script = %(
       $enabledStatus = Get-SharingPolicy -Identity "Default Sharing Policy" | Select-Object -ExpandProperty Enabled
       Write-Output $enabledStatus
-   }
-
-  powershell_output = powershell(ensure_external_calendar_sharing_blocked_script)
-  raise Inspec::Error, "Powershell output returned exit status #{powershell_output.exit_status}" if powershell_output.exit_status != 0
-
+   )
+  powershell_output = pwsh_single_session_executor(ensure_external_calendar_sharing_blocked_script).run_script_in_graph_exchange
   describe 'Ensure the Enabled option for Default Sharing Policy' do
     subject { powershell_output.stdout.strip }
     it 'is set to False' do

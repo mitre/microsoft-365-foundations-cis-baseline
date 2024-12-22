@@ -153,22 +153,14 @@ control 'microsoft-365-foundations-2.1.14' do
     powershell_script
   end
 
-  get_policies_script = %{
-   $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+  get_policies_script = %(
     $ExtensionPolicies = Get-MalwareFilterPolicy | Where-Object {$_.FileTypes.Count -gt 120 }
     $ExtensionPolicies | ConvertTo-Json
-    }
+    )
 
-  get_polices_output = powershell(get_policies_script)
-  raise Inspec::Error, "Powershell output returned exit status #{get_polices_output.exit_status}" if get_polices_output.exit_status != 0
+  get_polices_output = pwsh_single_session_executor(get_policies_script).run_script_in_graph_exchange
 
-  get_polices_output = get_polices_output.stdout.strip
+  get_polices_output = get_polices_output.stdout ||= ''
   policy_list = JSON.parse(get_polices_output) unless get_polices_output.empty?
   describe 'Ensure there is at least one policy that' do
     subject { policy_list }
@@ -179,12 +171,6 @@ control 'microsoft-365-foundations-2.1.14' do
   policy_list&.each do |_policy|
     file_ext_list = _policy.map { |file_ext| "'#{file_ext}'" }.join(', ')
     ensure_comprehensive_attachment_filtering_applied_script = %{
-        $client_id = '#{input('client_id')}'
-        $certificate_password = '#{input('certificate_password')}'
-        $certificate_path = '#{input('certificate_path')}'
-        $organization = '#{input('organization')}'
-        import-module exchangeonlinemanagement
-        Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
         $L2Extensions = @( "7z", "a3x", "ace", "ade", "adp", "ani", "app", "appinstaller", "applescript", "application", "appref-ms", "appx", "appxbundle", "arj", "asd", "asx", "bas", "bat", "bgi", "bz2", "cab", "chm", "cmd", "com", "cpl", "crt", "cs", "csh", "daa", "dbf", "dcr", "deb", "desktopthemepackfile", "dex", "diagcab", "dif", "dir", "dll", "dmg", "doc", "docm", "dot", "dotm", "elf", "eml", "exe", "fxp", "gadget", "gz", "hlp", "hta", "htc", "htm", "htm", "html", "html", "hwpx", "ics", "img", "inf", "ins", "iqy", "iso", "isp", "jar", "jnlp", "js", "jse", "kext", "ksh", "lha", "lib", "library-ms", "lnk", "lzh", "macho", "mam", "mda", "mdb", "mde", "mdt", "mdw", "mdz", "mht", "mhtml", "mof", "msc", "msi", "msix", "msp", "msrcincident", "mst", "ocx", "odt", "ops", "oxps", "pcd", "pif", "plg", "pot", "potm", "ppa", "ppam", "ppkg", "pps", "ppsm", "ppt", "pptm", "prf", "prg", "ps1", "ps11", "ps11xml", "ps1xml", "ps2", "ps2xml", "psc1", "psc2", "pub", "py", "pyc", "pyo", "pyw", "pyz", "pyzw", "rar", "reg", "rev", "rtf", "scf", "scpt", "scr", "sct", "searchConnector-ms", "service", "settingcontent-ms", "sh", "shb", "shs", "shtm", "shtml", "sldm", "slk", "so", "spl", "stm", "svg", "swf", "sys", "tar", "theme", "themepack", "timer", "uif", "url", "uue", "vb", "vbe", "vbs", "vhd", "vhdx", "vxd", "wbk", "website", "wim", "wiz", "ws", "wsc", "wsf", "wsh", "xla", "xlam", "xlc", "xll", "xlm", "xls", "xlsb", "xlsm", "xlt", "xltm", "xlw", "xml", "xnk", "xps", "xsl", "xz", "z" )
         $MissingCount = 0
         $ExtensionPolicies = $null
@@ -228,7 +214,7 @@ control 'microsoft-365-foundations-2.1.14' do
       }
 
     describe "Ensure the following malware policy (#{_policy['Identity']})" do
-      subject { powershell(ensure_comprehensive_attachment_filtering_applied_script).stdout.strip }
+      subject { pwsh_single_session_executor(ensure_comprehensive_attachment_filtering_applied_script).run_script_in_graph_exchange.stdout ||= '' }
       it 'should cover and contain all malware extensions' do
         expect(subject).to include 'PASS: Policy contains all extensions'
       end
