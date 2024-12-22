@@ -62,8 +62,7 @@ jobs:
 
       - name: Create config json file
         run: |
-          echo 
-          '{
+          echo '{
             "version": "1.1",
             "cli_options": {
               "color": "true"
@@ -81,7 +80,7 @@ jobs:
                 }
               }
             }
-          }' > .inspec/config.json
+          }' > ~/.inspec/config.json
 
       - name: Run Inspec test
         continue-on-error: true
