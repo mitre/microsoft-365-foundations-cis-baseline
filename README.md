@@ -14,7 +14,7 @@ CIS Guidance from the Center for Internet Security (CIS).
 The results of a profile run will provide information needed to support an Authority to Operate (ATO)
 decision for the applicable technology.
  
-The CIS Ubuntu Linux 22.04 LTS CIS Profile uses the [InSpec](https://github.com/inspec/inspec)
+The CIS Microsoft 365 Foundation CIS CIS Profile uses the [InSpec](https://github.com/inspec/inspec)
 open-source compliance validation language to support automation of the required compliance, security
 and policy testing for Assessment and Authorization (A&A) and Authority to Operate (ATO) decisions
 and Continuous Authority to Operate (cATO) processes.
@@ -42,13 +42,13 @@ used by the DoD agencies. In addition to defining security guidelines, the CISs 
 how security training should proceed and when security checks should occur. Organizations must
 stay compliant with these guidelines or they risk having their access to the DoD terminated.
  
-Requirements associated with the CIS Ubuntu Linux 22.04 LTS CIS are derived from the
+Requirements associated with the CIS Microsoft 365 Foundation CIS are derived from the
 [Security Requirements Guides](https://csrc.nist.gov/glossary/term/security_requirements_guide)
 and align to the [National Institute of Standards and Technology](https://www.nist.gov/) (NIST)
 [Special Publication (SP) 800-53](https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#!/800-53)
 Security Controls, [DoD Control Correlation Identifier](https://public.cyber.mil/stigs/cci/) and related standards.
  
-The CIS Ubuntu Linux 22.04 LTS CIS profile checks were developed to provide technical implementation
+The CIS Microsoft 365 Foundation CIS profile checks were developed to provide technical implementation
 validation to the defined DoD requirements, the guidance can provide insight for any organizations wishing
 to enhance their security posture and can be tailored easily for use in your organization.
  
