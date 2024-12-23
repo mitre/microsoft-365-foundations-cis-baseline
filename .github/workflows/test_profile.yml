@@ -60,6 +60,14 @@ jobs:
       - name: Create .inspec directory
         run: mkdir -p .inspec
 
+      - name: Check pwsh path
+        run: |
+          if command -v pwsh > /dev/null 2>&1; then
+            echo "pwsh found at: $(which pwsh)"
+          else
+            echo "pwsh not found in PATH"
+          fi
+
       - name: Create config json file
         run: |
           echo '{
