@@ -80,10 +80,7 @@ jobs:
 
           $SecurePassword = ConvertTo-SecureString -String $CertificatePassword -AsPlainText -Force
 
-          Connect-ExchangeOnline -CertificateFilePath $CertificatePath `
-                                -CertificatePassword $SecurePassword `
-                                -AppID $ClientId `
-                                -Organization $Organization `
+          Connect-ExchangeOnline -CertificateFilePath $CertificatePath -CertificatePassword $SecurePassword -AppID $ClientId -Organization $Organization `
 
       - name: Create config json file
         run: |
