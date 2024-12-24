@@ -85,6 +85,7 @@ jobs:
                         "certificate_password": "'"${{secrets.SAF_M365_CERTIFICATE_PASSWORD}}"'",
                         "organization": "'"${{secrets.SAF_M365_ORGANIZATION}}"'",
                         "sharepoint_admin_url": "'"${{secrets.SAF_M365_SHAREPOINT_ADMIN_URL}}"'"
+                        "pwsh_path": "'"${{secrets.SAF_M365_PWSH_PATH}}"'"
                       }
                     }
                   }
