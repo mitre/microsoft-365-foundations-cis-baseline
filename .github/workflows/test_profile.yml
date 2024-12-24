@@ -78,10 +78,6 @@ jobs:
           $ClientId = "${{secrets.SAF_M365_CLIENT_ID}}"
           $Organization = "${{secrets.SAF_M365_ORGANIZATION}}"
 
-          $SecurePassword = ConvertTo-SecureString -String $CertificatePassword -AsPlainText -Force
-
-          Connect-ExchangeOnline -CertificateFilePath $CertificatePath -CertificatePassword $SecurePassword -AppID $ClientId -Organization $Organization `
-
       - name: Create config json file
         run: |
           echo '{
