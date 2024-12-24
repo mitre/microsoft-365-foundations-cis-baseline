@@ -67,6 +67,27 @@ jobs:
           else
             echo "pwsh not found in PATH"
           fi
+      
+      - name: Install Exchange Online Management Module
+        shell: pwsh
+        run: |
+          Install-Module -Name ExchangeOnlineManagement -Force -Scope CurrentUser
+          Import-Module ExchangeOnlineManagement
+      
+       - name: Connect to Exchange Online
+        shell: pwsh
+        run: |
+          $CertificatePath = "cert.pfx"
+          $CertificatePassword = "${{secrets.SAF_M365_CERTIFICATE_PASSWORD}}"
+          $ClientId = "${{secrets.SAF_M365_CLIENT_ID}}"
+          $Organization = "${{secrets.SAF_M365_ORGANIZATION}}"
+
+          $SecurePassword = ConvertTo-SecureString -String $CertificatePassword -AsPlainText -Force
+
+          Connect-ExchangeOnline -CertificateFilePath $CertificatePath `
+                                -CertificatePassword $SecurePassword `
+                                -AppID $ClientId `
+                                -Organization $Organization `
 
       - name: Create config json file
         run: |
