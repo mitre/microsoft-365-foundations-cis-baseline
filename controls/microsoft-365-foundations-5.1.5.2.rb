@@ -41,6 +41,7 @@ control 'microsoft-365-foundations-5.1.5.2' do
 }
 
   powershell_output = pwsh_single_session_executor(ensure_user_cant_access_company_data_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe.one do
     describe powershell_output do

@@ -43,6 +43,7 @@ control 'microsoft-365-foundations-7.2.1' do
 	  (Get-PnPTenant).LegacyAuthProtocolsEnabled
   }
   powershell_output = pwsh_single_session_executor(ensure_modern_authentication_spo_applications_required_script).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'Ensure the LegacyAuthProtocolsEnabled option for SharePoint' do
     subject { powershell_output.stdout.strip }

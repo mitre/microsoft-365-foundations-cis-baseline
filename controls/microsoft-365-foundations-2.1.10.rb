@@ -74,6 +74,8 @@ control 'microsoft-365-foundations-2.1.10' do
     }
     }
   powershell_output_dmarc = pwsh_single_session_executor(check_dmarc_domain_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output_dmarc.stderr}" if powershell_output_dmarc.exit_status != 0
+
   describe "Ensure the number of DMARC domains that do not contain a record or does not contain the following substring in the record v=DMARC1; (p=quarantine OR p=reject), pct=100, rua=mailto:#{input('reporting_mail_address')} and ruf=mailto:#{input('reporting_mail_address')}" do
     subject { powershell_output_dmarc.stdout.strip }
     it 'is 0' do
@@ -107,6 +109,8 @@ control 'microsoft-365-foundations-2.1.10' do
       }
     }
   powershell_output_moera = pwsh_single_session_executor(check_moera_domain_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output_moera.stderr}" if powershell_output_moera.exit_status != 0
+
   describe "Ensure the number of MOERA domains that do not contain a record or does not contain the following substring in the record v=DMARC1; (p=quarantine OR p=reject), pct=100, rua=mailto:#{input('reporting_mail_address')} and ruf=mailto:#{input('reporting_mail_address')}" do
     subject { powershell_output_moera.stdout.strip }
     it 'is 0' do

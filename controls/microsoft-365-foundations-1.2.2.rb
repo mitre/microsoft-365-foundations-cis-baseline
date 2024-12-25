@@ -56,6 +56,8 @@ control 'microsoft-365-foundations-1.2.2' do
       Write-Output $disabled_account_count
    )
   powershell_output = pwsh_single_session_executor(ensure_signin_mailboxes_blocked_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
   describe 'Ensure the number of shared mailboxes with AccountEnabled as true' do
     subject { powershell_output.stdout.strip }
     it 'is equal to 0' do

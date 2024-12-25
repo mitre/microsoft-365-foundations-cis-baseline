@@ -32,6 +32,7 @@ control 'microsoft-365-foundations-6.5.2' do
     Get-OrganizationConfig | Select-Object -Property MailTips* | ConvertTo-Json
  )
   powershell_output = pwsh_single_session_executor(ensure_mailtip_enabled_for_end_users_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   powershell_output = powershell_output.stdout.strip
   mailtips_settings = JSON.parse(powershell_output) unless powershell_output.empty?

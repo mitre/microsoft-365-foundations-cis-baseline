@@ -40,6 +40,7 @@ control 'microsoft-365-foundations-6.5.3' do
  }
 
   powershell_output = pwsh_single_session_executor(ensure_additional_storage_providers_restricted_web_outlook_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'Ensure the AdditionalStorageProvidersAvailable option from Get-OwaMailboxPolicy' do
     subject { powershell_output.stdout.strip }

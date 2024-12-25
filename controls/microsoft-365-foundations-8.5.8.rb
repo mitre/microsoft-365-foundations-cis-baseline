@@ -42,6 +42,7 @@ control 'microsoft-365-foundations-8.5.8' do
   }
 
   powershell_output = pwsh_single_session_executor(ensure_external_meeting_chat_off_script).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'Ensure that the AllowExternalNonTrustedMeetingChat state' do
     subject { powershell_output.stdout.strip }

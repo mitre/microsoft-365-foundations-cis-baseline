@@ -55,6 +55,7 @@ control 'microsoft-365-foundations-5.2.3.4' do
     Write-Output $count.Count
   )
   powershell_output = pwsh_single_session_executor(ensure_member_users_mfa_capable_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'Ensure count for IsMfaCapable equals False' do
     subject { powershell_output.stdout.to_i }

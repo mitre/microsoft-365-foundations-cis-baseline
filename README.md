@@ -450,6 +450,7 @@ Not all controls in the CIS Benchmark are capable of automated assessment. The t
 | 5.1.5.2   | Automated         |
 | 5.1.5.3   | Manual            |
 | 5.1.6.1   | Manual            |
+| 5.1.8.1   | Automated         |
 | 5.2.2.1   | Manual            |
 | 5.2.2.2   | Manual            |
 | 5.2.2.3   | Automated         |

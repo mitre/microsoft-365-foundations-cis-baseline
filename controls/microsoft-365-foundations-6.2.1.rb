@@ -77,6 +77,7 @@ control 'microsoft-365-foundations-6.2.1' do
   } | Select-Object -ExpandProperty Name
  )
   powershell_output_address = pwsh_single_session_executor(ensure_no_external_address_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output_address.stderr}" if powershell_output_address.exit_status != 0
 
   powershell_output_address = powershell_output_address.stdout ||= ''
 
@@ -94,6 +95,7 @@ control 'microsoft-365-foundations-6.2.1' do
  )
 
   powershell_output = pwsh_single_session_executor(ensure_all_mail_forwarding_blocked_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   powershell_output = powershell_output.stdout ||= ''
   mailboxes_without_off = JSON.parse(powershell_output) unless powershell_output.empty?

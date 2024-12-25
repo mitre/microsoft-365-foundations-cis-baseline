@@ -41,6 +41,8 @@ control 'microsoft-365-foundations-1.3.3' do
       Write-Output $enabledStatus
    )
   powershell_output = pwsh_single_session_executor(ensure_external_calendar_sharing_blocked_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
   describe 'Ensure the Enabled option for Default Sharing Policy' do
     subject { powershell_output.stdout.strip }
     it 'is set to False' do

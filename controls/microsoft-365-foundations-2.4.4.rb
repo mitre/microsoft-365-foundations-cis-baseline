@@ -56,6 +56,7 @@ control 'microsoft-365-foundations-2.4.4' do
 )
 
   powershell_output_zap = pwsh_single_session_executor(ensure_zap_enabled_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output_zap.stderr}" if powershell_output_zap.exit_status != 0
 
   describe 'Ensure the ZapEnabled option for Default Sharing Policy' do
     subject { powershell_output_zap.stdout.strip }
@@ -65,6 +66,7 @@ control 'microsoft-365-foundations-2.4.4' do
   end
 
   powershell_output_exclusions = pwsh_single_session_executor(check_exclusions_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output_exclusions.stderr}" if powershell_output_exclusions.exit_status != 0
 
   describe 'Ensure that the list of exclusions' do
     subject { powershell_output_exclusions.stdout ||= '' }

@@ -44,6 +44,7 @@ control 'microsoft-365-foundations-6.2.3' do
    } | Select-Object -ExpandProperty Identity
   }
   powershell_output = pwsh_single_session_executor(ensure_email_from_external_senders_identified_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   powershell_output = powershell_output.stdout.strip
   error_identities = powershell_output.split("\n") unless powershell_output.empty?

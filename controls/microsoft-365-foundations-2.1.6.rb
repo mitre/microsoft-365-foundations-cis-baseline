@@ -78,6 +78,7 @@ control 'microsoft-365-foundations-2.1.6' do
   }
 
   powershell_output = pwsh_single_session_executor(ensure_exchange_online_spam_policies_set_to_notify_admins_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'Ensure the number of Exchange Online Spam Policies that have the settings BccSuspiciousOutboundMail as False, NotifyOutboundSpam as False, NotifyOutboundSpamRecipients set to an incorrect email address, or BccSuspiciousOutboundAdditionalRecipients set to an incorrect email addresses' do
     subject { powershell_output.stdout.strip }

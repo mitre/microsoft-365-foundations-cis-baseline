@@ -47,6 +47,7 @@ control 'microsoft-365-foundations-6.1.4' do
  )
 
   powershell_output = pwsh_single_session_executor(ensure_auditbybass_not_enabled_mailbox_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   powershell_output = powershell_output.stdout.strip
   mailboxes_with_true = JSON.parse(powershell_output) unless powershell_output.empty?

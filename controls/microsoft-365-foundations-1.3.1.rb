@@ -41,6 +41,7 @@ control 'microsoft-365-foundations-1.3.1' do
      Write-Output $passwordValidityPeriod
   }
   powershell_output = pwsh_single_session_executor(password_expiration_days_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'The password validity period' do
     subject { powershell_output.stdout.to_i }

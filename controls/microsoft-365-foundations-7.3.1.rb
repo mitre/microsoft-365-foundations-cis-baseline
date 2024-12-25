@@ -41,6 +41,7 @@ control 'microsoft-365-foundations-7.3.1' do
   }
 
   powershell_output = pwsh_single_session_executor(ensure_office_m365spo_infected_files_disallowed_download_script).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'Ensure the DisallowInfectedFileDownload option for Office 365 SharePoint' do
     subject { powershell_output.stdout.strip }

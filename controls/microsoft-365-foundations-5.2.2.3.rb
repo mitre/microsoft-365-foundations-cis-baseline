@@ -87,6 +87,7 @@ control 'microsoft-365-foundations-5.2.2.3' do
     $jsonOutput = $trueSettings | ConvertTo-Json
   )
   powershell_authentication_types_output = pwsh_single_session_executor(check_basic_authentication_types_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_authentication_types_output.stderr}" if powershell_authentication_types_output.exit_status != 0
 
   powershell_authentication_types_output = powershell_authentication_types_output.stdout.strip
 
@@ -104,6 +105,7 @@ control 'microsoft-365-foundations-5.2.2.3' do
     $jsonOutput
     )
   powershell_block_basic_output = pwsh_single_session_executor(check_authentication_block_basic_auth_policy_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_block_basic_output.stderr}" if powershell_block_basic_output.exit_status != 0
 
   powershell_block_basic_output = powershell_block_basic_output.stdout.strip
   block_basic_policy_data = JSON.parse(powershell_block_basic_output) unless powershell_block_basic_output.empty?

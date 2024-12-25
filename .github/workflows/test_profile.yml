@@ -68,7 +68,7 @@ jobs:
             echo "pwsh not found in PATH"
           fi
     
-      - name: Install required modules
+      - name: Install required modules for exchange, teams, and pnp
         shell: pwsh
         run: |
           Install-Module -Name ExchangeOnlineManagement -Force -Scope CurrentUser

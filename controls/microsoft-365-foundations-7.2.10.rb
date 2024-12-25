@@ -46,6 +46,7 @@ control 'microsoft-365-foundations-7.2.10' do
   )
 
   powershell_output = pwsh_single_session_executor(ensure_reauth_with_verification_code_restricted).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   powershell_output = powershell_output.stdout.strip
   powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?

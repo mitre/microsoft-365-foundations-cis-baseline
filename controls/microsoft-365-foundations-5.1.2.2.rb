@@ -45,6 +45,7 @@ control 'microsoft-365-foundations-5.1.2.2' do
   }
 
   powershell_output = pwsh_single_session_executor(ensure_third_party_apps_not_allowed_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'Ensure DefaultUserRolePermissions.AllowedToCreateApps' do
     subject { powershell_output.stdout.strip }

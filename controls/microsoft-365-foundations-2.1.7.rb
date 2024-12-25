@@ -77,6 +77,7 @@ control 'microsoft-365-foundations-2.1.7' do
     }
   }
   powershell_output = pwsh_single_session_executor(ensure_anti_phishing_policy_created_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'Ensure the number of anti-phishing policies that have the settings Enabled as False, PhishThresholdLevel < 2, EnableMailboxIntelligenceProtection as False, EnableMailboxIntelligence as False, or EnableSpoofIntelligence as False' do
     subject { powershell_output.stdout.strip }

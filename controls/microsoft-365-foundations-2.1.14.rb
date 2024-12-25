@@ -159,6 +159,7 @@ control 'microsoft-365-foundations-2.1.14' do
     )
 
   get_polices_output = pwsh_single_session_executor(get_policies_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{get_polices_output.stderr}" if get_polices_output.exit_status != 0
 
   get_polices_output = get_polices_output.stdout ||= ''
   policy_list = JSON.parse(get_polices_output) unless get_polices_output.empty?

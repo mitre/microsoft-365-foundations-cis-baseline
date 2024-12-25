@@ -41,6 +41,7 @@ control 'microsoft-365-foundations-7.2.5' do
 	  (Get-PnPTenant).PreventExternalUsersFromResharing
   }
   powershell_output = pwsh_single_session_executor(ensure_spo_guest_users_cannot_share_items_dont_own_script).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'Ensure the PreventExternalUsersFromResharing option for SharePoint' do
     subject { powershell_output.stdout.strip }

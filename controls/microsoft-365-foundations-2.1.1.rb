@@ -127,6 +127,7 @@ control 'microsoft-365-foundations-2.1.1' do
       }
   }
   policy_links_script = pwsh_single_session_executor(get_policy_names_line).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{policy_links_script.stderr}" if policy_links_script.exit_status != 0
 
   describe 'Ensure the number of safe links policies that have the settings EnableSafeLinksForEmail as False, EnableSafeLinksForTeams as False, EnableSafeLinksForOffice as False, TrackClicks as False, AllowClickThrough as True, ScanUrls as False, EnableForInternalSenders as False, DeliverMessageAfterScan as False, or DisableUrlRewrite as True' do
     subject { policy_links_script.stdout.strip }

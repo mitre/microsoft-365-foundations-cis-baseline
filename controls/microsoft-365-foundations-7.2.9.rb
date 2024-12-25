@@ -49,6 +49,7 @@ control 'microsoft-365-foundations-7.2.9' do
   )
 
   powershell_output = pwsh_single_session_executor(ensure_guest_access_to_od_will_expire_automatically_script).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   powershell_output = powershell_output.stdout.strip
   powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?

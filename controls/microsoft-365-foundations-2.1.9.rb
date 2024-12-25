@@ -58,6 +58,7 @@ control 'microsoft-365-foundations-2.1.9' do
     Get-DkimSigningConfig | Where-Object { $_.Enabled -eq $false } | Measure-Object | Select-Object -ExpandProperty Count
  )
   powershell_output = pwsh_single_session_executor(ensure_dkim_enabled_for_exchange_domains_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'Ensure the count of Exchange Online Domains with the DKIM Enabled setting set to False' do
     subject { powershell_output.stdout.strip }

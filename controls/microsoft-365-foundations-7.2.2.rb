@@ -36,6 +36,7 @@ control 'microsoft-365-foundations-7.2.2' do
 	  (Get-PnPTenant).EnableAzureADB2BIntegration
   }
   powershell_output = pwsh_single_session_executor(ensure_spo_od_integration_with_azure_script).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'Ensure the EnableAzureADB2BIntegration option for SharePoint' do
     subject { powershell_output.stdout.strip }

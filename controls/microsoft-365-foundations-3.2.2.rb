@@ -79,6 +79,7 @@ control 'microsoft-365-foundations-3.2.2' do
     }
  }
   powershell_output = pwsh_single_session_executor(ensure_dlp_policies_enabled_teams_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'Ensure the number of Teams DLP Policies that have the settings Mode not set to Enable, TeamsLocation not set to All, or TeamsLocationException not including permitted exceptions' do
     subject { powershell_output.stdout.strip }

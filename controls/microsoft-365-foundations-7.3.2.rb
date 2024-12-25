@@ -50,6 +50,7 @@ control 'microsoft-365-foundations-7.3.2' do
 	  (Get-PnPTenantSyncClientRestriction).TenantRestrictionEnabled
   }
   powershell_output_tenant = pwsh_single_session_executor(tenantrestrictionenabled_script).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output_tenant.stderr}" if powershell_output_tenant.exit_status != 0
 
   describe 'Ensure the TenantRestrictionEnabled option for SharePoint/OneDrive Sync' do
     subject { powershell_output_tenant.stdout.strip }
@@ -70,6 +71,7 @@ control 'microsoft-365-foundations-7.3.2' do
     }
   }
   powershell_output_domains = pwsh_single_session_executor(ensure_trusted_domains_guids).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output_domains.stderr}" if powershell_output_domains.exit_status != 0
 
   describe 'Ensure the number of domains GUIDs not trusted from AllowedDomainList option on SharePoint' do
     subject { powershell_output_domains.stdout ||= '' }

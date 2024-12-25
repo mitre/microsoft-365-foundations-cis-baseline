@@ -46,6 +46,7 @@ control 'microsoft-365-foundations-7.3.4' do
 	  Get-PnPTenantSite | Where-Object { $_.DenyAddAndCustomizePages -eq "Disabled" -and $_.Url -notlike "*-my.sharepoint.com/" } | Select-Object -ExpandProperty Url
   )
   powershell_output = pwsh_single_session_executor(ensure_spo_guest_users_cannot_share_items_dont_own_script).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   powershell_output = powershell_output.stdout.strip
   disabled_urls = powershell_output.split("\n") unless powershell_output.empty?

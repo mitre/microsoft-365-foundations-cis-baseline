@@ -33,18 +33,27 @@ control 'microsoft-365-foundations-2.1.8' do
   domain_list = %("#{input('spf_domains').sort.join('", "')}")
   resolve_domain_script = %{
       $domain_list = @(#{domain_list})
-      Import-Module DNSClient
-      foreach ($domain in $domain_list) {
-        $txtRecords = Resolve-DnsName $domain -Type TXT | Select-Object -ExpandProperty Strings
+      try{
+        Import-Module DNSClient -ErrorAction Stop
+      }
+      catch{
+      }
+      try{
+        foreach ($domain in $domain_list) {
+          $txtRecords = Resolve-DnsName $domain -Type TXT | Select-Object -ExpandProperty Strings
 
-        if ($txtRecords -and $txtRecords -contains "v=spf1 include:spf.protection.outlook.com") {
-            Write-Output "Domain: $domain - SPF record is correct."
-        } else {
-            Write-Output "Domain: $domain - SPF record is missing or incorrect."
+          if ($txtRecords -and $txtRecords -contains "v=spf1 include:spf.protection.outlook.com") {
+              Write-Output "Domain: $domain - SPF record is correct."
+          } else {
+              Write-Output "Domain: $domain - SPF record is missing or incorrect."
+          }
         }
+      }
+      catch{
       }
     }
   powershell_output = pwsh_single_session_executor(resolve_domain_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'Ensure the number of Exchange domains that do not contain a SPF record or contain v=spf1 include:spf.protection.outlook.com in the SPF record' do
     subject { powershell_output.stdout.strip }

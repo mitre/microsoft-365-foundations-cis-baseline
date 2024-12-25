@@ -64,6 +64,7 @@ control 'microsoft-365-foundations-7.2.4' do
 	  (Get-PnPTenant).OneDriveSharingCapability
   }
   powershell_output = pwsh_single_session_executor(ensure_od_content_sharing_restricted_script).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
   describe 'Ensure the OneDriveSharingCapability option for SharePoint' do
     subject { powershell_output.stdout.strip }
