@@ -71,12 +71,12 @@ jobs:
       - name: Install required modules for exchange, teams, and pnp
         shell: pwsh
         run: |
-          Install-Module -Name ExchangeOnlineManagement -Force -Scope CurrentUser
-          Import-Module ExchangeOnlineManagement
-          Install-module MicrosoftTeams -Force -AllowClobber
-          Import-module MicrosoftTeams
-          Install-module PnP.PowerShell -Force -AllowClobber
-          Import-module PnP.PowerShell
+          If($null -eq (get-module -listavailable -name "ExchangeOnlineManagement")){install-module ExchangeOnlineManagement}
+          If($null -eq (get-module -name "ExchangeOnlineManagement")){import-module ExchangeOnlineManagement}
+          If($null -eq (get-module -listavailable -name "MicrosoftTeams")){install-module MicrosoftTeams}
+          If($null -eq (get-module -name "MicrosoftTeams")){import-module MicrosoftTeams}
+          If($null -eq (get-module -listavailable -name "PnP.PowerShell")){install-module PnP.PowerShell}
+          If($null -eq (get-module -name "PnP.PowerShell")){import-module PnP.PowerShell}
 
       - name: Create config json file
         run: |
