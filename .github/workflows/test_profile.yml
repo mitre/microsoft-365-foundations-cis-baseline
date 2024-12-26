@@ -67,16 +67,6 @@ jobs:
           else
             echo "pwsh not found in PATH"
           fi
-    
-      - name: Install required modules for exchange, teams, and pnp
-        shell: pwsh
-        run: |
-          If($null -eq (get-module -listavailable -name "ExchangeOnlineManagement")){install-module ExchangeOnlineManagement}
-          If($null -eq (get-module -name "ExchangeOnlineManagement")){import-module ExchangeOnlineManagement}
-          If($null -eq (get-module -listavailable -name "MicrosoftTeams")){install-module MicrosoftTeams}
-          If($null -eq (get-module -name "MicrosoftTeams")){import-module MicrosoftTeams}
-          If($null -eq (get-module -listavailable -name "PnP.PowerShell")){install-module PnP.PowerShell}
-          If($null -eq (get-module -name "PnP.PowerShell")){import-module PnP.PowerShell}
 
       - name: Create config json file
         run: |
