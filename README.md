@@ -365,6 +365,7 @@ inspec exec <Profile> -t pwsh://<Options Dictionary Name> --enhanced-outcomes --
 [Full exec options](https://docs.chef.io/inspec/cli/#options-3)
  
 [top](#table-of-contents)
+
 ## Using Heimdall for Viewing Test Results
 The JSON results output file can be loaded into **[Heimdall-Lite](https://heimdall-lite.mitre.org/)**
 or **[Heimdall-Server](https://github.com/mitre/heimdall2)** for a user-interactive, graphical view of the profile scan results.
