@@ -3,7 +3,7 @@ This InSpec Profile was created to facilitate testing and auditing of `CIS Micro
 infrastructure and applications when validating compliancy with [Center for Internet Security (CIS) Benchmark](https://www.cisecurity.org/cis-benchmarks)
 requirements.
  
-- Profile Version: **3.1.0**
+- Profile Version: **3.1.1**
 - Benchmark Date: **2024-04-29**
 - Benchmark Version: **3.0.0**
  

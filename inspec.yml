@@ -5,7 +5,7 @@ copyright: "MITRE, 2024"
 copyright_email: "saf@groups.mitre.org"
 license: "Apache-2.0"
 summary: "InSpec Validation Profile for the CIS Microsoft 365 Foundations Benchmark"
-version: 3.1.0
+version: 3.1.1
 inspec_version: ">= 6"
 depends:
   - name: inspec-pwsh
