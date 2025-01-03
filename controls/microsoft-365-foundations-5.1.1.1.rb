@@ -51,7 +51,17 @@ control 'microsoft-365-foundations-5.1.1.1' do
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/fundamentals/concept-fundamentals-security-defaults'
   ref 'https://techcommunity.microsoft.com/t5/azure-active-directory-identity/introducing-security-defaults/ba-p/1061414'
 
-  describe 'manual' do
-    skip 'The test for this control needs to be done manually'
+  ensure_security_defaults_disabled_script = %{
+    Write-Output (Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy).IsEnabled
+    }
+
+  powershell_output = pwsh_single_session_executor(ensure_security_defaults_disabled_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
+  describe 'Ensure security defaults option MgPolicyIdentitySecurityDefaultEnforcementPolicy on Azure Active Directory' do
+    subject { powershell_output.stdout.strip }
+    it 'is disabled' do
+      expect(subject).to eq('False')
+    end
   end
 end

@@ -50,27 +50,14 @@ control 'microsoft-365-foundations-1.2.2' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/admin/email/create-a-shared-mailbox?view=o365-worldwide#block-sign-in-for-the-shared-mailbox-account'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/enterprise/block-user-accounts-with-microsoft-365-powershell?view=o365-worldwide#block-individual-user-accounts'
 
-  ensure_signin_mailboxes_blocked_script = %{
-      $client_id = '#{input('client_id')}'
-      $tenantid = '#{input('tenant_id')}'
-      $certificate_password = '#{input('certificate_password')}'
-      $certificate_path = '#{input('certificate_path')}'
-      $organization = '#{input('organization')}'
-      $clientSecret = '#{input('client_secret')}'
-      Install-Module -Name Microsoft.Graph -Force -AllowClobber
-      import-module microsoft.graph
-      Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-      import-module exchangeonlinemanagement
-      $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
-      $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
-      Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-      Connect-MgGraph -TenantId $tenantid -ClientSecretCredential $ClientSecretCredential -NoWelcome
+  ensure_signin_mailboxes_blocked_script = %(
       $MBX = Get-EXOMailbox -RecipientTypeDetails SharedMailbox
       $disabled_account_count = $MBX | ForEach-Object { Get-MgUser -UserId $_.ExternalDirectoryObjectId ` -Property DisplayName, UserPrincipalName, AccountEnabled } | Where-Object { $_.AccountEnabled -eq $true } | Measure-Object | Select-Object -ExpandProperty Count
       Write-Output $disabled_account_count
-   }
+   )
+  powershell_output = pwsh_single_session_executor(ensure_signin_mailboxes_blocked_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
 
-  powershell_output = powershell(ensure_signin_mailboxes_blocked_script)
   describe 'Ensure the number of shared mailboxes with AccountEnabled as true' do
     subject { powershell_output.stdout.strip }
     it 'is equal to 0' do

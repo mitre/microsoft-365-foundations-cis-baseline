@@ -49,50 +49,42 @@ control 'microsoft-365-foundations-2.1.6' do
     { '7' => ['7.10'] }
   ]
   tag nist: ['IR-1', 'IR-8']
-
+  notify_outbound_spam_recipients_list = %("#{input('notify_outbound_spam_recipients').sort.join('", "')}")
+  bcc_suspicious_outbound_additional_recipients_list = %("#{input('bcc_suspicious_outbound_additional_recipients').sort.join('", "')}")
   ensure_exchange_online_spam_policies_set_to_notify_admins_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-    Get-HostedOutboundSpamFilterPolicy | Select-Object Name, Bcc*, Notify* | ConvertTo-Json
+    $notify_outbound_spam_recipients_list = @(#{notify_outbound_spam_recipients_list})
+    $bcc_suspicious_outbound_additional_recipients_list = @(#{bcc_suspicious_outbound_additional_recipients_list})
+    $policies = Get-HostedOutboundSpamFilterPolicy | Select-Object Name, BccSuspiciousOutboundMail, NotifyOutboundSpam, NotifyOutboundSpamRecipients, BccSuspiciousOutboundAdditionalRecipients
+    foreach ($policy in $policies) {
+        $failedConditions = @()
+
+        if ($policy.BccSuspiciousOutboundMail -eq $false) {
+            $failedConditions += "BccSuspiciousOutboundMail"
+        }
+        if ($policy.NotifyOutboundSpam -eq $false) {
+            $failedConditions += "NotifyOutboundSpam"
+        }
+        if (($notify_outbound_spam_recipients_list | Sort-Object ) -ne ($policy.NotifyOutboundSpamRecipients.ToArray() | Sort-Object)) {
+            $failedConditions += "NotifyOutboundSpamRecipients"
+        }
+        if (($bcc_suspicious_outbound_additional_recipients_list | Sort-Object ) -ne ($policy.BccSuspiciousOutboundAdditionalRecipients.ToArray() | Sort-Object)) {
+            $failedConditions += "BccSuspiciousOutboundAdditionalRecipients"
+        }
+
+        if ($failedConditions.Count -gt 0) {
+            Write-Output "Policy Name: $($policy.Name), Failed Conditions = [$($failedConditions -join ', ')]"
+        }
+    }
   }
-  powershell_output = powershell(ensure_exchange_online_spam_policies_set_to_notify_admins_script).stdout.strip
-  powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
-  case powershell_data
-  when Hash
-    describe "Ensure the following Exchange Online Spam Policy (#{powershell_data['Name']})" do
-      it 'should have BccSuspiciousOutboundMail set to True' do
-        expect(powershell_data['BccSuspiciousOutboundMail']).to eq(true)
-      end
-      it 'should have NotifyOutboundSpam set to True' do
-        expect(powershell_data['NotifyOutboundSpam']).to eq(true)
-      end
-      it 'should have NotifyOutboundSpamRecipients set to correct email address' do
-        expect(powershell_data['NotifyOutboundSpamRecipients']).to eq(input('notify_outbound_spam_recipients'))
-      end
-      it 'should have BccSuspiciousOutboundAdditionalRecipients set to correct email address' do
-        expect(powershell_data['BccSuspiciousOutboundAdditionalRecipients']).to eq(input('bcc_suspicious_outbound_additional_recipients'))
-      end
-    end
-  when Array
-    powershell_data.each do |policy|
-      describe %(Ensure the following Exchange Online Spam Policy #{policy['Name']}) do
-        it 'should have BccSuspiciousOutboundMail set to True' do
-          expect(policy['BccSuspiciousOutboundMail']).to eq(true)
-        end
-        it 'should have NotifyOutboundSpam set to True' do
-          expect(policy['NotifyOutboundSpam']).to eq(true)
-        end
-        it 'should have NotifyOutboundSpamRecipients set to correct email address' do
-          expect(policy['NotifyOutboundSpamRecipients'].sort).to match_array(input('notify_outbound_spam_recipients').sort)
-        end
-        it 'should have BccSuspiciousOutboundAdditionalRecipients set to correct email address' do
-          expect(policy['BccSuspiciousOutboundAdditionalRecipients'].sort).to match_array(input('bcc_suspicious_outbound_additional_recipients').sort)
-        end
-      end
+
+  powershell_output = pwsh_single_session_executor(ensure_exchange_online_spam_policies_set_to_notify_admins_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
+  describe 'Ensure the number of Exchange Online Spam Policies that have the settings BccSuspiciousOutboundMail as False, NotifyOutboundSpam as False, NotifyOutboundSpamRecipients set to an incorrect email address, or BccSuspiciousOutboundAdditionalRecipients set to an incorrect email addresses' do
+    subject { powershell_output.stdout.strip }
+    it 'is 0' do
+      failure_message = "The following Exchange Online Spam Policies have failed along with conditions they have failed on: #{powershell_output.stdout.strip.split("\n").join(',')}"
+      expect(subject).to be_empty, failure_message
     end
   end
 end

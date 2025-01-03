@@ -44,29 +44,18 @@ control 'microsoft-365-foundations-7.2.9' do
   ref 'https://learn.microsoft.com/en-US/sharepoint/turn-external-sharing-on-or-off?WT.mc_id=365AdminCSH_spo#change-the-organization-level-external-sharing-setting'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/community/sharepoint-security-a-team-effort'
 
-  ensure_guest_access_to_od_will_expire_automatically_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
-    Install-Module -Name PnP.PowerShell -Force -AllowClobber
-    import-module pnp.powershell
-    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
-    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
+  ensure_guest_access_to_od_will_expire_automatically_script = %(
 	  Get-PnPTenant | Select-Object ExternalUserExpirationRequired, ExternalUserExpireInDays | ConvertTo-Json
-  }
+  )
 
-  powershell_output = powershell(ensure_guest_access_to_od_will_expire_automatically_script).stdout.strip
+  powershell_output = pwsh_single_session_executor(ensure_guest_access_to_od_will_expire_automatically_script).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
+  powershell_output = powershell_output.stdout.strip
   powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure the following setting' do
     subject { powershell_data }
-    it 'ExternalUserExpirationRequired in SharePoint/OneDrive is set to True' do
-      expect(subject['ExternalUserExpirationRequired']).to eq(true)
-    end
-    it 'ExternalUserExpireInDays in SharePoint/OneDrive is less than or equal to 30' do
-      expect(subject['ExternalUserExpireInDays']).to be <= input('external_user_expiry_in_days_spo_threshold')
-    end
+    its(['ExternalUserExpirationRequired']) { should cmp true }
+    its(['ExternalUserExpireInDays']) { should be <= input('external_user_expiry_in_days_spo_threshold') }
   end
 end

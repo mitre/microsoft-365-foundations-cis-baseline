@@ -46,44 +46,76 @@ control 'microsoft-365-foundations-2.1.10' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/email-authentication-dmarc-configure?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/step-by-step-guides/how-to-enable-dmarc-reporting-for-microsoft-online-email-routing-address-moera-and-parked-domains?view=o365-worldwide'
 
-  # This does not work on Mac - need to find a different way to test. Additionally, CIS Benchmark says manual
-  domain_list = input('dmarc_domains')
-  domain_list.each do |domain|
-    check_dmarc_domain_script = %{
-      $client_id = '#{input('client_id')}'
-      $certificate_password = '#{input('certificate_password')}'
-      $certificate_path = '#{input('certificate_path')}'
-      $organization = '#{input('organization')}'
-      Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-      import-module exchangeonlinemanagement
-      Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-      Import-Module DNSClient
-      Resolve-DnsName _dmarc.#{domain} txt
+  dmarc_domain_list = %("#{input('dmarc_domains').sort.join('", "')}")
+  check_dmarc_domain_script = %{
+      $domains = (#{dmarc_domain_list})
+      try{
+        Import-Module DNSClient -ErrorAction Stop
+      }
+      catch{
+      }
+      foreach ($domain in $domains) {
+        try {
+            $dmarcRecord = Resolve-DnsName -Name "_dmarc.$domain" -Type TXT -ErrorAction Stop
+            $dmarcText = $dmarcRecord.Strings -join ";"
+
+            if ($dmarcText.Contains("v=DMARC1") -and
+                ($dmarcText.Contains("p=quarantine") -or $dmarcText.Contains("p=reject")) -and
+                $dmarcText.Contains("pct=100") -and
+                $dmarcText.Contains("rua=mailto:#{input('reporting_mail_address')}") -and
+                $dmarcText.Contains("ruf=mailto:#{input('reporting_mail_address')}")) {
+                Write-Output "DMARC record for $domain is valid."
+            } else {
+                Write-Output "DMARC record for $domain is invalid or missing required flags."
+            }
+        } catch {
+            Write-Output "No DMARC record found for $domain."
+        }
     }
-    describe "Ensure the following DMARC domain (#{domain})" do
-      subject { powershell(check_dmarc_domain_script).stdout.strip }
-      it %{should contain all parts following string: v=DMARC1; (p=quarantine OR p=reject), pct=100, rua=mailto:#{input('reporting_mail_address')} and ruf=mailto:#{input('reporting_mail_address')}} do
-        expect(subject).to match %{v=DMARC1;.*p=(quarantine|reject);.*pct=100;.*rua=mailto:.*ruf=mailto:#{input('reporting_mail_address')}}
-      end
+    }
+  powershell_output_dmarc = pwsh_single_session_executor(check_dmarc_domain_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output_dmarc.stderr}" if powershell_output_dmarc.exit_status != 0
+
+  describe "Ensure the number of DMARC domains that do not contain a record or does not contain the following substring in the record v=DMARC1; (p=quarantine OR p=reject), pct=100, rua=mailto:#{input('reporting_mail_address')} and ruf=mailto:#{input('reporting_mail_address')}" do
+    subject { powershell_output_dmarc.stdout.strip }
+    it 'is 0' do
+      failure_message = "The following DMARC domains have failed: #{powershell_output_dmarc.stdout.strip.split("\n").join(',')}"
+      expect(subject).to be_empty, failure_message
     end
   end
-  domain_list_moera = input('moera_domains')
-  domain_list_moera.each do |domain|
-    check_moera_domain_script = %{
-      $client_id = '#{input('client_id')}'
-      $certificate_password = '#{input('certificate_password')}'
-      $certificate_path = '#{input('certificate_path')}'
-      $organization = '#{input('organization')}'
-      import-module exchangeonlinemanagement
-      Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-      Import-Module DNSClient
-      Resolve-DnsName _dmarc.#{domain}.onmicrosoft.com txt
+  check_moera_domain_script = %{
+      try{
+        Import-Module DNSClient -ErrorAction Stop
+      }
+      catch{
+
+      }
+      $domain = "_dmarc.$tenantid.onmicrosoft.com"
+      try {
+          $moeraRecord = Resolve-DnsName -Name $domain -Type TXT -ErrorAction Stop
+          $moeraText = $moeraRecord.Strings -join ";"
+
+          if ($moeraText.Contains("v=DMARC1") -and
+              ($moeraText.Contains("p=quarantine") -or $moeraText.Contains("p=reject")) -and
+              $moeraText.Contains("pct=100") -and
+              $moeraText.Contains("rua=mailto:#{input('reporting_mail_address')}") -and
+              $moeraText.Contains("ruf=mailto:#{input('reporting_mail_address')}")) {
+              Write-Output "MOERA record for $domain is valid."
+          } else {
+              Write-Output "MOERA record for $domain is invalid or missing required flags."
+          }
+      } catch {
+          Write-Output "No MOERA record found for $domain."
+      }
     }
-    describe "Ensure the following MOERA domain (#{domain})" do
-      subject { powershell(check_moera_domain_script).stdout.strip }
-      it %{should contain all parts following string: v=DMARC1; (p=quarantine OR p=reject), pct=100, rua=mailto:#{input('reporting_mail_address')} and ruf=mailto:#{input('reporting_mail_address')}} do
-        expect(subject).to match %{v=DMARC1;.*p=(quarantine|reject);.*pct=100;.*rua=mailto:.*ruf=mailto:#{input('reporting_mail_address')}}
-      end
+  powershell_output_moera = pwsh_single_session_executor(check_moera_domain_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output_moera.stderr}" if powershell_output_moera.exit_status != 0
+
+  describe "Ensure the number of MOERA domains that do not contain a record or does not contain the following substring in the record v=DMARC1; (p=quarantine OR p=reject), pct=100, rua=mailto:#{input('reporting_mail_address')} and ruf=mailto:#{input('reporting_mail_address')}" do
+    subject { powershell_output_moera.stdout.strip }
+    it 'is 0' do
+      failure_message = "The following MOERA domains have failed: #{powershell_output_moera.stdout.strip.split("\n").join(',')}"
+      expect(subject).to be_empty, failure_message
     end
   end
 end

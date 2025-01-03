@@ -54,17 +54,12 @@ control 'microsoft-365-foundations-2.1.9' do
 
   ref 'https://learn.microsoft.com/en-us/defender-office-365/email-authentication-dkim-configure?view=o365-worldwide'
 
-  ensure_dkim_enabled_for_exchange_domains_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+  ensure_dkim_enabled_for_exchange_domains_script = %(
     Get-DkimSigningConfig | Where-Object { $_.Enabled -eq $false } | Measure-Object | Select-Object -ExpandProperty Count
- }
-  powershell_output = powershell(ensure_dkim_enabled_for_exchange_domains_script)
+ )
+  powershell_output = pwsh_single_session_executor(ensure_dkim_enabled_for_exchange_domains_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
   describe 'Ensure the count of Exchange Online Domains with the DKIM Enabled setting set to False' do
     subject { powershell_output.stdout.strip }
     it 'is 0' do

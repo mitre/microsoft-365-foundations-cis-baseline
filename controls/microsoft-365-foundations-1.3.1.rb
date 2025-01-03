@@ -36,19 +36,13 @@ control 'microsoft-365-foundations-1.3.1' do
   ref 'https://learn.microsoft.com/en-US/microsoft-365/admin/misc/password-policy-recommendations?view=o365-worldwide'
 
   password_expiration_days_script = %{
-     $client_id = '#{input('client_id')}'
-     $tenantid = '#{input('tenant_id')}'
-     $clientSecret = '#{input('client_secret')}'
-     $organization = '#{input('organization')}'
-     Install-Module -Name Microsoft.Graph -Force -AllowClobber
-     import-module microsoft.graph
-     $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
-     $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
-     Connect-MgGraph -TenantId $tenantid -ClientSecretCredential $ClientSecretCredential -NoWelcome
+     $organization = "#{input('org_domain')}"
      $passwordValidityPeriod = (Get-MgDomain -DomainId $organization).PasswordValidityPeriodInDays
      Write-Output $passwordValidityPeriod
   }
-  powershell_output = powershell(password_expiration_days_script)
+  powershell_output = pwsh_single_session_executor(password_expiration_days_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
   describe 'The password validity period' do
     subject { powershell_output.stdout.to_i }
     it 'should be at integer max value' do

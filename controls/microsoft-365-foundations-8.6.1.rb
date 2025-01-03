@@ -74,78 +74,37 @@ control 'microsoft-365-foundations-8.6.1' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/submissions-teams?view=o365-worldwide'
 
   microsoft_teams_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
-    Install-Module -Name MicrosoftTeams -Force -AllowClobber
-    import-module MicrosoftTeams
-    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
     (Get-CsTeamsMessagingPolicy -Identity Global).AllowSecurityEndUserReporting
  }
-  powershell_output_teams = powershell(microsoft_teams_script).stdout.strip
+  powershell_output_teams = pwsh_teams_executor(microsoft_teams_script).run_script_in_teams
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output_teams.stderr}" if powershell_output_teams.exit_status != 0
+
   describe 'Ensure the AllowSecurityEndUserReporting state from Get-CsTeamsMessagingPolicy' do
-    subject { powershell_output_teams }
+    subject { powershell_output_teams.stdout.strip }
     it 'is set to True' do
       expect(subject).to eq('True')
     end
   end
 
-  microsoft_defender_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
-    import-module MicrosoftTeams
-    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
+  microsoft_defender_script = %(
     Get-ReportSubmissionPolicy | Select-Object -Property ReportJunkToCustomizedAddress, ReportNotJunkToCustomizedAddress, ReportPhishToCustomizedAddress, ReportJunkAddresses, ReportNotJunkAddresses, ReportPhishAddresses, ReportChatMessageEnabled, ReportChatMessageToCustomizedAddressEnabled | ConvertTo-Json
-  }
+  )
 
   reporting_email_addresses = input('reporting_email_addresses_for_malicious_messages')
-  powershell_output = powershell(microsoft_defender_script).stdout.strip
+  powershell_output = pwsh_exchange_executor(microsoft_defender_script).run_script_in_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
+  powershell_output = powershell_output.stdout.strip
   submission_policy_data = JSON.parse(powershell_output) unless powershell_output.empty?
-  describe 'Ensure that the following states:' do
-    subject { powershell_output }
-    it 'ReportJunkToCustomizedAddress should be True' do
-      expect(submission_policy_data['ReportJunkToCustomizedAddress']).to eq(true)
-    end
-
-    it 'ReportNotJunkToCustomizedAddress should be True' do
-      expect(submission_policy_data['ReportNotJunkToCustomizedAddress']).to eq(true)
-    end
-
-    it 'ReportPhishToCustomizedAddress should be True' do
-      expect(submission_policy_data['ReportPhishToCustomizedAddress']).to eq(true)
-    end
-
-    it "ReportJunkAddresses should be #{reporting_email_addresses}" do
-      expect(submission_policy_data['ReportJunkAddresses'].sort).to match_array(reporting_email_addresses.sort)
-    end
-
-    it "ReportNotJunkAddresses should be #{reporting_email_addresses}" do
-      expect(submission_policy_data['ReportNotJunkAddresses'].sort).to match_array(reporting_email_addresses.sort)
-    end
-
-    it "ReportPhishAddresses should be #{reporting_email_addresses}" do
-      expect(submission_policy_data['ReportPhishAddresses'].sort).to match_array(reporting_email_addresses.sort)
-    end
-
-    it 'ReportChatMessageEnabled should be False' do
-      expect(submission_policy_data['ReportChatMessageEnabled']).to eq(false)
-    end
-
-    it 'ReportChatMessageToCustomizedAddressEnabled should be True' do
-      expect(submission_policy_data['ReportChatMessageToCustomizedAddressEnabled']).to eq(true)
-    end
+  describe 'Ensure that the following state:' do
+    subject { submission_policy_data }
+    its(['ReportJunkToCustomizedAddress']) { should cmp true }
+    its(['ReportNotJunkToCustomizedAddress']) { should cmp true }
+    its(['ReportPhishToCustomizedAddress']) { should cmp true }
+    its(['ReportJunkAddresses'].sort) { should match_array(reporting_email_addresses.sort) }
+    its(['ReportNotJunkAddresses'].sort) { should match_array(reporting_email_addresses.sort) }
+    its(['ReportPhishAddresses'].sort) { should match_array(reporting_email_addresses.sort) }
+    its(['ReportChatMessageEnabled']) { should cmp false }
+    its(['ReportChatMessageToCustomizedAddressEnabled']) { should cmp true }
   end
 end

@@ -84,13 +84,6 @@ control 'microsoft-365-foundations-6.1.3' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/compliance/audit-mailboxes?view=o365-worldwide'
 
   e5_user_mailbox_auditing_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
     $AdminActions = @( "ApplyRecord", "Copy", "Create", "FolderBind", "HardDelete", "MailItemsAccessed", "Move", "MoveToDeletedItems", "SendAs", "SendOnBehalf", "Send", "SoftDelete", "Update", "UpdateCalendarDelegation", "UpdateFolderPermissions", "UpdateInboxRules" )
     $DelegateActions = @( "ApplyRecord", "Create", "FolderBind", "HardDelete", "Move", "MailItemsAccessed", "MoveToDeletedItems", "SendAs", "SendOnBehalf", "SoftDelete", "Update", "UpdateFolderPermissions", "UpdateInboxRules" )
     $OwnerActions = @( "ApplyRecord", "Create", "HardDelete", "MailboxLogin", "Move", "MailItemsAccessed", "MoveToDeletedItems", "Send", "SoftDelete", "Update", "UpdateCalendarDelegation", "UpdateFolderPermissions", "UpdateInboxRules" )
@@ -135,11 +128,13 @@ control 'microsoft-365-foundations-6.1.3' do
           Write-Host
         }
     }
-  powershell_output = powershell(e5_user_mailbox_auditing_script).stdout.strip
+  powershell_output = pwsh_single_session_executor(e5_user_mailbox_auditing_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
   describe 'Ensure that mailbox auditing for E5 users' do
-    subject { powershell_output }
+    subject { powershell_output.stdout.strip }
     it 'returns no actions needed from auditing' do
-      failure_message = "The following mailboxes failed with the following issues: #{powershell_output.split("\n").join(',')}"
+      failure_message = "The following mailboxes failed with the following issues: #{powershell_output.stdout.strip.split("\n").join(',')}"
       expect(subject).to be_empty, failure_message
     end
   end

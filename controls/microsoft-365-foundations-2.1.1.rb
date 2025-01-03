@@ -89,65 +89,51 @@ control 'microsoft-365-foundations-2.1.1' do
   ref 'https://learn.microsoft.com/en-us/defender-office-365/preset-security-policies?view=o365-worldwide'
 
   get_policy_names_line = %{
-        $client_id = '#{input('client_id')}'
-        $certificate_password = '#{input('certificate_password')}'
-        $certificate_path = '#{input('certificate_path')}'
-        $organization = '#{input('organization')}'
-        Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-        import-module exchangeonlinemanagement
-        Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-        $policy_names = Get-SafeLinksPolicy | Select-Object -ExpandProperty Name
-        Write-Output $policy_names
-  }
-  policy_links_script = powershell(get_policy_names_line)
+        $policies = Get-SafeLinksPolicy
+        foreach ($policy in $policies) {
+          $failedConditions = @()
 
-  describe 'Ensure the number of Safe Links policies' do
-    subject { powershell(get_policy_names_line).stdout.strip }
-    it 'is not 0' do
-      expect(subject).to_not be_empty
-    end
-  end
+          if ($policy.EnableSafeLinksForEmail -eq $false) {
+              $failedConditions += "EnableSafeLinksForEmail"
+          }
+          if ($policy.EnableSafeLinksForTeams -eq $false) {
+              $failedConditions += "EnableSafeLinksForTeams"
+          }
+          if ($policy.EnableSafeLinksForOffice -eq $false) {
+              $failedConditions += "EnableSafeLinksForOffice"
+          }
+          if ($policy.TrackClicks -eq $false) {
+              $failedConditions += "TrackClicks"
+          }
+          if ($policy.AllowClickThrough -eq $true) {
+              $failedConditions += "AllowClickThrough"
+          }
+          if ($policy.ScanUrls -eq $false) {
+              $failedConditions += "ScanUrls"
+          }
+          if ($policy.EnableForInternalSenders -eq $false) {
+              $failedConditions += "EnableForInternalSenders"
+          }
+          if ($policy.DeliverMessageAfterScan -eq $false) {
+              $failedConditions += "DeliverMessageAfterScan"
+          }
+          if ($policy.DisableUrlRewrite -eq $true) {
+              $failedConditions += "DisableUrlRewrite"
+          }
 
-  policy_names = policy_links_script.stdout.strip.split("\n")
-  policy_names.each do |policy_name|
-    get_state_script = %{
-        $client_id = '#{input('client_id')}'
-        $certificate_password = '#{input('certificate_password')}'
-        $certificate_path = '#{input('certificate_path')}'
-        $organization = '#{input('organization')}'
-        import-module exchangeonlinemanagement
-        Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-        Get-SafeLinksPolicy -Identity "#{policy_name.strip}" | Select-Object -Property EnableSafeLinksForEmail, EnableSafeLinksForTeams, EnableSafeLinksForOffice, TrackClicks, AllowClickThrough, ScanUrls, EnableForInternalSenders, DeliverMessageAfterScan, DisableUrlRewrite | ConvertTo-Json
+          if ($failedConditions.Count -gt 0) {
+              Write-Output "Policy Name: $($policy.Name), Failed Conditions = [$($failedConditions -join ', ')]"
+          }
       }
-    describe "Safe Links Policy: #{policy_name}" do
-      subject { JSON.parse(powershell(get_state_script).stdout.strip) }
-      it 'should have EnableSafeLinksForEmail set to True' do
-        expect(subject['EnableSafeLinksForEmail']).to eq(true)
-      end
-      it 'should have EnableSafeLinksForTeams set to True' do
-        expect(subject['EnableSafeLinksForTeams']).to eq(true)
-      end
-      it 'should have EnableSafeLinksForOffice set to True' do
-        expect(subject['EnableSafeLinksForOffice']).to eq(true)
-      end
-      it 'should have TrackClicks set to True' do
-        expect(subject['TrackClicks']).to eq(true)
-      end
-      it 'should have AllowClickThrough set to False' do
-        expect(subject['AllowClickThrough']).to eq(false)
-      end
-      it 'should have ScanUrls set to True' do
-        expect(subject['ScanUrls']).to eq(true)
-      end
-      it 'should have EnableForInternalSenders set to True' do
-        expect(subject['EnableForInternalSenders']).to eq(true)
-      end
-      it 'should have DeliverMessageAfterScan set to True' do
-        expect(subject['DeliverMessageAfterScan']).to eq(true)
-      end
-      it 'should have DisableUrlRewrite set to False' do
-        expect(subject['DisableUrlRewrite']).to eq(false)
-      end
+  }
+  policy_links_script = pwsh_single_session_executor(get_policy_names_line).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{policy_links_script.stderr}" if policy_links_script.exit_status != 0
+
+  describe 'Ensure the number of safe links policies that have the settings EnableSafeLinksForEmail as False, EnableSafeLinksForTeams as False, EnableSafeLinksForOffice as False, TrackClicks as False, AllowClickThrough as True, ScanUrls as False, EnableForInternalSenders as False, DeliverMessageAfterScan as False, or DisableUrlRewrite as True' do
+    subject { policy_links_script.stdout.strip }
+    it 'is 0' do
+      failure_message = "The following safe link policies have failed along with conditions they have failed on: #{policy_links_script.stdout.strip.split("\n").join(',')}"
+      expect(subject).to be_empty, failure_message
     end
   end
 end

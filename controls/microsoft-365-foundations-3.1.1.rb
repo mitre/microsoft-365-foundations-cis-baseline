@@ -39,17 +39,12 @@ control 'microsoft-365-foundations-3.1.1' do
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-adminauditlogconfig?view=exchange-ps'
 
   ensure_m365_audit_log_enabled_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
     (Get-AdminAuditLogConfig | Select-Object -ExpandProperty UnifiedAuditLogIngestionEnabled)
  }
 
-  powershell_output = powershell(ensure_m365_audit_log_enabled_script)
+  powershell_output = pwsh_single_session_executor(ensure_m365_audit_log_enabled_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
   describe 'Ensure the UnifiedAuditLogIngestionEnabled option for audit logs' do
     subject { powershell_output.stdout.strip }
     it 'is set to True' do

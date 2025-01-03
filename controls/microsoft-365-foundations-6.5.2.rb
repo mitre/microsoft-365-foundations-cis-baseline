@@ -28,31 +28,19 @@ control 'microsoft-365-foundations-6.5.2' do
   ref 'https://learn.microsoft.com/en-us/exchange/clients-and-mobile-in-exchange-online/mailtips/mailtips'
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/set-organizationconfig?view=exchange-ps'
 
-  ensure_mailtip_enabled_for_end_users_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+  ensure_mailtip_enabled_for_end_users_script = %(
     Get-OrganizationConfig | Select-Object -Property MailTips* | ConvertTo-Json
- }
-  powershell_output = powershell(ensure_mailtip_enabled_for_end_users_script).stdout.strip
+ )
+  powershell_output = pwsh_single_session_executor(ensure_mailtip_enabled_for_end_users_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
+  powershell_output = powershell_output.stdout.strip
   mailtips_settings = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure that the MailTip setting' do
     subject { mailtips_settings }
-    it 'MailTipsAllTipsEnabled should be set to True' do
-      expect(mailtips_settings['MailTipsAllTipsEnabled']).to eq(true)
-    end
-    it 'MailTipsExternalRecipientsTipsEnabled should be set to True' do
-      expect(mailtips_settings['MailTipsExternalRecipientsTipsEnabled']).to eq(true)
-    end
-    it 'MailTipsGroupMetricsEnabled should be set to True' do
-      expect(mailtips_settings['MailTipsGroupMetricsEnabled']).to eq(true)
-    end
-    it 'MailTipsLargeAudienceThreshold should be set to an acceptable value' do
-      expect(mailtips_settings['MailTipsLargeAudienceThreshold']).to eq(input('mailtipslargeaudiencethreshold_value'))
-    end
+    its(['MailTipsAllTipsEnabled']) { should cmp true }
+    its(['MailTipsExternalRecipientsTipsEnabled']) { should cmp true }
+    its(['MailTipsGroupMetricsEnabled']) { should cmp true }
+    its(['MailTipsLargeAudienceThreshold']) { should eq((input('mailtipslargeaudiencethreshold_value'))) }
   end
 end

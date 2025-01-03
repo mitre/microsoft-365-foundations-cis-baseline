@@ -50,54 +50,40 @@ control 'microsoft-365-foundations-2.1.7' do
   tag nist: ['SI-3', 'SI-8']
 
   ensure_anti_phishing_policy_created_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
-    Get-AntiPhishPolicy | Select-Object Name, Enabled, PhishThresholdLevel, EnableMailboxIntelligenceProtection, EnableMailboxIntelligence, EnableSpoofIntelligence | ConvertTo-Json
+    $policies = Get-AntiPhishPolicy | Select-Object Name, Enabled, PhishThresholdLevel, EnableMailboxIntelligenceProtection, EnableMailboxIntelligence, EnableSpoofIntelligence
+
+    foreach ($policy in $policies) {
+        $failedConditions = @()
+
+        if ($policy.Enabled -eq $false) {
+            $failedConditions += "Enabled"
+        }
+        if ($policy.PhishThresholdLevel -lt 2) {
+            $failedConditions += "PhishThresholdLevel"
+        }
+        if ($policy.EnableMailboxIntelligenceProtection -eq $false) {
+            $failedConditions += "EnableMailboxIntelligenceProtection"
+        }
+        if ($policy.EnableMailboxIntelligence -eq $false) {
+            $failedConditions += "EnableMailboxIntelligence"
+        }
+        if ($policy.EnableSpoofIntelligence -eq $false) {
+            $failedConditions += "EnableSpoofIntelligence"
+        }
+
+        if ($failedConditions.Count -gt 0) {
+            Write-Output "Policy Name: $($policy.Name), Failed Conditions = [$($failedConditions -join ', ')]"
+        }
+    }
   }
-  powershell_output = powershell(ensure_anti_phishing_policy_created_script).stdout.strip
-  powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
-  case powershell_data
-  when Hash
-    describe "Ensure the following Exchange Anti-Fishing Policy (#{powershell_data['Name']})" do
-      it 'should have Enabled state set to True' do
-        expect(powershell_data['Enabled']).to eq(true)
-      end
-      it 'should have PhishThresholdLevel at least 2' do
-        expect(powershell_data['PhishThresholdLevel']).to be >= 2
-      end
-      it 'should have EnableMailboxIntelligenceProtection state set to True' do
-        expect(powershell_data['EnableMailboxIntelligenceProtection']).to eq(true)
-      end
-      it 'should have EnableMailboxIntelligence state set to True' do
-        expect(powershell_data['EnableMailboxIntelligence']).to eq(true)
-      end
-      it 'should have EnableSpoofIntelligence state set to True' do
-        expect(powershell_data['EnableSpoofIntelligence']).to eq(true)
-      end
-    end
-  when Array
-    powershell_output.each do |policy|
-      describe %(Ensure the following Exchange Anti-Fishing Policy #{policy['Name']}) do
-        it 'should have Enabled state set to True' do
-          expect(policy['Enabled']).to eq(true)
-        end
-        it 'should have PhishThresholdLevel at least 2' do
-          expect(policy['PhishThresholdLevel']).to be >= 2
-        end
-        it 'should have EnableMailboxIntelligenceProtection state set to True' do
-          expect(policy['EnableMailboxIntelligenceProtection']).to eq(true)
-        end
-        it 'should have EnableMailboxIntelligence state set to True' do
-          expect(policy['EnableMailboxIntelligence']).to eq(true)
-        end
-        it 'should have EnableSpoofIntelligence state set to True' do
-          expect(policy['EnableSpoofIntelligence']).to eq(true)
-        end
-      end
+  powershell_output = pwsh_single_session_executor(ensure_anti_phishing_policy_created_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
+  describe 'Ensure the number of anti-phishing policies that have the settings Enabled as False, PhishThresholdLevel < 2, EnableMailboxIntelligenceProtection as False, EnableMailboxIntelligence as False, or EnableSpoofIntelligence as False' do
+    subject { powershell_output.stdout.strip }
+    it 'is 0' do
+      failure_message = "The following anti-phishing policies have failed along with the conditions they have failed on: #{powershell_output.stdout.strip.split("\n").join(',')}"
+      expect(subject).to be_empty, failure_message
     end
   end
 end

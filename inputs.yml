@@ -1,3 +1,4 @@
+org_domain: mitredev.onmicrosoft.com
 notify_outbound_spam_recipients: 
   - test@msft.com
 bcc_suspicious_outbound_additional_recipients: 
@@ -5,8 +6,6 @@ bcc_suspicious_outbound_additional_recipients:
 spf_domains:
   - google.com
 dmarc_domains:
-  - google.com
-moera_domains:
   - google.com
 permitted_exceptions_teams_locations:
   - a

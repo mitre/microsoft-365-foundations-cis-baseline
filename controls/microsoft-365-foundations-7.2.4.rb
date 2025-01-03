@@ -61,21 +61,13 @@ control 'microsoft-365-foundations-7.2.4' do
   ref 'https://learn.microsoft.com/en-us/sharepoint/dev/embedded/concepts/app-concepts/sharing-and-perm#container-partition'
 
   ensure_od_content_sharing_restricted_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
-    Install-Module -Name PnP.PowerShell -Force -AllowClobber
-    import-module pnp.powershell
-    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
-    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
 	  (Get-PnPTenant).OneDriveSharingCapability
   }
-  powershell_output = powershell(ensure_od_content_sharing_restricted_script).stdout.strip
+  powershell_output = pwsh_single_session_executor(ensure_od_content_sharing_restricted_script).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
   describe 'Ensure the OneDriveSharingCapability option for SharePoint' do
-    subject { powershell_output }
+    subject { powershell_output.stdout.strip }
     it 'is set to Disabled' do
       expect(subject).to eq('Disabled')
     end

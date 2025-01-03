@@ -37,12 +37,6 @@ control 'microsoft-365-foundations-8.1.1' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/enterprise/manage-skype-for-business-online-with-microsoft-365-powershell?view=o365-worldwide'
 
   ensure_file_sharing_enabled_cloud_script = %{
-     $client_id = '#{input('client_id')}'
-     $tenantid = '#{input('tenant_id')}'
-     $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
-     import-module MicrosoftTeams
-     Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
-
      $teamsClientConfig = Get-CsTeamsClientConfiguration | Select-Object AllowDropbox,AllowBox,AllowGoogleDrive,AllowShareFile,AllowEgnyte
      $allTrue = $false
      foreach ($property in @('AllowDropbox', 'AllowBox', 'AllowGoogleDrive', 'AllowShareFile', 'AllowEgnyte')) {
@@ -58,7 +52,9 @@ control 'microsoft-365-foundations-8.1.1' do
       }
     }
 
-  powershell_output = powershell(ensure_file_sharing_enabled_cloud_script)
+  powershell_output = pwsh_single_session_executor(ensure_file_sharing_enabled_cloud_script).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
   describe 'Ensure that all the authorized cloud storage services ' do
     subject { powershell_output.stdout.strip }
     it 'are set to true' do

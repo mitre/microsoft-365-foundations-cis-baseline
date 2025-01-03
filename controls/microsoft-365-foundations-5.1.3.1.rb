@@ -53,21 +53,15 @@ control 'microsoft-365-foundations-5.1.3.1' do
   ref 'https://learn.microsoft.com/en-us/azure/active-directory/external-identities/use-dynamic-groups'
 
   ensure_dynamic_group_for_guest_users_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}'
-    Install-Module -Name Microsoft.Graph -Force -AllowClobber
-    import-module microsoft.graph
-    $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
-    $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
-    Connect-MgGraph -TenantId $tenantid -ClientSecretCredential $ClientSecretCredential -NoWelcome
     $groups = Get-MgGroup | Where-Object { $_.GroupTypes -contains "DynamicMembership" -and $_.MembershipRule -notmatch '(user.userType -eq "guest")'}
     $groups | ft DisplayName
   }
 
-  powershell_output = powershell(ensure_dynamic_group_for_guest_users_script).stdout.strip.split("\n").drop(2).count
+  powershell_output = pwsh_single_session_executor(ensure_dynamic_group_for_guest_users_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
   describe 'Ensure the number of dyanmic groups without guests' do
-    subject { powershell_output }
+    subject { powershell_output.stdout.strip.split("\n").drop(2).count }
     it 'should be 0' do
       expect(subject).to eq 0
     end

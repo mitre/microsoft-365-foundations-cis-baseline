@@ -50,7 +50,17 @@ control 'microsoft-365-foundations-5.2.3.4' do
   ref 'https://learn.microsoft.com/en-us/entra/identity/conditional-access/what-if-tool'
   ref 'https://learn.microsoft.com/en-us/entra/identity/authentication/howto-authentication-methods-activity'
 
-  describe 'manual' do
-    skip 'The test for this control needs to be done manually'
+  ensure_member_users_mfa_capable_script = %(
+    $count = Get-MgReportAuthenticationMethodUserRegistrationDetail ` -Filter "IsMfaCapable eq false and UserType eq 'Member'" | Measure-Object
+    Write-Output $count.Count
+  )
+  powershell_output = pwsh_single_session_executor(ensure_member_users_mfa_capable_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
+  describe 'Ensure count for IsMfaCapable equals False' do
+    subject { powershell_output.stdout.to_i }
+    it 'should be 0 for all member users' do
+      expect(subject).to eq(0)
+    end
   end
 end

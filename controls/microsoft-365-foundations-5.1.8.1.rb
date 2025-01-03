@@ -54,21 +54,15 @@ control 'microsoft-365-foundations-5.1.8.1' do
   ref 'https://www.microsoft.com/en-us/download/details.aspx?id=47594'
 
   ensure_password_hash_enabled_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}'
-    Install-Module -Name Microsoft.Graph -Force -AllowClobber
-    import-module microsoft.graph
-    $password = ConvertTo-SecureString -String $clientSecret -AsPlainText -Force
-    $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential($client_id,$password)
-    Connect-MgGraph -TenantId $tenantid -ClientSecretCredential $ClientSecretCredential -NoWelcome
     $onPremisesSyncEnabled = (Get-MgOrganization).OnPremisesSyncEnabled
     Write-Output $onPremisesSyncEnabled
   }
 
-  powershell_output = powershell(ensure_password_hash_enabled_script)
+  powershell_output = pwsh_single_session_executor(ensure_password_hash_enabled_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
   describe 'Ensure OnPremisesSyncEnabled count' do
-    subject { powershell_output.stdout.strip }
+    subject { powershell_output.stdout ||= '' }
     it 'should not be empty' do
       expect(subject).not_to be_empty
     end

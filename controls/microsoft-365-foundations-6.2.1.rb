@@ -70,19 +70,17 @@ control 'microsoft-365-foundations-6.2.1' do
   ref 'https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/outbound-spam-policies-external-email-forwarding?view=o365-worldwide'
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/Remove-TransportRule?view=exchange-ps'
 
-  ensure_no_external_address_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+  ensure_no_external_address_script = %(
     Get-TransportRule | Where-Object {
     $_.RedirectMessageTo -ne $null -and
     $_.RedirectMessageTo -notmatch '#{input('internal_domains_transport_rule').join('|')}'
   } | Select-Object -ExpandProperty Name
- }
-  powershell_output_address = powershell(ensure_no_external_address_script).stdout.strip
+ )
+  powershell_output_address = pwsh_single_session_executor(ensure_no_external_address_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output_address.stderr}" if powershell_output_address.exit_status != 0
+
+  powershell_output_address = powershell_output_address.stdout ||= ''
+
   external_rules = powershell_output_address.split("\n") unless powershell_output_address.empty?
   describe 'Ensure only internal domains' do
     subject { powershell_output_address }
@@ -92,18 +90,14 @@ control 'microsoft-365-foundations-6.2.1' do
     end
   end
 
-  ensure_all_mail_forwarding_blocked_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
+  ensure_all_mail_forwarding_blocked_script = %(
     Get-HostedOutboundSpamFilterPolicy | Where-Object { $_.AutoForwardingMode -ne "Off" } | Select-Object Name, AutoForwardingMode | ConvertTo-Json
- }
+ )
 
-  powershell_output = powershell(ensure_all_mail_forwarding_blocked_script).stdout.strip
+  powershell_output = pwsh_single_session_executor(ensure_all_mail_forwarding_blocked_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
+  powershell_output = powershell_output.stdout ||= ''
   mailboxes_without_off = JSON.parse(powershell_output) unless powershell_output.empty?
   describe 'Ensure the number of mailboxes with the AutoForwardingMode state not set to Off' do
     subject { powershell_output }

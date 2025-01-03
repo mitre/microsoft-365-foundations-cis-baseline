@@ -66,12 +66,6 @@ control 'microsoft-365-foundations-8.2.1' do
   authorized_domains = input('authorized_domains_teams_admin_center')
   domain_pattern = authorized_domains.map { |domain| "'#{domain}'" }.join(', ')
   ensure_external_access_restricted_teams_admin_center_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2('#{input('certificate_path')}','#{input('certificate_password')}')
-    Install-Module -Name MicrosoftTeams -Force -AllowClobber
-    import-module MicrosoftTeams
-    Connect-MicrosoftTeams -Certificate $cert -ApplicationId $client_id -TenantId $tenantid > $null
     $authorizedDomains = @(#{domain_pattern})
 
     $federationConfig = Get-CsTenantFederationConfiguration
@@ -101,11 +95,13 @@ control 'microsoft-365-foundations-8.2.1' do
         }
     }
   }
-  powershell_output = powershell(ensure_external_access_restricted_teams_admin_center_script).stdout.strip
+  powershell_output = pwsh_single_session_executor(ensure_external_access_restricted_teams_admin_center_script).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
   describe 'Ensure the AllowTeamsConsumer, AllowPublicUsers, AllowFederatedUsers, and AllowedDomains' do
-    subject { powershell_output }
+    subject { powershell_output.stdout.strip }
     it 'are set to appropriate values and authorized domains present' do
-      failure_message = "The following failed:\n#{powershell_output}"
+      failure_message = "The following failed:\n#{powershell_output.stdout.strip}"
       expect(subject).to be_empty, failure_message
     end
   end

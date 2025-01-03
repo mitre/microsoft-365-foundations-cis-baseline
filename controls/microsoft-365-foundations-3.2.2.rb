@@ -54,54 +54,38 @@ control 'microsoft-365-foundations-3.2.2' do
   ref 'https://learn.microsoft.com/en-us/purview/dlp-teams-default-policy?view=o365-worldwide%2F1000'
   ref 'https://learn.microsoft.com/en-us/powershell/module/exchange/connect-ippssession?view=exchange-ps'
 
+  permitted_exceptions_list = %("#{input('permitted_exceptions_teams_locations').sort.join('", "')}")
   ensure_dlp_policies_enabled_teams_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-IPPSSession -AppID $client_id -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force) -Organization $organization -ShowBanner:$false
+    $permitted_exceptions_list = @(#{permitted_exceptions_list})
     $DlpPolicy = Get-DlpCompliancePolicy
-    $DlpPolicy | Where-Object {$_.Workload -match "Teams"} | Select-Object Name, Mode, TeamsLocation, TeamsLocationException | ConvertTo-Json
- }
+    $filteredPolicies = $DlpPolicy | Where-Object { $_.Workload -match "Teams" }
 
-  powershell_output = powershell(ensure_dlp_policies_enabled_teams_script).stdout.strip
-  powershell_data = JSON.parse(powershell_output) unless powershell_output.empty?
-  case powershell_data
-  when Hash
-    describe "Ensure the following DLP policy (#{powershell_data['Name']})" do
-      it 'should have its Mode state set to Enable' do
-        expect(powershell_data['Mode']).to eq('Enable')
-      end
-      it %(should have its TeamsLocation state include 'All') do
-        expect(powershell_data['TeamsLocation'][0]['DisplayName']).to include('All')
-      end
-      it 'should have its TeamsLocationException state to be empty or include only permitted exceptions' do
-        permitted_exceptions = input('permitted_exceptions_teams_locations')
-        actual_exceptions = powershell_data['TeamsLocationException']
-        expect(actual_exceptions.empty? ||
-        (actual_exceptions - permitted_exceptions).empty? ||
-        actual_exceptions.sort == permitted_exceptions.sort).to eq(true)
-      end
-    end
-  when Array
-    powershell_output.each do |policy|
-      describe %(Ensure the following DLP policy (#{policy['Identity']})) do
-        it 'should have its Mode state set to Enable' do
-          expect(policy['Mode']).to eq('Enable')
-        end
-        it %(should have its TeamsLocation state include 'All') do
-          expect(policy['TeamsLocation'][0]['DisplayName']).to include('All')
-        end
-        it 'should have its TeamsLocationException state to be empty or include only permitted exceptions' do
-          permitted_exceptions = input('permitted_exceptions_teams_locations')
-          actual_exceptions = policy['TeamsLocationException']
-          expect(actual_exceptions.empty? ||
-          (actual_exceptions - permitted_exceptions).empty? ||
-          actual_exceptions.sort == permitted_exceptions.sort).to eq(true)
-        end
-      end
+    foreach ($policy in $filteredPolicies) {
+        $failedConditions = @()
+        if (-not $policy.Mode.Contains('Enable')) {
+            $failedConditions += "Mode is not set to Enable"
+        }
+        if (-not $policy.TeamsLocation.Contains('All')) {
+            $failedConditions += "TeamsLocation does not include All"
+        }
+        $exceptions = $policy.TeamsLocationException
+        if (($permitted_exceptions_list | Sort-Object) -ne ($exceptions.ToArray() | Sort-Object)) {
+            $failedConditions += "TeamsLocationException has unpermitted exceptions"
+        }
+        # Print the policy name and failed conditions if any
+        if ($failedConditions.Count -gt 0) {
+            Write-Output "Policy name: $($policy.Name), Failed Conditions = [$($failedConditions -join ', ')]"
+        }
+    }
+ }
+  powershell_output = pwsh_single_session_executor(ensure_dlp_policies_enabled_teams_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
+  describe 'Ensure the number of Teams DLP Policies that have the settings Mode not set to Enable, TeamsLocation not set to All, or TeamsLocationException not including permitted exceptions' do
+    subject { powershell_output.stdout.strip }
+    it 'is 0' do
+      failure_message = "The following Teams DLP Policies have failed along with conditions they have failed on: #{powershell_output.stdout.strip.split("\n").join(',')}"
+      expect(subject).to be_empty, failure_message
     end
   end
 end

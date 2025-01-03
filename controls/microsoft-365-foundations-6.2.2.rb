@@ -38,16 +38,12 @@ control 'microsoft-365-foundations-6.2.2' do
   ref 'https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/mail-flow-rules'
 
   ensure_mail_transport_rules_dont_whitelist_specific_domains_script = %{
-    $client_id = '#{input('client_id')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $organization = '#{input('organization')}'
-    Install-Module -Name ExchangeOnlineManagement -Force -AllowClobber
-    import-module exchangeonlinemanagement
-    Connect-ExchangeOnline -CertificateFilePath $certificate_path -CertificatePassword (ConvertTo-SecureString -String $certificate_password -AsPlainText -Force)  -AppID $client_id -Organization $organization -ShowBanner:$false
     Get-TransportRule | Where-Object { ($_.SetScl -eq -1 -and $_.SenderDomainIs -ne $null) } | Select-Object -ExpandProperty Name
  }
-  powershell_output = powershell(ensure_mail_transport_rules_dont_whitelist_specific_domains_script).stdout.strip
+  powershell_output = pwsh_single_session_executor(ensure_mail_transport_rules_dont_whitelist_specific_domains_script).run_script_in_graph_exchange
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
+  powershell_output = powershell_output.stdout ||= ''
   whitelisted_domain_rules = powershell_output.split("\n") unless powershell_output.empty?
   describe 'Ensure the mail transport rules' do
     subject { powershell_output }

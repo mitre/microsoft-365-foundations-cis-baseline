@@ -42,20 +42,13 @@ control 'microsoft-365-foundations-7.3.4' do
   ref 'https://learn.microsoft.com/en-us/sharepoint/security-considerations-of-allowing-custom-script'
   ref 'https://learn.microsoft.com/en-us/powershell/module/sharepoint-online/set-sposite?view=sharepoint-ps'
 
-  ensure_spo_guest_users_cannot_share_items_dont_own_script = %{
-    $client_id = '#{input('client_id')}'
-    $tenantid = '#{input('tenant_id')}'
-    $clientSecret = '#{input('client_secret')}'
-    $certificate_password = '#{input('certificate_password')}'
-    $certificate_path = '#{input('certificate_path')}'
-    $sharepoint_admin_url = '#{input('sharepoint_admin_url')}'
-    Install-Module -Name PnP.PowerShell -Force -AllowClobber
-    import-module pnp.powershell
-    $password = (ConvertTo-SecureString -AsPlainText $certificate_password -Force)
-    Connect-PnPOnline -Url $sharepoint_admin_url -ClientId $client_id -CertificatePath $certificate_path -CertificatePassword $password  -Tenant $tenantid
+  ensure_spo_guest_users_cannot_share_items_dont_own_script = %(
 	  Get-PnPTenantSite | Where-Object { $_.DenyAddAndCustomizePages -eq "Disabled" -and $_.Url -notlike "*-my.sharepoint.com/" } | Select-Object -ExpandProperty Url
-  }
-  powershell_output = powershell(ensure_spo_guest_users_cannot_share_items_dont_own_script).stdout.strip
+  )
+  powershell_output = pwsh_single_session_executor(ensure_spo_guest_users_cannot_share_items_dont_own_script).run_script_in_teams_pnp
+  raise Inspec::Error, "The powershell output returned the following error:  #{powershell_output.stderr}" if powershell_output.exit_status != 0
+
+  powershell_output = powershell_output.stdout.strip
   disabled_urls = powershell_output.split("\n") unless powershell_output.empty?
   describe 'Ensure the number of sites with DenyAddAndCustomizePages setting as Disabled' do
     subject { powershell_output }
