@@ -350,7 +350,7 @@ Ensure the controls are ready to be committed into the repo:
 [top](#table-of-contents)
 ## Running the Profile
 **Note**: Replace the profile's directory name - e.g. - `<Profile>` with `.` if currently in the profile's root directory.
-**Note 2** The `<Name of Dictionary Storing Pwsh Options>` will be pwsh-options if exactly following train-pwsh documentation.
+**Note 2**: The `<Name of Dictionary Storing Pwsh Options>` will be `pwsh-options` if exactly following train-pwsh documentation.
 ```sh
 bundle exec cinc-auditor exec <Profile> -t pwsh://<Name of Dictionary Storing Pwsh Options> --controls=<control_id> --enhanced-outcomes --input-file=inputs.yml
 ```
