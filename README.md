@@ -5,21 +5,18 @@ requirements.
  
 - Profile Version: **3.1.1**
 - Benchmark Date: **2024-04-29**
-- Benchmark Version: **3.0.0**
+- Benchmark Version: **3.1.0**
  
  
 This profile was developed to reduce the time it takes to perform a security checks based upon the
 CIS Guidance from the Center for Internet Security (CIS).
- 
-The results of a profile run will provide information needed to support an Authority to Operate (ATO)
-decision for the applicable technology.
  
 The CIS Microsoft 365 Foundation CIS CIS Profile uses the [InSpec](https://github.com/inspec/inspec)
 open-source compliance validation language to support automation of the required compliance, security
 and policy testing for Assessment and Authorization (A&A) and Authority to Operate (ATO) decisions
 and Continuous Authority to Operate (cATO) processes.
 
-The M365 CIS Benchmark includes security requirements for an Microsoft 365 environment.
+The M365 CIS Benchmark includes security requirements for a Microsoft 365 environment.
  
 Table of Contents
 =================
@@ -36,21 +33,9 @@ Table of Contents
 * [Check Overview]()
  
 ## Benchmark Information
-The Center for Internet Security, Inc. (CIS®) create and maintain a set of Critical Security Controls (CIS Controls) for applications, computer systems and networks
-connected to the Department of Defense (DoD). These guidelines are the primary security standards
-used by the DoD agencies. In addition to defining security guidelines, the CISs also stipulate
-how security training should proceed and when security checks should occur. Organizations must
-stay compliant with these guidelines or they risk having their access to the DoD terminated.
- 
-Requirements associated with the CIS Microsoft 365 Foundation CIS are derived from the
-[Security Requirements Guides](https://csrc.nist.gov/glossary/term/security_requirements_guide)
-and align to the [National Institute of Standards and Technology](https://www.nist.gov/) (NIST)
-[Special Publication (SP) 800-53](https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#!/800-53)
-Security Controls, [DoD Control Correlation Identifier](https://public.cyber.mil/stigs/cci/) and related standards.
- 
-The CIS Microsoft 365 Foundation CIS profile checks were developed to provide technical implementation
-validation to the defined DoD requirements, the guidance can provide insight for any organizations wishing
-to enhance their security posture and can be tailored easily for use in your organization.
+The Center for Internet Security, Inc. (CIS®) create and maintain a set of Critical Security Controls (CIS Controls) for applications, computer systems and networks.
+
+The original benchmark document that serves as the basis for this automated testing profile can be found at the [CIS Workbench](https://workbench.cisecurity.org) website.
  
 [top](#table-of-contents)
 ## Requirements
@@ -90,34 +75,37 @@ Ensure access and install the following powershell modules. The controls also ha
 - [MicrosoftTeams](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-install)
 
 ## Getting Started  
-### InSpec (CINC-auditor) setup
-For maximum flexibility/accessibility `cinc-auditor`, the open-source packaged binary version of Chef InSpec should be used,
-compiled by the CINC (CINC Is Not Chef) project in coordination with Chef using Chef's always-open-source InSpec source code.
+### InSpec (CINC Auditor) setup
+For maximum flexibility/accessibility, CINC Auditor (`cinc-auditor`) is the executable program that should be used to run this testing profile.
+
+CINC Auditor is the open-source packaged binary version of Chef InSpec,
+compiled by the CINC (CINC Is Not Chef) project in coordination with Chef using Chef's always-open-source InSpec source code. CINC Auditor and InSpec are built from the same source code and function identically, but CINC Auditor requires no license to use (which means it also does not come with any expectation of support from Chef).
+
 For more information see [CINC Home](https://cinc.sh/)
  
-It is intended and recommended that CINC-auditor and this profile executed from a __"runner"__ host
+It is intended and recommended that CINC Auditor and this profile executed from a __"runner"__ host
 (such as a DevOps orchestration server, an administrative management system, or a developer's workstation/laptop)
 against the target. This can be any Unix/Linux/MacOS or Windows runner host, with access to the Internet.
  
 > [!TIP]
-> **For the best security of the runner, always install on the runner the latest version of CINC-auditor and any other supporting language components.**
+> **For the best security of the runner, always install on the runner the latest version of CINC Auditor and any other supporting language components.**
  
-To install CINC-auditor on a UNIX/Linux/MacOS platform use the following command:
+To install CINC Auditor on a UNIX/Linux/MacOS platform use the following command:
 ```bash
 curl -L https://omnitruck.cinc.sh/install.sh | sudo bash -s -- -P cinc-auditor
 ```
  
-To install CINC-auditor on a Windows platform (Powershell) use the following command:
+To install CINC Auditor on a Windows platform (Powershell) use the following command:
 ```powershell
 . { iwr -useb https://omnitruck.cinc.sh/install.ps1 } | iex; install -project cinc-auditor
 ```
  
-To confirm successful install of cinc-auditor:
+To confirm successful install of CINC Auditor:
 ```
 cinc-auditor -v
 ```
  
-Latest versions and other installation options are available at [CINC Auditor](https://cinc.sh/start/auditor/) site.
+Latest versions and other installation options are available at [CINC Auditor](https://cinc.sh/start/auditor/)'s website.
  
 [top](#table-of-contents)
 ### Intended Usage
