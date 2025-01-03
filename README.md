@@ -3,20 +3,20 @@ This InSpec Profile was created to facilitate testing and auditing of `CIS Micro
 infrastructure and applications when validating compliancy with [Center for Internet Security (CIS) Benchmark](https://www.cisecurity.org/cis-benchmarks)
 requirements.
  
-- Profile Version: **3.1.1**
+- Profile Version: **3.1.2**
 - Benchmark Date: **2024-04-29**
 - Benchmark Version: **3.1.0**
  
  
-This profile was developed to reduce the time it takes to perform a security checks based upon the
+This profile was developed to reduce the time it takes to perform a security check based upon the
 CIS Guidance from the Center for Internet Security (CIS).
  
-The CIS Microsoft 365 Foundation CIS CIS Profile uses the [InSpec](https://github.com/inspec/inspec)
+The CIS Microsoft 365 Foundation CIS Profile uses the [InSpec](https://github.com/inspec/inspec)
 open-source compliance validation language to support automation of the required compliance, security
 and policy testing for Assessment and Authorization (A&A) and Authority to Operate (ATO) decisions
 and Continuous Authority to Operate (cATO) processes.
 
-The M365 CIS Benchmark includes security requirements for a Microsoft 365 environment.
+The Microsoft 365 CIS Benchmark includes security requirements for a Microsoft 365 environment.
  
 Table of Contents
 =================
@@ -30,21 +30,33 @@ Table of Contents
     * [Directly from Github](#directly-from-github)
     * [Different Run Options](#different-run-options)
 * [Using Heimdall for Viewing Test Results](#using-heimdall-for-viewing-test-results)
-* [Check Overview]()
+* [Check Overview](#check-overview)
  
 ## Benchmark Information
-The Center for Internet Security, Inc. (CIS®) create and maintain a set of Critical Security Controls (CIS Controls) for applications, computer systems and networks.
+The Center for Internet Security, Inc. (CIS®) create and maintains a set of Critical Security Controls (CIS Controls) for applications, computer systems and networks.
 
 The original benchmark document that serves as the basis for this automated testing profile can be found at the [CIS Workbench](https://workbench.cisecurity.org) website.
  
 [top](#table-of-contents)
+
 ## Requirements
-### Microsoft 365
-- M365 account API credentials and certificate
-- M365 providing appropriate permissions to perform audit scan
-  - This can be done by creating an application registration within your account, which will provide you with the appropriate credentials to login such as Client ID and Tenant ID. You will need to create a Client Secret/Certificate as well. The following link provides more detail on how to setup an application registration: [Application_Registration_Steps](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate)
+### Microsoft 365 Credentials
+Your Microsoft 365 admin may need to be contacted to obtain some of these credentials. The following credentials are needed, as highlighted by the [train-pwsh](https://github.com/mitre/train-pwsh) documentation:
+- client_id (id of client)
+- tenant_id (id of tenant)
+- client_secret (secret key for client)
+- certificate_path (path on machine where authentication certificate is stored)
+- certificate_password (password for certificate)
+- organization (organization domain)
+- sharepoint_admin_url (sharepoint url for admin)
+- pwsh_path (path on machine where the PowerShell executable is stored)
+
+Some details to create credentials if you are a Microsoft 365 admin:
+- Create an application registration within your account, which will provide you with the appropriate credentials to login such as Client ID and Tenant ID. You will need to create a Client Secret/Certificate as well. The following link provides more detail on how to setup an application registration: [Application_Registration_Steps](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate)
+
 
 ### Ensure the Following Permissions on your Application Registration Account
+  Request your Microsoft 365 admin for these permissions to Microsoft 365 modules or enable these permissions if you are the admin:
   - Microsoft Graph
     - SecurityEvents.Read.All
     - User.Read
@@ -58,21 +70,32 @@ The original benchmark document that serves as the basis for this automated test
 
 ### Required software and steps needed on the InSpec Runner
 - git
-- [Powershell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.4)
+- [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.4)
 - [InSpec](https://www.chef.io/products/chef-inspec/)
 - [train-pwsh](https://github.com/mitre/train-pwsh)
 - [inspec-pwsh](https://github.com/mitre/inspec-pwsh)
 
-It is important to follow/understand the documentation for train-pwsh and inspec-pwsh that is linked above for this profile to run correctly. For context, the train-pwsh is the transport that is used to maintain a persistent connection with various Powershell sessions. Meanwhile, inspec-pwsh is a resource pack that is used to connect controls using different modules to its corresponding session group (e.g. session for exchange, teams, exchange/graph, etc.). The documentation for inspec-pwsh has more detail about the resource pack. 
+Inspec, train-pwsh, inspec-pwsh are already included as gems in this profile and should not need separate downloads. The profile just needs to be ran with bundle exec to ensure the gems are loaded.  
 
-Particularly, for train-pwsh, your organization field will also need to be defined as a environment variable named `ORGANIZATION` as it is used in a profile. The train-pwsh documentation has more detail on how to do this. 
+It is also important to follow/understand the documentation for train-pwsh and inspec-pwsh that is linked above for this profile to run correctly. For context, the train-pwsh is the transport that is used to maintain a persistent connection with various PowerShell sessions. Meanwhile, inspec-pwsh is a resource pack that is used to connect controls using different modules to its corresponding session group (e.g. session for exchange, teams, exchange/graph, etc.). The documentation for inspec-pwsh has more detail about the resource pack. 
+
+Additionally, for train-pwsh, the organization field will also need to be defined as a environment variable named `ORGANIZATION` as it is used in a profile. The train-pwsh documentation has more detail on how to create this environment variable. Additionally, it is important to note that train-pwsh is not being invoked using code in this profile, so the config.json file approach needs to be followed for train to run correctly. The documentation for train-pwsh goes into more detail on how to create the config.json and  populate its contents with your Microsoft 365 credentials that are used by this profile. 
 
 ### PowerShell Module Installation
-Ensure access and install the following powershell modules. The controls also have the module installation code when running the Powershell queries for redundancy purposes:
+Ensure access and install the following PowerShell modules. The controls also have the module installation code when running the PowerShell queries for redundancy purposes:
 - [Microsoft.Graph](https://learn.microsoft.com/en-us/powershell/microsoftgraph/installation?view=graph-powershell-1.0#installation)
 - [ExchangeOnlineManagement](https://learn.microsoft.com/en-us/powershell/exchange/connect-to-exchange-online-powershell?view=exchange-ps)
 - [PnP.PowerShell](https://learn.microsoft.com/en-us/powershell/sharepoint/sharepoint-pnp/sharepoint-pnp-cmdlets)
 - [MicrosoftTeams](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-install)
+
+### Test O365 Example
+
+Upon obtaining the right permissions/credentials and downloading the correct modules/software, test that these permissions work by running the o365_example_baseline profile available at the following link: [O365 Profile](https://github.com/mitre/o365_example_baseline). If the o365 profile runs correctly, then this profile should be able to ran correctly. The o365_example_baseline profile contains a subset of controls from this profile, and also leverages `train-pwsh` and `inspec-pwsh`. It should serve as a good test to ensure that `train-pwsh` and `inspec-pwsh` are working properly. 
+
+More details on how to use `train-pwsh` and `inspec-pwsh` are detailed below:
+
+- [train-pwsh](https://github.com/mitre/train-pwsh)
+- [inspec-pwsh](https://github.com/mitre/inspec-pwsh)
 
 ## Getting Started  
 ### InSpec (CINC Auditor) setup
@@ -95,7 +118,7 @@ To install CINC Auditor on a UNIX/Linux/MacOS platform use the following command
 curl -L https://omnitruck.cinc.sh/install.sh | sudo bash -s -- -P cinc-auditor
 ```
  
-To install CINC Auditor on a Windows platform (Powershell) use the following command:
+To install CINC Auditor on a Windows platform (PowerShell) use the following command:
 ```powershell
 . { iwr -useb https://omnitruck.cinc.sh/install.ps1 } | iex; install -project cinc-auditor
 ```
@@ -327,24 +350,24 @@ Ensure the controls are ready to be committed into the repo:
 [top](#table-of-contents)
 ## Running the Profile
 **Note**: Replace the profile's directory name - e.g. - `<Profile>` with `.` if currently in the profile's root directory.
-
+**Note 2** The `<Name of Dictionary Storing Pwsh Options>` will be pwsh-options if exactly following train-pwsh documentation.
 ```sh
-inspec exec <Profile> -t pwsh://<Options Dictionary Name> --controls=<control_id> --enhanced-outcomes --input-file=inputs.yml
+bundle exec cinc-auditor exec <Profile> -t pwsh://<Name of Dictionary Storing Pwsh Options> --controls=<control_id> --enhanced-outcomes --input-file=inputs.yml
 ```
 
 #### Execute a Single Control and save results as JSON 
 ```sh
-inspec exec <Profile> -t pwsh://<Options Dictionary Name> --controls=<control_id> --enhanced-outcomes --input-file=inputs.yml --reporter json:results.json
+bundle exec cinc-auditor exec <Profile> -t pwsh://<Name of Dictionary Storing Pwsh Options>> --controls=<control_id> --enhanced-outcomes --input-file=inputs.yml --reporter json:results.json
 ```
 
 #### Execute All Controls in the Profile 
 ```sh
-inspec exec <Profile> -t pwsh://<Options Dictionary Name> --enhanced-outcomes --input-file=inputs.yml
+bundle exec cinc-auditor exec <Profile> -t pwsh://<Name of Dictionary Storing Pwsh Options>> --enhanced-outcomes --input-file=inputs.yml
 ```
 
 #### Execute all the Controls in the Profile and save results as JSON 
 ```sh
-inspec exec <Profile> -t pwsh://<Options Dictionary Name> --enhanced-outcomes --input-file=inputs.yml --reporter json:results.json
+bundle exec cinc-auditor exec <Profile> -t pwsh://<Name of Dictionary Storing Pwsh Options>> --enhanced-outcomes --input-file=inputs.yml --reporter json:results.json
 ```
 [top](#table-of-contents)
 
@@ -370,9 +393,9 @@ of Heimdall-Lite via the `saf view:heimdall` command.
 Additionally both Heimdall applications can be deployed via docker, kubernetes, or the installation packages.
 ## Check Overview
 
-### M365 Services
+### Microsoft 365 Services
 
-This profile evaluates the M365 CIS Benchmark compliance of the following M365 administrative centers by evaluating their setting configurations:
+This profile evaluates the Microsoft 365 CIS Benchmark compliance of the following Microsoft 365 administrative centers by evaluating their setting configurations:
 
 - Microsoft 365 Admin Center
 - Microsoft 365 Defender
